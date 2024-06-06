@@ -1,0 +1,21 @@
+﻿body {
+}
+.login-form{
+    width: 50%;
+    
+}
+
+.login-form .login-submit{
+    margin: 5% 0 0 0;
+}
+.content-login {
+    margin: auto !important;
+}
+.notice {
+    display: none;
+    position: absolute;
+    background-color: #000000ad;
+    color: white;
+    margin: 0% 0 0 65%;
+    padding: 1em;
+}
