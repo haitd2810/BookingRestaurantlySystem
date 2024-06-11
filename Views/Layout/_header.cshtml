@@ -15,9 +15,8 @@
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-    <!-- CSS Screen Login -->
-    <link href="~/css/login.css" rel="stylesheet">
-
+    <!-- staff_style  -->
+    <link href="~/css/staff_index_style.css" rel="stylesheet">
     <!-- Vendor CSS Files -->
     <link href="~/assets/vendor/animate.css/animate.min.css" rel="stylesheet">
     <link href="~/assets/vendor/aos/aos.css" rel="stylesheet">
@@ -29,19 +28,12 @@
 
     <!-- Template Main CSS File -->
     <link href="assets/css/style.css" rel="stylesheet">
-
-    <!-- =======================================================
-    * Template Name: Restaurantly - v3.1.0
-    * Template URL: https://bootstrapmade.com/restaurantly-restaurant-template/
-    * Author: BootstrapMade.com
-    * License: https://bootstrapmade.com/license/
-    ======================================================== -->
 </head>
 
 <body>
 
     <!-- ======= Top Bar ======= -->
-    <div id="topbar" class="d-flex align-items-center fixed-top">
+    <div id="topbar" class="d-flex align-items-center">
         <div class="container d-flex justify-content-center justify-content-md-between">
 
             <div class="contact-info d-flex align-items-center">
@@ -59,7 +51,7 @@
     </div>
 
     <!-- ======= Header ======= -->
-    <header id="header" class="fixed-top d-flex align-items-cente">
+    <header id="header" class="d-flex align-items-cente">
         <div class="container-fluid container-xl d-flex align-items-center justify-content-lg-between">
 
             <h1 class="logo me-auto me-lg-0"><a asp-controller="Home" asp-action="Index">Restaurantly</a></h1>
@@ -68,40 +60,14 @@
 
             <nav id="navbar" class="navbar order-last order-lg-0">
                 <ul>
-                    
-                    @if (ViewData["CurrentPage"] == null || ViewData["CurrentPage"].ToString() != "Login")
-                    {
-                        <li><a class="nav-link scrollto active" asp-controller="Home" asp-action="Index">Home</a></li>
-                        <li><a class="nav-link scrollto active" asp-controller="Staff" asp-action="Index">View</a></li>
-                        <li><a class="nav-link scrollto" href="#about">About</a></li>
-                        <li><a class="nav-link scrollto" href="#menu">Menu</a></li>
-                        <li><a class="nav-link scrollto" href="#specials">Specials</a></li>
-                        <li><a class="nav-link scrollto" href="#events">Events</a></li>
-                        <li><a class="nav-link scrollto" href="#chefs">Chefs</a></li>
-                        <li><a class="nav-link scrollto" href="#gallery">Gallery</a></li>
-                    
-                        <li class="dropdown">
-                            <a href="#"><span>Login</span> <i class="bi bi-chevron-down"></i></a>
-                            <ul>
-                                <li><a asp-controller="User" asp-action="Index">Are you staff?</a></li>
-                                @* <li class="dropdown">
-                                    <a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
-                                    <ul>
-                                        <li><a href="#">Deep Drop Down 1</a></li>
-                                        <li><a href="#">Deep Drop Down 2</a></li>
-                                        <li><a href="#">Deep Drop Down 3</a></li>
-                                        <li><a href="#">Deep Drop Down 4</a></li>
-                                        <li><a href="#">Deep Drop Down 5</a></li>
-                                    </ul>
-                                </li> *@
-                            </ul>
-                        </li>
-                        <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
-                    }
+                    <li><a class="nav-link scrollto active" asp-controller="Home" asp-action="Index">Home</a></li>
+
+                    <li>
+                        <a href="#"><span>Logout</span></a>
+                    </li>
                 </ul>
                 <i class="bi bi-list mobile-nav-toggle"></i>
-            </nav><!-- .navbar -->
-            <a href="#book-a-table" class="book-a-table-btn scrollto d-none d-lg-flex">Book a table</a>
+            </nav>
 
         </div>
     </header><!-- End Header -->
