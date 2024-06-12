@@ -9,5 +9,10 @@ namespace booking.Controllers
             return View();
         }
 
+        public ActionResult Details(int id)
+        {
+            return View("Details", id);
+        }
+
     }
 }
