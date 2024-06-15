@@ -2,6 +2,9 @@
     const checkboxes = document.querySelectorAll('.form-check-input');
     const selectedItemsContainer = document.getElementById('selected-items-container');
 
+    // Object to store selected items and their quantities
+    const selectedItems = {};
+
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function () {
             updateSelectedItems();
@@ -9,71 +12,76 @@
     });
 
     function updateSelectedItems() {
-        
         selectedItemsContainer.innerHTML = '';
 
-        
         checkboxes.forEach(checkbox => {
             if (checkbox.checked) {
-                
-                const menuItem = checkbox.closest('.menu-item').cloneNode(true);
-                
-                const clonedCheckbox = menuItem.querySelector('.form-check-input');
-                clonedCheckbox.parentNode.removeChild(clonedCheckbox);
-                
+                const menuItem = checkbox.closest('.menu-item');
+                const itemName = menuItem.querySelector('.menu-content a').textContent;
+
+                // If the item is not already selected, add it with a default quantity of 1
+                if (!selectedItems[itemName]) {
+                    selectedItems[itemName] = {
+                        element: menuItem.cloneNode(true),
+                        quantity: 1
+                    };
+                }
+
+                // Create a clone of the menu item to display in the selected items container
+                const clonedItem = selectedItems[itemName].element.cloneNode(true);
+                const clonedCheckbox = clonedItem.querySelector('.form-check-input');
+                if (clonedCheckbox) clonedCheckbox.parentNode.removeChild(clonedCheckbox);
+
+                // Add quantity controls to the cloned item
                 const quantityControl = document.createElement('div');
                 quantityControl.className = 'quantity-control';
                 quantityControl.innerHTML = `
-                        <button class="btn decrement-btn">-</button>
-                        <span class="quantity">1</span>
-                        <button class="btn increment-btn">+</button>
-                    `;
-                menuItem.appendChild(quantityControl);
+                    <button class="btn decrement-btn">-</button>
+                    <span class="quantity">${selectedItems[itemName].quantity}</span>
+                    <button class="btn increment-btn">+</button>
+                `;
+                clonedItem.appendChild(quantityControl);
+                selectedItemsContainer.appendChild(clonedItem);
 
-                selectedItemsContainer.appendChild(menuItem);
-
-                const decrementBtn = menuItem.querySelector('.decrement-btn');
-                const incrementBtn = menuItem.querySelector('.increment-btn');
-                const quantitySpan = menuItem.querySelector('.quantity');
+                const decrementBtn = clonedItem.querySelector('.decrement-btn');
+                const incrementBtn = clonedItem.querySelector('.increment-btn');
+                const quantitySpan = clonedItem.querySelector('.quantity');
 
                 decrementBtn.addEventListener('click', function () {
-                    let quantity = parseInt(quantitySpan.textContent);
+                    let quantity = selectedItems[itemName].quantity;
                     if (quantity > 1) {
                         quantitySpan.textContent = --quantity;
-                        menuItem.setAttribute('data-quantity', quantity);
+                        selectedItems[itemName].quantity = quantity;
                     }
                 });
 
                 incrementBtn.addEventListener('click', function () {
-                    let quantity = parseInt(quantitySpan.textContent);
+                    let quantity = selectedItems[itemName].quantity;
                     quantitySpan.textContent = ++quantity;
-                    menuItem.setAttribute('data-quantity', quantity);
+                    selectedItems[itemName].quantity = quantity;
                 });
+            }
+        });
 
-                const itemName = menuItem.querySelector('.menu-content a').textContent;
-                menuItem.setAttribute('data-name', itemName);
-                menuItem.setAttribute('data-quantity', 1);
+        // Remove items from the selectedItems object if they are unchecked
+        Object.keys(selectedItems).forEach(itemName => {
+            if (![...checkboxes].find(checkbox => checkbox.checked && checkbox.closest('.menu-item').querySelector('.menu-content a').textContent === itemName)) {
+                delete selectedItems[itemName];
             }
         });
     }
-});
 
-function getSelectedItems() {
-    const selectedItemsContainer = document.getElementById('selected-items-container');
-    const selectedItems = selectedItemsContainer.querySelectorAll('.menu-item');
-    const items = [];
+    function getSelectedItems() {
+        const items = [];
+        Object.keys(selectedItems).forEach(itemName => {
+            items.push({ name: itemName, quantity: selectedItems[itemName].quantity });
+        });
+        return items;
+    }
 
-    selectedItems.forEach(item => {
-        const name = item.getAttribute('data-name');
-        const quantity = item.getAttribute('data-quantity');
-        items.push({ name, quantity });
+    // Example usage
+    document.getElementById('retrieve-button').addEventListener('click', function () {
+        const selectedItemsList = getSelectedItems();
+        console.log(selectedItemsList);
     });
-
-    return items;
-}
-
-// Example usage
-document.getElementById('retrieve-button').addEventListener('click', function () {
-    const selectedItems = getSelectedItems();
-    console.log(selectedItems);
 });
