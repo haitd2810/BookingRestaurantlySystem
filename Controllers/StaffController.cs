@@ -13,8 +13,15 @@ namespace booking.Controllers
         {
             return View("Details", id);
         }
+
         [Route("Staff/Schedule")]
         public IActionResult Schedule()
+        {
+            return View();
+        }
+
+        [Route("Staff/Statistic")]
+        public IActionResult Statistic()
         {
             return View();
         }
