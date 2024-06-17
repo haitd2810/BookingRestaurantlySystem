@@ -1,0 +1,9 @@
+﻿body {
+}
+.table-container {
+    display: none;
+}
+
+.table-container.active {
+    display: block;
+}
