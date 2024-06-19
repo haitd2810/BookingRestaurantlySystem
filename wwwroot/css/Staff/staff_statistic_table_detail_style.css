@@ -1,0 +1,31 @@
+﻿body {
+}
+.search-box form {
+    /*margin-top: 30px;*/
+    background: #28251f;
+    padding: 6px 10px;
+    position: relative;
+    border-radius: 50px;
+    border: 1px solid #454035;
+}
+    .search-box form input[type="submit"] {
+        position: absolute;
+        top: -1px;
+        right: -1px;
+        bottom: -1px;
+        border: 0;
+        background: none;
+        font-size: 16px;
+        padding: 0 20px 2px 20px;
+        background: #cda45e;
+        color: #fff;
+        transition: 0.3s;
+        border-radius: 50px;
+    }
+    .search-box form input[type="text"] {
+        border: 0;
+        padding: 4px;
+        width: calc(100% - 110px);
+        background: #28251f;
+        color: white;
+    }

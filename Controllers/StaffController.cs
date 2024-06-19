@@ -26,5 +26,11 @@ namespace booking.Controllers
             return View();
         }
 
+        [Route("Staff/StatisticStableDetail")]
+        public IActionResult StatisticStableDetail()
+        {
+            return View();
+        }
+
     }
 }
