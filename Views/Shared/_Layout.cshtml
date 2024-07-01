@@ -1,4 +1,13 @@
-﻿<!DOCTYPE html>
+﻿@using booking.Models
+@using Newtonsoft.Json
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    var httpContext = HttpContextAccessor.HttpContext;
+    var infoSettingJson = httpContext.Session.GetString("InfoSetting");
+    Setting infoSetting = infoSettingJson != null ? JsonConvert.DeserializeObject<Setting>(infoSettingJson) : null;
+}
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -123,17 +132,15 @@
                         <div class="footer-info">
                             <h3>Restaurantly</h3>
                             <p>
-                                FPT University <br>
-                                Hoa Lac Hi-Tech Park, km 29, Avenue, Thang Long, Hanoi, Vietnam<br><br>
-                                <strong>Phone:</strong> +84 039 5765 849<br>
-                                <strong>Email:</strong> info@example.com<br>
+                                @infoSetting.Location<br><br>
+                                <strong>Phone:</strong> @infoSetting.Phone<br>
+                                <strong>Email:</strong> @infoSetting.Email<br>
                             </p>
                             <div class="social-links mt-3">
-                                <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-                                <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-                                <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-                                <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-                                <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+                                <a href="@infoSetting.Twitter" class="twitter" target="_blank"><i class="bx bxl-twitter"></i></a>
+                                <a href="@infoSetting.Facebook" class="facebook" target="_blank"><i class="bx bxl-facebook"></i></a>
+                                <a href="@infoSetting.Instagram" class="instagram"><i class="bx bxl-instagram" target="_blank"></i></a>
+                                <a href="@infoSetting.LinkedIn" class="linkedin"><i class="bx bxl-linkedin" target="_blank"></i></a>
                             </div>
                         </div>
                     </div>

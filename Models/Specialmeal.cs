@@ -14,5 +14,6 @@ namespace booking.Models
         public byte[]? Status { get; set; }
 
         public virtual Meal IdNavigation { get; set; } = null!;
+        public virtual Meal? meal { get; set; }
     }
 }

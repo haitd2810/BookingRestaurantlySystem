@@ -1,7 +1,16 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@using booking.Models
+@using Newtonsoft.Json
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
+@{
+    var httpContext = HttpContextAccessor.HttpContext;
+    var infoSettingJson = httpContext.Session.GetString("InfoSetting");
+    Setting infoSetting = infoSettingJson != null ? JsonConvert.DeserializeObject<Setting>(infoSettingJson) : null;
+    ViewData["Title"] = "Home Page";
+    List<Meal> meal = ViewBag.meal as List<Meal>;
+    List<Categorymeal> category = ViewBag.category as List<Categorymeal>;
+    List<Specialmeal> special_meal = ViewBag.special_meals as List<Specialmeal>;
+}
 
   <!-- ======= Hero Section ======= -->
   <section id="hero" class="d-flex align-items-center">
@@ -106,112 +115,38 @@
           <h2>Menu</h2>
           <p>Check Our Tasty Menu</p>
         </div>
-
+        
         <div class="row" data-aos="fade-up" data-aos-delay="100">
           <div class="col-lg-12 d-flex justify-content-center">
             <ul id="menu-flters">
-              <li data-filter="*" class="filter-active">All</li>
-              <li data-filter=".filter-starters">Starters</li>
-              <li data-filter=".filter-salads">Salads</li>
-              <li data-filter=".filter-specialty">Specialty</li>
-            </ul>
+                <li data-filter="*" class="filter-active">All</li>
+                        @if (category != null)
+                        {
+                            @foreach (var item in category)
+                            {
+                                <li data-filter=".filter-@item.Name.ToLower()">@item.Name</li>
+                            }
+                        }
+                    </ul>
           </div>
         </div>
 
         <div class="row menu-container" data-aos="fade-up" data-aos-delay="200">
-
-          <div class="col-lg-6 menu-item filter-starters">
-            <img src="~/assets/img/menu/lobster-bisque.jpg" class="menu-img" alt="">
-            <div class="menu-content">
-              <a href="#">Lobster Bisque</a><span>$5.95</span>
-            </div>
-            <div class="menu-ingredients">
-              Lorem, deren, trataro, filede, nerada
-            </div>
-          </div>
-
-          <div class="col-lg-6 menu-item filter-specialty">
-            <img src="~/assets/img/menu/bread-barrel.jpg" class="menu-img" alt="">
-            <div class="menu-content">
-              <a href="#">Bread Barrel</a><span>$6.95</span>
-            </div>
-            <div class="menu-ingredients">
-              Lorem, deren, trataro, filede, nerada
-            </div>
-          </div>
-
-          <div class="col-lg-6 menu-item filter-starters">
-            <img src="~/assets/img/menu/cake.jpg" class="menu-img" alt="">
-            <div class="menu-content">
-              <a href="#">Crab Cake</a><span>$7.95</span>
-            </div>
-            <div class="menu-ingredients">
-              A delicate crab cake served on a toasted roll with lettuce and tartar sauce
-            </div>
-          </div>
-
-          <div class="col-lg-6 menu-item filter-starters">
-             <img src="~/assets/img/menu/mozzarella.jpg" class="menu-img" alt="">
-             <div class="menu-content">
-                <a href="#">Mozzarella Stick</a><span>$4.95</span>
-             </div>
-             <div class="menu-ingredients">
-                Lorem, deren, trataro, filede, nerada
-             </div>
-           </div>
-
-          <div class="col-lg-6 menu-item filter-salads">
-            <img src="~/assets/img/menu/caesar.jpg" class="menu-img" alt="">
-            <div class="menu-content">
-              <a href="#">Caesar Selections</a><span>$8.95</span>
-            </div>
-            <div class="menu-ingredients">
-              Lorem, deren, trataro, filede, nerada
-            </div>
-          </div>
-
-          <div class="col-lg-6 menu-item filter-specialty">
-            <img src="~/assets/img/menu/tuscan-grilled.jpg" class="menu-img" alt="">
-            <div class="menu-content">
-              <a href="#">Tuscan Grilled</a><span>$9.95</span>
-            </div>
-            <div class="menu-ingredients">
-              Grilled chicken with provolone, artichoke hearts, and roasted red pesto
-            </div>
-          </div>
-
-          
-
-          <div class="col-lg-6 menu-item filter-salads">
-            <img src="~/assets/img/menu/greek-salad.jpg" class="menu-img" alt="">
-            <div class="menu-content">
-              <a href="#">Greek Salad</a><span>$9.95</span>
-            </div>
-            <div class="menu-ingredients">
-              Fresh spinach, crisp romaine, tomatoes, and Greek olives
-            </div>
-          </div>
-
-          <div class="col-lg-6 menu-item filter-salads">
-            <img src="~/assets/img/menu/spinach-salad.jpg" class="menu-img" alt="">
-            <div class="menu-content">
-              <a href="#">Spinach Salad</a><span>$9.95</span>
-            </div>
-            <div class="menu-ingredients">
-              Fresh spinach with mushrooms, hard boiled egg, and warm bacon vinaigrette
-            </div>
-          </div>
-
-          <div class="col-lg-6 menu-item filter-specialty">
-            <img src="~/assets/img/menu/lobster-roll.jpg" class="menu-img" alt="">
-            <div class="menu-content">
-              <a href="#">Lobster Roll</a><span>$12.95</span>
-            </div>
-            <div class="menu-ingredients">
-              Plump lobster meat, mayo and crisp lettuce on a toasted bulky roll
-            </div>
-          </div>
-
+                @if (meal != null)
+                {
+                    @foreach (var item_meal in meal)
+                    {
+                        <div class="col-lg-6 menu-item filter-@item_meal.Cate.Name.ToLower()">
+                            <img src="@item_meal.Img" class="menu-img" alt="">
+                            <div class="menu-content">
+                                <a href="#">@item_meal.Name</a><span>$@item_meal.Price</span>
+                            </div>
+                            <div class="menu-ingredients">
+                                @item_meal.Intro
+                            </div>
+                        </div>
+                    }
+                }
         </div>
 
       </div>
@@ -229,38 +164,70 @@
         <div class="row" data-aos="fade-up" data-aos-delay="100">
           <div class="col-lg-3">
             <ul class="nav nav-tabs flex-column">
-              <li class="nav-item">
-                <a class="nav-link active show" data-bs-toggle="tab" href="#tab-1">Modi sit est</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" href="#tab-2">Unde praesentium sed</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" href="#tab-3">Pariatur explicabo vel</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" href="#tab-4">Nostrum qui quasi</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" href="#tab-5">Iusto ut expedita aut</a>
-              </li>
+                @if (special_meal != null)
+                {
+                    Boolean isFirst = true;
+                    @foreach (var item_special in special_meal)
+                    {
+                        @if (isFirst)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link active show" data-bs-toggle="tab" href="#tab-@item_special.Id">@item_special.meal.Name</a>
+                            </li>
+                            isFirst = false;
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                        <a class="nav-link" data-bs-toggle="tab" href="#tab-@item_special.Id">@item_special.meal.Name</a>
+                            </li>
+                        }
+                    }
+                }
+              
             </ul>
           </div>
           <div class="col-lg-9 mt-4 mt-lg-0">
             <div class="tab-content">
-              <div class="tab-pane active show" id="tab-1">
-                <div class="row">
-                  <div class="col-lg-8 details order-2 order-lg-1">
-                    <h3>Architecto ut aperiam autem id</h3>
-                    <p class="fst-italic">Qui laudantium consequatur laborum sit qui ad sapiente dila parde sonata raqer a videna mareta paulona marka</p>
-                    <p>Et nobis maiores eius. Voluptatibus ut enim blanditiis atque harum sint. Laborum eos ipsum ipsa odit magni. Incidunt hic ut molestiae aut qui. Est repellat minima eveniet eius et quis magni nihil. Consequatur dolorem quaerat quos qui similique accusamus nostrum rem vero</p>
-                  </div>
-                  <div class="col-lg-4 text-center order-1 order-lg-2">
-                    <img src="assets/img/specials-1.png" alt="" class="img-fluid">
-                  </div>
-                </div>
-              </div>
-              <div class="tab-pane" id="tab-2">
+                @if (special_meal != null)
+                {
+                    Boolean isFirst = true;
+                    @foreach (var item_special in special_meal)
+                    {
+                        @if (isFirst)
+                        {
+                            <div class="tab-pane active show" id="tab-@item_special.Id">
+                                <div class="row">
+                                    <div class="col-lg-8 details order-2 order-lg-1">
+                                        <h3>@item_special.meal.Name</h3>
+                                                <p class="fst-italic"> BRIEF INFORMATION </p>
+                                        <p>@item_special.Detail</p>
+                                    </div>
+                                    <div class="col-lg-4 text-center order-1 order-lg-2">
+                                        <img src="@item_special.Img" alt="" class="img-fluid">
+                                    </div>
+                                </div>
+                            </div>
+                            isFirst = false;
+                        }
+                        else
+                        {
+                            <div class="tab-pane" id="tab-@item_special.Id">
+                                <div class="row">
+                                    <div class="col-lg-8 details order-2 order-lg-1">
+                                        <h3>@item_special.meal.Name</h3>
+                                        <p class="fst-italic">  BRIEF INFORMATION </p>
+                                        <p>@item_special.Detail</p>
+                                    </div>
+                                    <div class="col-lg-4 text-center order-1 order-lg-2">
+                                        <img src="@item_special.Img" alt="" class="img-fluid">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+                        @* <div class="tab-pane" id="tab-2">
                 <div class="row">
                   <div class="col-lg-8 details order-2 order-lg-1">
                     <h3>Et blanditiis nemo veritatis excepturi</h3>
@@ -307,7 +274,7 @@
                     <img src="assets/img/specials-5.png" alt="" class="img-fluid">
                   </div>
                 </div>
-              </div>
+              </div> *@
             </div>
           </div>
         </div>
@@ -656,28 +623,28 @@
               <div class="address">
                 <i class="bi bi-geo-alt"></i>
                 <h4>Location:</h4>
-                <p>Hoa Lac Hi-Tech Park, km 29, Avenue, Thang Long, Hanoi, Vietnam</p>
+                <p>@infoSetting.Location</p>
               </div>
 
               <div class="open-hours">
                 <i class="bi bi-clock"></i>
                 <h4>Open Hours:</h4>
                 <p>
-                  Monday-Saturday:<br>
-                  11:00 AM - 23:00 PM
+                  @infoSetting.DayWork<br>
+                  @infoSetting.OpenTime AM - @infoSetting.CloseTime PM
                 </p>
               </div>
 
               <div class="email">
                 <i class="bi bi-envelope"></i>
                 <h4>Email:</h4>
-                <p>info@example.com</p>
+                <p>@infoSetting.Email</p>
               </div>
 
               <div class="phone">
                 <i class="bi bi-phone"></i>
                 <h4>Call:</h4>
-                <p>+84 039 5765 849</p>
+                <p>@infoSetting.Phone</p>
               </div>
 
             </div>

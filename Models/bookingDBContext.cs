@@ -401,7 +401,7 @@ namespace booking.Models
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.CloseTime)
-                    .HasColumnType("datetime")
+                    .HasColumnType("TimeSpan")
                     .HasColumnName("closeTime");
 
                 entity.Property(e => e.DayWork)
@@ -429,7 +429,7 @@ namespace booking.Models
                     .HasColumnName("location");
 
                 entity.Property(e => e.OpenTime)
-                    .HasColumnType("datetime")
+                    .HasColumnType("TimeSpan")
                     .HasColumnName("openTime");
 
                 entity.Property(e => e.Phone)
