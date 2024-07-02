@@ -18,17 +18,25 @@ namespace booking.Controllers
 
         public IActionResult Index()
         {
+            //footer data
             Setting info_setting = context.Settings.FirstOrDefault();
             HttpContext.Session.SetString("InfoSetting", JsonConvert.SerializeObject(info_setting));
 
-            List<Meal> meal = context.Meals.Include(cate => cate.Cate).ToList();
-            ViewBag.meal = meal;
+            //menu data
+            List<Meal> meal_list = context.Meals.Include(cate => cate.Cate).ToList();
+            ViewBag.meal = meal_list;
 
-            List<Categorymeal> cate = context.Categorymeals.ToList();
-            ViewBag.category = cate;
+            //category meal data
+            List<Categorymeal> cate_list = context.Categorymeals.ToList();
+            ViewBag.category = cate_list;
 
-            List<Specialmeal> special_meal = context.Specialmeals.Include(meal => meal.meal).ToList();
-            ViewBag.special_meals = special_meal;
+            //special meal data
+            List<Specialmeal> special_meal_list = context.Specialmeals.Include(meal => meal.meal).ToList();
+            ViewBag.special_meals = special_meal_list;
+
+            //post data
+            List<Post> post_list = context.Posts.ToList();
+            ViewBag.post = post_list;
             return View();
         }
 
