@@ -7,8 +7,8 @@ namespace booking.Models
     {
         public int Id { get; set; }
         public string? Location { get; set; }
-        public TimeSpan? OpenTime { get; set; }
-        public TimeSpan? CloseTime { get; set; }
+        public TimeOnly? OpenTime { get; set; }
+        public TimeOnly? CloseTime { get; set; }
         public string? DayWork { get; set; }
         public string? Email { get; set; }
         public string? Phone { get; set; }
