@@ -12,5 +12,6 @@ namespace booking.Models
         public DateTime? CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public byte[]? Status { get; set; }
+        public string? Img { get; set; }
     }
 }

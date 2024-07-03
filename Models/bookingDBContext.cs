@@ -145,8 +145,12 @@ namespace booking.Models
                     .HasColumnName("createDate");
 
                 entity.Property(e => e.Detail)
-                    .HasMaxLength(255)
+                    .HasMaxLength(3000)
                     .HasColumnName("detail");
+
+                entity.Property(e => e.Img)
+                    .HasMaxLength(255)
+                    .HasColumnName("img");
 
                 entity.Property(e => e.Jobs)
                     .HasMaxLength(255)
@@ -184,9 +188,8 @@ namespace booking.Models
                     .HasColumnName("createDate");
 
                 entity.Property(e => e.Img)
-                    .HasMaxLength(1)
-                    .HasColumnName("img")
-                    .IsFixedLength();
+                    .HasMaxLength(255)
+                    .HasColumnName("img");
 
                 entity.Property(e => e.Intro)
                     .HasMaxLength(255)
@@ -350,13 +353,12 @@ namespace booking.Models
                     .HasColumnName("createDate");
 
                 entity.Property(e => e.Detail)
-                    .HasMaxLength(255)
+                    .HasMaxLength(3000)
                     .HasColumnName("detail");
 
                 entity.Property(e => e.Img)
-                    .HasMaxLength(1)
-                    .HasColumnName("img")
-                    .IsFixedLength();
+                    .HasMaxLength(255)
+                    .HasColumnName("img");
 
                 entity.Property(e => e.Status)
                     .HasMaxLength(1)
@@ -401,7 +403,7 @@ namespace booking.Models
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.CloseTime)
-                    .HasColumnType("datetime")
+                    .HasColumnType("time")
                     .HasColumnName("closeTime");
 
                 entity.Property(e => e.DayWork)
@@ -429,7 +431,7 @@ namespace booking.Models
                     .HasColumnName("location");
 
                 entity.Property(e => e.OpenTime)
-                    .HasColumnType("datetime")
+                    .HasColumnType("time")
                     .HasColumnName("openTime");
 
                 entity.Property(e => e.Phone)
@@ -497,9 +499,7 @@ namespace booking.Models
                     .HasColumnType("datetime")
                     .HasColumnName("createDate");
 
-                entity.Property(e => e.Password)
-                    .HasMaxLength(1)
-                    .IsFixedLength();
+                entity.Property(e => e.Password).HasMaxLength(255);
 
                 entity.Property(e => e.RoleId)
                     .HasColumnName("roleID")

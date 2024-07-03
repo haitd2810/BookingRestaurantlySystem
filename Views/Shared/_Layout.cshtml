@@ -1,4 +1,13 @@
-﻿<!DOCTYPE html>
+﻿@using booking.Models
+@using Newtonsoft.Json
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    var httpContext = HttpContextAccessor.HttpContext;
+    var infoSettingJson = httpContext.Session.GetString("InfoSetting");
+    Setting infoSetting = infoSettingJson != null ? JsonConvert.DeserializeObject<Setting>(infoSettingJson) : null;
+}
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -45,8 +54,8 @@
         <div class="container d-flex justify-content-center justify-content-md-between">
 
             <div class="contact-info d-flex align-items-center">
-                <i class="bi bi-phone d-flex align-items-center"><span>+84 039 5765 849</span></i>
-                <i class="bi bi-clock d-flex align-items-center ms-4"><span> Mon-Sat: 11AM - 23PM</span></i>
+                <i class="bi bi-phone d-flex align-items-center"><span>@infoSetting.Phone</span></i>
+                <i class="bi bi-clock d-flex align-items-center ms-4"><span> @infoSetting.DayWork: @infoSetting.OpenTime - @infoSetting.CloseTime</span></i>
             </div>
 
             <div class="languages d-none d-md-flex align-items-center">
@@ -72,11 +81,11 @@
                     @if (ViewData["CurrentPage"] == null || ViewData["CurrentPage"].ToString() != "Login")
                     {
                         <li><a class="nav-link scrollto active" asp-controller="Home" asp-action="Index">Home</a></li>
-                        <li><a class="nav-link scrollto" asp-controller="Staff" asp-action="Index">Tables Status</a></li>
+                        <li><a class="nav-link scrollto" href="#book-a-table">Book a table</a></li>
                         <li><a class="nav-link scrollto" href="#about">About</a></li>
                         <li><a class="nav-link scrollto" href="#menu">Menu</a></li>
                         <li><a class="nav-link scrollto" href="#specials">Specials</a></li>
-                        <li><a class="nav-link scrollto" href="#events">Events</a></li>
+                        <li><a class="nav-link scrollto" href="#post">Post</a></li>
                         <li><a class="nav-link scrollto" href="#gallery">Gallery</a></li>
                     
                         <li class="dropdown">
@@ -119,48 +128,35 @@
             <div class="container">
                 <div class="row">
 
-                    <div class="col-lg-3 col-md-6">
+                    <div class="col-lg-4 col-md-6">
                         <div class="footer-info">
                             <h3>Restaurantly</h3>
                             <p>
-                                FPT University <br>
-                                Hoa Lac Hi-Tech Park, km 29, Avenue, Thang Long, Hanoi, Vietnam<br><br>
-                                <strong>Phone:</strong> +84 039 5765 849<br>
-                                <strong>Email:</strong> info@example.com<br>
+                                @infoSetting.Location<br><br>
+                                <strong>Phone:</strong> @infoSetting.Phone<br>
+                                <strong>Email:</strong> @infoSetting.Email<br>
                             </p>
                             <div class="social-links mt-3">
-                                <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-                                <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-                                <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-                                <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-                                <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+                                <a href="@infoSetting.Twitter" class="twitter" target="_blank"><i class="bx bxl-twitter"></i></a>
+                                <a href="@infoSetting.Facebook" class="facebook" target="_blank"><i class="bx bxl-facebook"></i></a>
+                                <a href="@infoSetting.Instagram" class="instagram"><i class="bx bxl-instagram" target="_blank"></i></a>
+                                <a href="@infoSetting.LinkedIn" class="linkedin"><i class="bx bxl-linkedin" target="_blank"></i></a>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-lg-2 col-md-6 footer-links">
+                    <div class="col-lg-3 col-md-6 footer-links">
                         <h4>Useful Links</h4>
                         <ul>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
+                            <li><i class="bx bx-chevron-right"></i><a href="#book-a-table">Book a table</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#about">About us</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#menu">Menu</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#specials">Specials Meals</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#post">Post</a></li>
                         </ul>
                     </div>
 
-                    <div class="col-lg-3 col-md-6 footer-links">
-                        <h4>Our Services</h4>
-                        <ul>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 footer-newsletter">
+                    <div class="col-lg-5 col-md-6 footer-newsletter">
                         <h4>Our Newsletter</h4>
                         <p>Leave your email to receive advice on booking a table immediately</p>
                         <form action="" method="post">
