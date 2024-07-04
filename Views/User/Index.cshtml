@@ -1,5 +1,4 @@
-﻿@model IEnumerable<Program>
-
+﻿@model booking.Models.Staff
 @{
     ViewData["Title"] = "View";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -14,17 +13,28 @@
             </div>
             <div class="col-lg-6 d-flex align-items-center justify-content-center position-relative" data-aos="zoom-in" data-aos-delay="200">
 
-                <form method="post" action="#">
-                    <!-- Email input -->
+                <form method="post" asp-action="Create" asp-controller="User">
+                    @Html.AntiForgeryToken()
+
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        </div>
+                    }
+
+                    <!-- Username input -->
                     <div data-mdb-input-init class="form-outline mb-4">
-                        <input type="email" id="form1Example13" class="form-control form-control-lg" />
-                        <label class="form-label" for="form1Example13">Email address</label>
+                        <input type="email" required asp-for="Username" id="form1Example13" class="form-control form-control-lg" />
+                        <label class="form-label" for="form1Example13">Username</label>
+                        @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
                     </div>
 
                     <!-- Password input -->
                     <div data-mdb-input-init class="form-outline mb-4">
-                        <input type="password" id="form1Example23" class="form-control form-control-lg" />
+                        <input type="password" required asp-for="Password" id="form1Example23" class="form-control form-control-lg" />
                         <label class="form-label" for="form1Example23">Password</label>
+                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
                     </div>
 
                     <!-- Submit button -->
@@ -41,12 +51,10 @@
                         <p class="text-center fw-bold mx-3 mb-0 text-muted">OR</p>
                     </div>
 
-                    <a data-mdb-ripple-init class="btn btn-outline-light" href="#!"
-                        role="button">
+                    <a data-mdb-ripple-init class="btn btn-outline-light" href="#!" role="button">
                         <i class="fab fa-facebook-f me-2"></i>Continue with Facebook
                     </a>
-                    <a data-mdb-ripple-init class="btn btn-outline-light" href="#!"
-                        role="button">
+                    <a data-mdb-ripple-init class="btn btn-outline-light" href="#!" role="button">
                         <i class="fab fa-google me-2"></i>Continue with Google
                     </a>
                 </form>
