@@ -1,13 +1,35 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using booking.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace booking.Controllers
 {
     public class UserController : Controller
     {
-        public IActionResult Index()
+        private readonly bookingDBContext context = new bookingDBContext();
+        public IActionResult Create()
         {
             ViewData["CurrentPage"] = "Login";
             return View();
+        }
+        private Boolean isValidStaff(string username, string password)
+        {
+            Staff staff = context.Staff.Where(staff => staff.Username == username && staff.Password == password).FirstOrDefault();
+            return staff != null;
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(Staff staff)
+        {
+            if(isValidStaff(staff.Username, staff.Password))
+            {
+                HttpContext.Items["msg_login"] = "Login Success";
+                return RedirectToAction("Index", "Staff");
+            }
+            else
+            {
+                HttpContext.Items["msg_login"] = "Failed Login";
+                return View("~/Views/User/Create.cshtml");
+            }
         }
     }
 }
