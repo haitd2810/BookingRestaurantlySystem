@@ -6,7 +6,7 @@ namespace booking.Controllers
     public class UserController : Controller
     {
         private readonly bookingDBContext context = new bookingDBContext();
-        public IActionResult Index()
+        public IActionResult Create()
         {
             ViewData["CurrentPage"] = "Login";
             return View();
@@ -22,11 +22,13 @@ namespace booking.Controllers
         {
             if(isValidStaff(staff.Username, staff.Password))
             {
+                HttpContext.Items["msg_login"] = "Login Success";
                 return RedirectToAction("Index", "Staff");
             }
             else
             {
-                return RedirectToAction("Index", "User");
+                HttpContext.Items["msg_login"] = "Failed Login";
+                return View("~/Views/User/Create.cshtml");
             }
         }
     }
