@@ -39,7 +39,13 @@ namespace booking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult booking(string name, string email, string phone, string date, string time, string tableNumber, string message)
         {
-            user.sendMailConfirm(name, email,phone, date,time,tableNumber,message);
+            // confirm email
+            string email_from = context.Mailsettings.FirstOrDefault().Mail;
+            string email_password = context.Mailsettings.FirstOrDefault().Password;
+            string subject = "Confirm your booking";
+            string body = user.messageConfirm(name, email, phone, date, time, tableNumber, message);
+            user.sendMailConfirm(email_from, email_password, email, body, subject);
+
             return RedirectToAction("Index", "Home");
         }
     }

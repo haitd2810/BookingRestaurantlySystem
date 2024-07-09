@@ -12,16 +12,9 @@ namespace booking.Services
             return staff != null;
         }
 
-        public void sendMailConfirm(string name, string email, string phone, string date, string time, string tableNumber, string msg)
+        public string messageConfirm(string name, string email, string phone, string date, string time, string tableNumber, string msg)
         {
-            string fromMail = "haitd28102003@gmail.com";
-            string fromPass = "ufgnjoyhaobumcwm";
-            MailMessage message = new MailMessage();
-            message.From = new MailAddress(fromMail);
-            message.Subject = "Confirmation for booking";
-            message.To.Add(new MailAddress(email));
-            message.Body = "" +
-                "<!DOCTYPE html>" +
+            string body = "<!DOCTYPE html>" +
                 "\r\n<html>\r\n" +
                 "<head>\r\n" +
                 "<style>\r\n" +
@@ -75,23 +68,24 @@ namespace booking.Services
                 "<body>\r\n" +
                 "<div class=\"container\">\r\n" +
                 "<div class=\"header\">\r\n" +
-                "<h1>Restaurant Name</h1>\r\n" +
+                "<h1>Restaurantly</h1>\r\n" +
                 "</div>\r\n" +
                 "<div class=\"content\">\r\n" +
                 "<h2>Table Booking Confirmation</h2>\r\n" +
-                "<p>Dear [Customer Name],</p>\r\n" +
+                "<p>Dear "+ name +",</p>\r\n" +
                 "<p>Thank you for choosing our restaurant. Your table booking has been successfully confirmed.</p>\r\n" +
                 "<p><strong>Booking Details:</strong></p>\r\n" +
                 "<ul>\r\n" +
-                "<li><strong>Booking Number:</strong> [Booking Number]</li>\r\n" +
-                "<li><strong>Date:</strong> [Date]</li>\r\n" +
-                "<li><strong>Time:</strong> [Time]</li>\r\n" +
-                "<li><strong>Number of Guests:</strong> [Number of Guests]</li>\r\n" +
+                "<li><strong>Booking Number:</strong> "+ phone +"</li>\r\n" +
+                "<li><strong>Date:</strong> " + date +"</li>\r\n" +
+                "<li><strong>Time:</strong> "+ time +"</li>\r\n" +
+                "<li><strong>Table Number:</strong> "+ tableNumber +"</li>\r\n" +
+                "<li><strong>Your Message:</strong> " + msg + "</li>\r\n" +
                 "</ul>\r\n" +
                 "<p>We look forward to serving you and making your dining experience memorable. If you have any questions or need to make any changes to your booking, please do not hesitate to contact us.</p>\r\n" +
                 "<p>Best regards,</p>\r\n" +
-                "<p>[Restaurant Name]</p>\r\n" +
-                "<a href=\"[Restaurant Website URL]\">Visit Our Website</a>\r\n" +
+                "<p>Restaurantly Hari</p>\r\n" +
+                "<a href=\"https://localhost:7148/\">Visit Our Website</a>\r\n" +
                 "</div>\r\n" +
                 "<div class=\"footer\">\r\n" +
                 "<p>&copy; 2024 [Restaurant Name]. All rights reserved.</p>\r\n" +
@@ -100,6 +94,18 @@ namespace booking.Services
                 "</div>\r\n" +
                 "</body>\r\n" +
                 "</html>";
+
+            return body;
+        }
+        public void sendMailConfirm(string from, string password, string to,string body, string subject)
+        {
+            string fromMail = from;
+            string fromPass = password;
+            MailMessage message = new MailMessage();
+            message.From = new MailAddress(fromMail);
+            message.Subject = subject;
+            message.To.Add(new MailAddress(to));
+            message.Body = body;
             message.IsBodyHtml = true;
             var smtpClient = new SmtpClient("smtp.gmail.com")
             {

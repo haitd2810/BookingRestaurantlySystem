@@ -19,6 +19,7 @@ namespace booking.Models
         public virtual DbSet<Bookingtable> Bookingtables { get; set; } = null!;
         public virtual DbSet<Categorymeal> Categorymeals { get; set; } = null!;
         public virtual DbSet<Feedback> Feedbacks { get; set; } = null!;
+        public virtual DbSet<Mailsetting> Mailsettings { get; set; } = null!;
         public virtual DbSet<Meal> Meals { get; set; } = null!;
         public virtual DbSet<Orderhistory> Orderhistories { get; set; } = null!;
         public virtual DbSet<Ordertable> Ordertables { get; set; } = null!;
@@ -159,6 +160,37 @@ namespace booking.Models
                 entity.Property(e => e.Name)
                     .HasMaxLength(255)
                     .HasColumnName("name");
+
+                entity.Property(e => e.Status)
+                    .HasMaxLength(1)
+                    .HasColumnName("status")
+                    .IsFixedLength();
+
+                entity.Property(e => e.UpdateDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("updateDate");
+            });
+
+            modelBuilder.Entity<Mailsetting>(entity =>
+            {
+                entity.ToTable("mailsetting");
+
+                entity.HasIndex(e => e.Id, "id")
+                    .IsUnique();
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.CreateDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("createDate");
+
+                entity.Property(e => e.Mail)
+                    .HasMaxLength(255)
+                    .HasColumnName("mail");
+
+                entity.Property(e => e.Password)
+                    .HasMaxLength(255)
+                    .HasColumnName("password");
 
                 entity.Property(e => e.Status)
                     .HasMaxLength(1)
