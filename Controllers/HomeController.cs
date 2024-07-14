@@ -45,15 +45,14 @@ namespace booking.Controllers
             //photo  data
             List<Photorestaurant> photo_list = context.Photorestaurants.Where(img => img.Status[0] == 1).ToList();
             ViewBag.photo = photo_list;
+
+            //booking list data
+            List<Bookingtable> booking_list = context.Bookingtables.ToList();
+            ViewBag.booking = booking_list;
             return View();
         }
 
         public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        public IActionResult Login()
         {
             return View();
         }
