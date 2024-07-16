@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 
 namespace booking.Models
@@ -17,5 +18,12 @@ namespace booking.Models
         public byte[]? Status { get; set; }
 
         public virtual Role? Role { get; set; }
+
+        public Boolean isStaff(string username, string password)
+        {
+            bookingDBContext context = new bookingDBContext();
+            Staff staff = context.Staff.Where(staff => staff.Username == username && staff.Password == password).FirstOrDefault();
+            return staff != null;
+        }
     }
 }

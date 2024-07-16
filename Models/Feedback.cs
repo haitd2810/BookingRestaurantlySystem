@@ -13,5 +13,17 @@ namespace booking.Models
         public DateTime? UpdateDate { get; set; }
         public byte[]? Status { get; set; }
         public string? Img { get; set; }
+
+        public Boolean giveFeedback()
+        {
+            bookingDBContext context = new bookingDBContext();
+            context.Add(this);
+            int result = context.SaveChanges();
+            if (result == 0 )
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

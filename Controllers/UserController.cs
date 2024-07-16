@@ -18,8 +18,8 @@ namespace booking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Staff staff)
         {
-
-            if(user.isValidStaff(staff.Username, staff.Password))
+            Staff staff_method = new Staff();
+            if(staff_method.isStaff(staff.Username, staff.Password))
             {
                 HttpContext.Items["msg_login"] = "Login Success";
                 return RedirectToAction("Index", "Staff");

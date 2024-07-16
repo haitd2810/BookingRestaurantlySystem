@@ -41,7 +41,6 @@
 
 document.addEventListener('DOMContentLoaded', function () {
     let bookingList = JSON.parse(document.getElementById('bookingListJson').value);
-    console.log(bookingList);
 
     function formatDate(dateObj) {
         let month = dateObj.Month.toString().padStart(2, '0');

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.Collections.Generic;
 
 namespace booking.Models
@@ -19,5 +20,12 @@ namespace booking.Models
         public byte[]? Status { get; set; }
 
         public virtual Table? Table { get; set; }
+
+        public Boolean isBooked(string email, string phone)
+        {
+            bookingDBContext context = new bookingDBContext();
+            var booked = context.Bookingtables.Where(book => book.Email == email && book.Phone == phone).FirstOrDefault();
+            return booked == null;
+        }
     }
 }
