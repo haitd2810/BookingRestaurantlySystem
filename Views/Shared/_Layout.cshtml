@@ -3,9 +3,8 @@
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
 @{
-    var httpContext = HttpContextAccessor.HttpContext;
-    var infoSettingJson = httpContext.Session.GetString("InfoSetting");
-    Setting infoSetting = infoSettingJson != null ? JsonConvert.DeserializeObject<Setting>(infoSettingJson) : null;
+    bookingDBContext context = new bookingDBContext();
+    Setting infoSetting = context.Settings.FirstOrDefault();
 }
 <!DOCTYPE html>
 <html lang="en">

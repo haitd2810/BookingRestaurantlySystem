@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using Newtonsoft.Json;
+using booking.Services;
+
 
 namespace booking.Controllers
 {
@@ -11,6 +14,7 @@ namespace booking.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly bookingDBContext context = new bookingDBContext();
+        private readonly IUserManage user = new UserManage();
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
@@ -20,7 +24,7 @@ namespace booking.Controllers
         {
             //footer data
             Setting info_setting = context.Settings.FirstOrDefault();
-            HttpContext.Session.SetString("InfoSetting", JsonConvert.SerializeObject(info_setting));
+            ViewBag.infosetting = info_setting;
 
             //menu data
             List<Meal> meal_list = context.Meals.Where(meal => meal.Status[0] == 1).Include(cate => cate.Cate).ToList();
@@ -51,8 +55,34 @@ namespace booking.Controllers
             ViewBag.booking = booking_list;
             return View();
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult createFeedback(string name, string jobs, string email, string phone, string img, string feedback)
+        {
+            Bookingtable booked = new Bookingtable();
+            if (!booked.isBooked(email, phone) )
+            {
+                Feedback fb = new Feedback()
+                {
+                    Name = name,
+                    Jobs = jobs,
+                    Detail = feedback,
+                    CreateDate = DateTime.Now,
+                    UpdateDate = DateTime.Now,
+                    Status = new byte[] {0},
+                    Img = img == null? "/assets/img/testimonials/d8b5d0a738295345ebd8934b859fa1fca1c8c6ad.jpeg" : img.ToString()
+                };
+                fb.giveFeedback();
+                string email_from = context.Mailsettings.FirstOrDefault().Mail;
+                string email_password = context.Mailsettings.FirstOrDefault().Password;
+                string subject = "Thanks for your response";
+                string body = user.messageFeedback(name);
+                user.sendMailConfirm(email_from,email_password,email,body,subject);
+            }
+            return RedirectToAction("Index", "Home");
 
-        public IActionResult Privacy()
+        }
+            public IActionResult Privacy()
         {
             return View();
         }
