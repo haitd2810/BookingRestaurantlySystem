@@ -1,4 +1,5 @@
-﻿using booking.Models;
+﻿using booking.IServices;
+using booking.Models;
 using booking.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,7 +8,7 @@ namespace booking.Controllers
     public class UserController : Controller
     {
         private readonly bookingDBContext context = new bookingDBContext();
-        private readonly IUserManage user = new UserManage();
+        private readonly ISendMailSerivce user = new SendMailSerivce();
         public IActionResult Create()
         {
             ViewData["CurrentPage"] = "Login";

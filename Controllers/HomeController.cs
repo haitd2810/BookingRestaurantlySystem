@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using booking.Services;
+using booking.IServices;
 
 
 namespace booking.Controllers
@@ -14,7 +15,8 @@ namespace booking.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly bookingDBContext context = new bookingDBContext();
-        private readonly IUserManage user = new UserManage();
+        private readonly ISendMailSerivce user_service = new SendMailSerivce();
+        private readonly FeedbackService fb_service = new FeedbackService();
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
@@ -57,11 +59,22 @@ namespace booking.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult createFeedback(string name, string jobs, string email, string phone, string img, string feedback)
+        public async Task<ActionResult> createFeedback(string name, string jobs, string email, string phone, IFormFile img, string feedback)
         {
             Bookingtable booked = new Bookingtable();
-            if (!booked.isBooked(email, phone) )
+
+            //check user who give feedback, have yet booked table
+            if (!booked.isBooked(email, phone))
             {
+                string imgPath = "/assets/img/testimonials/d8b5d0a738295345ebd8934b859fa1fca1c8c6ad.jpeg";
+
+                //check img that user upload is true format or not
+                if(fb_service.isTrueIMG(img))
+                {
+                    string path = "wwwroot/assets/img/uploads";
+                    await fb_service.saveFile(img, path);
+                    imgPath = "/assets/img/uploads/" + img.FileName;
+                }
                 Feedback fb = new Feedback()
                 {
                     Name = name,
@@ -69,20 +82,19 @@ namespace booking.Controllers
                     Detail = feedback,
                     CreateDate = DateTime.Now,
                     UpdateDate = DateTime.Now,
-                    Status = new byte[] {0},
-                    Img = img == null? "/assets/img/testimonials/d8b5d0a738295345ebd8934b859fa1fca1c8c6ad.jpeg" : img.ToString()
+                    Status = new byte[] { 0 },
+                    Img = imgPath
                 };
                 fb.giveFeedback();
                 string email_from = context.Mailsettings.FirstOrDefault().Mail;
                 string email_password = context.Mailsettings.FirstOrDefault().Password;
                 string subject = "Thanks for your response";
-                string body = user.messageFeedback(name);
-                user.sendMailConfirm(email_from,email_password,email,body,subject);
+                string body = user_service.messageFeedback(name);
+                user_service.sendMailConfirm(email_from, email_password, email, body, subject);
             }
             return RedirectToAction("Index", "Home");
-
         }
-            public IActionResult Privacy()
+        public IActionResult Privacy()
         {
             return View();
         }
