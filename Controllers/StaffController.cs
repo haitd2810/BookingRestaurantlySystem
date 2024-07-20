@@ -1,11 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using booking.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace booking.Controllers
 {
     public class StaffController : Controller
     {
+        private readonly bookingDBContext context = new bookingDBContext();
         public IActionResult Index()
         {
+            List<Table> table_list = context.Tables.Include(t => t.TypeTable).ToList();
+            ViewBag.listTable = table_list;
             return View();
         }
 
