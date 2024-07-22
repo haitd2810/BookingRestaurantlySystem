@@ -11,6 +11,7 @@ namespace booking.Controllers
         {
             List<Table> table_list = context.Tables.Include(t => t.TypeTable).ToList();
             ViewBag.listTable = table_list;
+
             return View();
         }
 
