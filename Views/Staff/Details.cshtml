@@ -1,6 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Layout/_header.cshtml";
+    List<Meal> meal_list = ViewBag.mealList as List<Meal>;
+    List<Ordertable> order_list = ViewBag.orderList as List<Ordertable>;
+    List<Categorymeal> category = ViewBag.category as List<Categorymeal>;
 }
 
 <main id="main" style="margin-top: 5em;">
@@ -28,55 +31,21 @@
         <div class="container" data-aos="fade-up">
             <div id="menu-container" class="row menu-container" data-aos="fade-up" data-aos-delay="200">
 
-                <div class="col-lg-6 menu-item meal-item filter-starters">
-                    <img src="~/assets/img/menu/lobster-bisque.jpg" class="menu-img" alt="">
-                    <div class="menu-content">
-                        <a href="#">Lobster Bisque (2)</a><span class="price">$5.95</span>
-                    </div>
-                    <div class="menu-ingredients">
-                        Lorem, deren, trataro, filede, nerada
-                    </div>
-                </div>
-
-                <div class="col-lg-6 menu-item meal-item filter-starters">
-                    <img src="~/assets/img/menu/cake.jpg" class="menu-img" alt="">
-                    <div class="menu-content">
-                        <a href="#">Crab Cake (1)</a><span class="price">$7.95</span>
-                    </div>
-                    <div class="menu-ingredients">
-                        A delicate crab cake served on a toasted roll with lettuce and tartar sauce
-                    </div>
-                </div>
-
-                <div class="col-lg-6 menu-item meal-item filter-starters">
-                    <img src="~/assets/img/menu/mozzarella.jpg" class="menu-img" alt="">
-                    <div class="menu-content">
-                        <a href="#">Mozzarella Stick (1)</a><span class="price">$4.95</span>
-                    </div>
-                    <div class="menu-ingredients">
-                        Lorem, deren, trataro, filede, nerada
-                    </div>
-                </div>
-
-                <div class="col-lg-6 menu-item meal-item filter-salads">
-                    <img src="~/assets/img/menu/caesar.jpg" class="menu-img" alt="">
-                    <div class="menu-content">
-                        <a href="#">Caesar Selections (1)</a><span class="price">$8.95</span>
-                    </div>
-                    <div class="menu-ingredients">
-                        Lorem, deren, trataro, filede, nerada
-                    </div>
-                </div>
-
-                <div class="col-lg-6 menu-item meal-item filter-specialty">
-                    <img src="~/assets/img/menu/tuscan-grilled.jpg" class="menu-img" alt="">
-                    <div class="menu-content">
-                        <a href="#">Tuscan Grilled (1)</a><span class="price">$9.95</span>
-                    </div>
-                    <div class="menu-ingredients">
-                        Grilled chicken with provolone, artichoke hearts, and roasted red pesto
-                    </div>
-                </div>
+                @if(order_list != null)
+                {
+                    @foreach(Ordertable od in order_list)
+                    {
+                        <div class="col-lg-6 menu-item meal-item filter-starters">
+                            <img src="@od.Meal.Img" class="menu-img" alt="">
+                            <div class="menu-content">
+                                <a href="#">@od.Meal.Name (@od.Quantity)</a><span class="price">$@od.Price</span>
+                            </div>
+                            <div class="menu-ingredients">
+                                @od.Meal.Intro
+                            </div>
+                        </div>
+                    }
+                }
 
             </div>
 
@@ -120,131 +89,36 @@
             <div class="col-lg-12 d-flex justify-content-center">
                 <ul id="menu-flters">
                     <li data-filter="*" class="filter-active">All</li>
-                    <li data-filter=".filter-starters">Starters</li>
-                    <li data-filter=".filter-salads">Salads</li>
-                    <li data-filter=".filter-specialty">Specialty</li>
+                    @if (category != null)
+                    {
+                        @foreach (var item in category)
+                        {
+                            <li data-filter=".filter-@item.Name.ToLower()">@item.Name</li>
+                        }
+                    }
                 </ul>
             </div>
         </div>
 
         <div class="row menu-container" data-aos="fade-up" data-aos-delay="200">
-
-            <div id="selectable-item" class="col-lg-6 menu-item filter-starters">
-                <div>
-                    <input class="form-check-input" type="checkbox" id="checkbox1" value="JS Lobster Bisque" aria-label="...">
-                </div>
-                <img src="~/assets/img/menu/lobster-bisque.jpg" class="menu-img" alt="">
-                <div class="menu-content">
-                    <a href="#">JS Lobster Bisque</a><span>$5.95</span>
-                </div>
-                <div class="menu-ingredients">
-                    Lorem, deren, trataro, filede, nerada
-                </div>
-            </div>
-
-            <div class="col-lg-6 menu-item filter-specialty">
-                <div>
-                    <input class="form-check-input" type="checkbox" id="checkbox2" value="Bread Barrel" aria-label="...">
-                </div>
-                <img src="~/assets/img/menu/bread-barrel.jpg" class="menu-img" alt="">
-                <div class="menu-content">
-                    <a href="#">Bread Barrel</a><span>$6.95</span>
-                </div>
-                <div class="menu-ingredients">
-                    Lorem, deren, trataro, filede, nerada
-                </div>
-            </div>
-
-            <div class="col-lg-6 menu-item filter-starters">
-                <div>
-                    <input class="form-check-input" type="checkbox" id="checkbox3" value="Crab Cake" aria-label="...">
-                </div>
-                <img src="~/assets/img/menu/cake.jpg" class="menu-img" alt="">
-                <div class="menu-content">
-                    <a href="#">Crab Cake</a><span>$7.95</span>
-                </div>
-                <div class="menu-ingredients">
-                    A delicate crab cake served on a toasted roll with lettuce and tartar sauce
-                </div>
-            </div>
-
-            <div class="col-lg-6 menu-item filter-starters">
-                <div>
-                    <input class="form-check-input" type="checkbox" id="checkbox4" value="Mozzarella Stick" aria-label="...">
-                </div>
-                <img src="~/assets/img/menu/mozzarella.jpg" class="menu-img" alt="">
-                <div class="menu-content">
-                    <a href="#">Mozzarella Stick</a><span>$4.95</span>
-                </div>
-                <div class="menu-ingredients">
-                    Lorem, deren, trataro, filede, nerada
-                </div>
-            </div>
-
-            <div class="col-lg-6 menu-item filter-salads">
-                <div>
-                    <input class="form-check-input" type="checkbox" id="checkbox5" value="Caesar Selections" aria-label="...">
-                </div>
-                <img src="~/assets/img/menu/caesar.jpg" class="menu-img" alt="">
-                <div class="menu-content">
-                    <a href="#">Caesar Selections</a><span>$8.95</span>
-                </div>
-                <div class="menu-ingredients">
-                    Lorem, deren, trataro, filede, nerada
-                </div>
-            </div>
-
-            <div class="col-lg-6 menu-item filter-specialty">
-                <div>
-                    <input class="form-check-input" type="checkbox" id="checkbox6" value="Tuscan Grilled" aria-label="...">
-                </div>
-                <img src="~/assets/img/menu/tuscan-grilled.jpg" class="menu-img" alt="">
-                <div class="menu-content">
-                    <a href="#">Tuscan Grilled</a><span>$9.95</span>
-                </div>
-                <div class="menu-ingredients">
-                    Grilled chicken with provolone, artichoke hearts, and roasted red pesto
-                </div>
-            </div>
-
-            <div class="col-lg-6 menu-item filter-salads">
-                <div>
-                    <input class="form-check-input" type="checkbox" id="checkbox7" value="Greek Salad" aria-label="...">
-                </div>
-                <img src="~/assets/img/menu/greek-salad.jpg" class="menu-img" alt="">
-                <div class="menu-content">
-                    <a href="#">Greek Salad</a><span>$9.95</span>
-                </div>
-                <div class="menu-ingredients">
-                    Fresh spinach, crisp romaine, tomatoes, and Greek olives
-                </div>
-            </div>
-
-            <div class="col-lg-6 menu-item filter-salads">
-                <div>
-                    <input class="form-check-input" type="checkbox" id="checkbox8" value="Spinach Salad" aria-label="...">
-                </div>
-                <img src="~/assets/img/menu/spinach-salad.jpg" class="menu-img" alt="">
-                <div class="menu-content">
-                    <a href="#">Spinach Salad</a><span>$9.95</span>
-                </div>
-                <div class="menu-ingredients">
-                    Fresh spinach with mushrooms, hard boiled egg, and warm bacon vinaigrette
-                </div>
-            </div>
-
-            <div class="col-lg-6 menu-item filter-specialty">
-                <div>
-                    <input class="form-check-input" type="checkbox" id="checkbox9" value="Lobster Roll" aria-label="...">
-                </div>
-                <img src="~/assets/img/menu/lobster-roll.jpg" class="menu-img" alt="">
-                <div class="menu-content">
-                    <a href="#">Lobster Roll</a><span>$12.95</span>
-                </div>  
-                <div class="menu-ingredients">
-                    Plump lobster meat, mayo and crisp lettuce on a toasted bulky roll
-                </div>
-            </div>
+            @if(meal_list != null)
+            {
+                @for(int i=0; i < meal_list.Count(); i++)
+                {
+                    <div class="col-lg-6 menu-item filter-@meal_list[i].Cate.Name.ToLower()">
+                        <div>
+                            <input class="form-check-input" type="checkbox" id="checkbox@{@i}" value="JS Lobster Bisque" aria-label="...">
+                        </div>
+                        <img src="@meal_list[i].Img" class="menu-img" alt="">
+                        <div class="menu-content">
+                            <a href="#">@meal_list[i].Name</a><span>$@meal_list[i].Price</span>
+                        </div>
+                        <div class="menu-ingredients">
+                            @meal_list[i].Intro
+                        </div>
+                    </div>
+                }
+            }
 
         </div>
         <hr />
