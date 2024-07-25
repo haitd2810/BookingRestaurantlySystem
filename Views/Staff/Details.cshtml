@@ -4,6 +4,7 @@
     List<Meal> meal_list = ViewBag.mealList as List<Meal>;
     List<Ordertable> order_list = ViewBag.orderList as List<Ordertable>;
     List<Categorymeal> category = ViewBag.category as List<Categorymeal>;
+    int odHistoryID = 1;
 }
 
 <main id="main" style="margin-top: 5em;">
@@ -35,9 +36,11 @@
                 {
                     @foreach(Ordertable od in order_list)
                     {
-                        <div class="col-lg-6 menu-item meal-item filter-starters">
+                        odHistoryID = int.Parse(@od.OdHistoryId.ToString());
+                        <div class="col-lg-6 menu-item meal-item filter-@od.Meal.Cate.Name">
                             <img src="@od.Meal.Img" class="menu-img" alt="">
                             <div class="menu-content">
+                                <input type="hidden" name="id" value="@od.MealId"/>
                                 <a href="#">@od.Meal.Name (@od.Quantity)</a><span class="price">$@od.Price</span>
                             </div>
                             <div class="menu-ingredients">
@@ -110,7 +113,12 @@
                             <input class="form-check-input" type="checkbox" id="checkbox@{@i}" value="JS Lobster Bisque" aria-label="...">
                         </div>
                         <img src="@meal_list[i].Img" class="menu-img" alt="">
+                        
                         <div class="menu-content">
+                            <input type="hidden" name="mealID" id="mealID" value="@meal_list[i].Id" />
+                            <input type="hidden" name="tableID" value="@ViewBag.tableID" id="tableID" />
+                            <input type="hidden" name="odhistoryID" value="@odHistoryID" id="odhistoryID" />
+                            <input type="hidden" name="price_each_item" value="@meal_list[i].Price" id="price_each_item" />
                             <a href="#">@meal_list[i].Name</a><span>$@meal_list[i].Price</span>
                         </div>
                         <div class="menu-ingredients">
@@ -122,21 +130,22 @@
 
         </div>
         <hr />
-
-        <!-- Box to display selected items -->
-        <div class="selected-items-box mt-4">
-            <h3>Selected Items:</h3>
-            <div id="selected-items-container" class="row"></div>
-        </div>
-        <form>
+        <form action="#">
+            <!-- Box to display selected items -->
+            <div class="selected-items-box mt-4">
+                <h3>Selected Items:</h3>
+                <div id="selected-items-container" class="row"></div>
+            </div>
+        
+            <input type="hidden" name="tableID" value="@ViewBag.tableID" id="tableID" />
             <div class="btns">
-                <button class="btn-menu animated fadeInUp scrollto add-order">Add Order</button>
+                <button id="" class="btn-menu animated fadeInUp scrollto add-order">Add Order</button>
             </div>
         </form>
 
     </div>
 </section>
-@* <button id="retrieve-button" class="btn btn-primary">Retrieve Selected Items</button> *@
+ <button id="retrieve-button" class="btn btn-primary">Retrieve Selected Items</button> 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -160,4 +169,121 @@
     });
 
 </script>
-<script src="~/js/Staff/selected_items_order.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkboxes = document.querySelectorAll('.form-check-input');
+        const selectedItemsContainer = document.getElementById('selected-items-container');
+
+        // Object to store selected items and their quantities
+        const selectedItems = {};
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function () {
+                updateSelectedItems();
+            });
+        });
+
+        function updateSelectedItems() {
+            selectedItemsContainer.innerHTML = '';
+
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    const menuItem = checkbox.closest('.menu-item');
+                    const itemName = menuItem.querySelector('.menu-content a').textContent;
+                    const itemId = menuItem.querySelector('input[name="mealID"]').value;
+                    const tableID = menuItem.querySelector('#tableID').value;
+                    const odhistoryID = menuItem.querySelector('#odhistoryID').value;
+                    const priceEachItem = menuItem.querySelector('#price_each_item').value;
+                    var currentdate = new Date(); 
+                    var datetime =  + currentdate.getDate() + "-"
+                                    + (currentdate.getMonth()+1)  + "-" 
+                                    + currentdate.getFullYear() + " "  
+                                    + currentdate.getHours() + ":"  
+                                    + currentdate.getMinutes() + ":" 
+                                    + currentdate.getSeconds();
+                    // If the item is not already selected, add it with a default quantity of 1
+                    if (!selectedItems[itemName]) {
+                        selectedItems[itemName] = {
+                            id: itemId,
+                            element: menuItem.cloneNode(true),
+                            quantity: 1,
+                            tableID: tableID,
+                            odhistoryID: odhistoryID,
+                            createDate: datetime,
+                            updateDate: datetime,
+                            price: priceEachItem
+                        };
+                    }
+
+                    // Create a clone of the menu item to display in the selected items container
+                    const clonedItem = selectedItems[itemName].element.cloneNode(true);
+                    const clonedCheckbox = clonedItem.querySelector('.form-check-input');
+                    if (clonedCheckbox) clonedCheckbox.parentNode.removeChild(clonedCheckbox);
+
+                    // Add quantity controls to the cloned item
+                    const quantityControl = document.createElement('div');
+                    quantityControl.className = 'quantity-control';
+                    quantityControl.innerHTML = `
+                        <button class="btn decrement-btn">-</button>
+                        <span class="quantity">${selectedItems[itemName].quantity}</span>
+                        <button class="btn increment-btn">+</button>
+                    `;
+                    clonedItem.appendChild(quantityControl);
+                    selectedItemsContainer.appendChild(clonedItem);
+
+                    const decrementBtn = clonedItem.querySelector('.decrement-btn');
+                    const incrementBtn = clonedItem.querySelector('.increment-btn');
+                    const quantitySpan = clonedItem.querySelector('.quantity');
+
+                    decrementBtn.addEventListener('click', function (event) {
+                        event.preventDefault(); // Ngăn chặn hành vi gửi biểu mẫu mặc định
+                        let quantity = selectedItems[itemName].quantity;
+                        if (quantity > 1) {
+                            quantitySpan.textContent = --quantity;
+                            selectedItems[itemName].quantity = quantity;
+                        }
+                    });
+
+                    incrementBtn.addEventListener('click', function (event) {
+                        event.preventDefault(); // Ngăn chặn hành vi gửi biểu mẫu mặc định
+                        let quantity = selectedItems[itemName].quantity;
+                        quantitySpan.textContent = ++quantity;
+                        selectedItems[itemName].quantity = quantity;
+                    });
+                }
+            });
+
+            // Remove items from the selectedItems object if they are unchecked
+            Object.keys(selectedItems).forEach(itemName => {
+                if (![...checkboxes].find(checkbox => checkbox.checked && checkbox.closest('.menu-item').querySelector('.menu-content a').textContent === itemName)) {
+                    delete selectedItems[itemName];
+                }
+            });
+        }
+
+        function getSelectedItems() {
+            const items = [];
+            Object.keys(selectedItems).forEach(itemName => {
+                var price = selectedItems[itemName].quantity * selectedItems[itemName].price;
+                items.push({
+                    id: selectedItems[itemName].id, // Include the item ID
+                    name: itemName,
+                    quantity: selectedItems[itemName].quantity,
+                    tableID: selectedItems[itemName].tableID,
+                    odhistoryID: selectedItems[itemName].odhistoryID,
+                    createDate: selectedItems[itemName].createDate,
+                    updateDate: selectedItems[itemName].updateDate,
+                    price: price
+                });
+            });
+            return items;
+        }
+
+        // Example usage
+        document.getElementById('retrieve-button').addEventListener('click', function () {
+            const selectedItemsList = getSelectedItems();
+            console.log(selectedItemsList);
+        });
+    });
+
+</script>

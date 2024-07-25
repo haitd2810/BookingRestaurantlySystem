@@ -27,8 +27,18 @@ namespace booking.Controllers
 
             List<Categorymeal> cate_list = context.Categorymeals.Where(cate => cate.Status[0] == 1).ToList();
             ViewBag.category = cate_list;
+
+            ViewBag.tableID = id;
+
             return View("Details", id);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+       /* public ActionResult orderMeal(var a)
+        {
+
+        }*/
 
         [Route("Staff/Schedule")]
         public IActionResult Schedule()
