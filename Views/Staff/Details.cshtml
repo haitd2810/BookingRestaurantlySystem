@@ -130,7 +130,7 @@
 
         </div>
         <hr />
-        <form action="#">
+        @* <form asp-action="orderMeal" asp-controller="Staff" method="post"> *@
             <!-- Box to display selected items -->
             <div class="selected-items-box mt-4">
                 <h3>Selected Items:</h3>
@@ -139,13 +139,13 @@
         
             <input type="hidden" name="tableID" value="@ViewBag.tableID" id="tableID" />
             <div class="btns">
-                <button id="" class="btn-menu animated fadeInUp scrollto add-order">Add Order</button>
+                <button id="btnClick" class="btn-menu animated fadeInUp scrollto add-order">Add Order</button>
             </div>
-        </form>
+        @* </form> *@
 
     </div>
 </section>
- <button id="retrieve-button" class="btn btn-primary">Retrieve Selected Items</button> 
+ @* <button id="retrieve-button" class="btn btn-primary">Retrieve Selected Items</button>  *@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -169,6 +169,7 @@
     });
 
 </script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const checkboxes = document.querySelectorAll('.form-check-input');
@@ -195,22 +196,14 @@
                     const odhistoryID = menuItem.querySelector('#odhistoryID').value;
                     const priceEachItem = menuItem.querySelector('#price_each_item').value;
                     var currentdate = new Date(); 
-                    var datetime =  + currentdate.getDate() + "-"
-                                    + (currentdate.getMonth()+1)  + "-" 
-                                    + currentdate.getFullYear() + " "  
-                                    + currentdate.getHours() + ":"  
-                                    + currentdate.getMinutes() + ":" 
-                                    + currentdate.getSeconds();
                     // If the item is not already selected, add it with a default quantity of 1
                     if (!selectedItems[itemName]) {
                         selectedItems[itemName] = {
-                            id: itemId,
+                            MealId: itemId,
                             element: menuItem.cloneNode(true),
                             quantity: 1,
                             tableID: tableID,
                             odhistoryID: odhistoryID,
-                            createDate: datetime,
-                            updateDate: datetime,
                             price: priceEachItem
                         };
                     }
@@ -224,9 +217,9 @@
                     const quantityControl = document.createElement('div');
                     quantityControl.className = 'quantity-control';
                     quantityControl.innerHTML = `
-                        <button class="btn decrement-btn">-</button>
+                        <span class="btn decrement-btn">-</span>
                         <span class="quantity">${selectedItems[itemName].quantity}</span>
-                        <button class="btn increment-btn">+</button>
+                        <span class="btn increment-btn">+</span>
                     `;
                     clonedItem.appendChild(quantityControl);
                     selectedItemsContainer.appendChild(clonedItem);
@@ -266,24 +259,36 @@
             Object.keys(selectedItems).forEach(itemName => {
                 var price = selectedItems[itemName].quantity * selectedItems[itemName].price;
                 items.push({
-                    id: selectedItems[itemName].id, // Include the item ID
+                    MealId: selectedItems[itemName].MealId,
                     name: itemName,
                     quantity: selectedItems[itemName].quantity,
                     tableID: selectedItems[itemName].tableID,
                     odhistoryID: selectedItems[itemName].odhistoryID,
-                    createDate: selectedItems[itemName].createDate,
-                    updateDate: selectedItems[itemName].updateDate,
                     price: price
                 });
             });
             return items;
         }
 
-        // Example usage
-        document.getElementById('retrieve-button').addEventListener('click', function () {
+        $('#btnClick').click(function (e) {
+            e.preventDefault();
             const selectedItemsList = getSelectedItems();
             console.log(selectedItemsList);
+            $.ajax({
+                url: '@Url.Action("OrderMeal", "Staff")',
+                type: 'post', 
+                contentType: 'application/json',
+                data: JSON.stringify(selectedItemsList),
+                success: function () {
+                    alert("yes");
+                },
+                error: function (errMsg) {
+                    alert("Error: " + errMsg.responseText);
+                }
+            });
         });
+
     });
 
 </script>
+

@@ -4,6 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace booking.Controllers
 {
+    public class SelectedItem
+    {
+        public int MealID { get; set; }
+        public string name { get; set; }
+        public int quantity { get; set; }
+        public int tableID { get; set; }
+        public int odhistoryID { get; set; }
+        public float price { get; set; }
+    }
     public class StaffController : Controller
     {
         private readonly bookingDBContext context = new bookingDBContext();
@@ -32,13 +41,24 @@ namespace booking.Controllers
 
             return View("Details", id);
         }
-
         [HttpPost]
-        [ValidateAntiForgeryToken]
-       /* public ActionResult orderMeal(var a)
+        public IActionResult OrderMeal([FromBody] List<SelectedItem> selectedItems)
         {
+            if (selectedItems == null || !selectedItems.Any())
+            {
+                return BadRequest("Invalid data.");
+            }
 
-        }*/
+            foreach (var item in selectedItems)
+            {
+                Console.WriteLine($"Item ID: {item.MealID}, Item Name: {item.name}");
+                Console.Write($" - Table ID: {item.tableID}, Quantity: {item.quantity}");
+                Console.Write($" - Od History ID: {item.odhistoryID}, Price: {item.price}");
+            }
+
+            // Process the selected items
+            return Ok();
+        }
 
         [Route("Staff/Schedule")]
         public IActionResult Schedule()
