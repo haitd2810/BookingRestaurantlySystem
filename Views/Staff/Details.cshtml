@@ -4,7 +4,8 @@
     List<Meal> meal_list = ViewBag.mealList as List<Meal>;
     List<Ordertable> order_list = ViewBag.orderList as List<Ordertable>;
     List<Categorymeal> category = ViewBag.category as List<Categorymeal>;
-    int odHistoryID = 1;
+    int odHistoryID = -1;
+    int tableID = @ViewBag.tableID;
 }
 
 <main id="main" style="margin-top: 5em;">
@@ -37,6 +38,7 @@
                     @foreach(Ordertable od in order_list)
                     {
                         odHistoryID = int.Parse(@od.OdHistoryId.ToString());
+                        tableID = int.Parse(@od.TableId.ToString());
                         <div class="col-lg-6 menu-item meal-item filter-@od.Meal.Cate.Name">
                             <img src="@od.Meal.Img" class="menu-img" alt="">
                             <div class="menu-content">
@@ -45,6 +47,11 @@
                             </div>
                             <div class="menu-ingredients">
                                 @od.Meal.Intro
+                                <div>
+                                    <a asp-action="DeleteOrderMeal" asp-route-tableID="@od.TableId" asp-route-mealID="@od.MealId" asp-route-odHistory="@odHistoryID">
+                                        <img src="~/assets/img/svg_icon/bin-svgrepo-com.svg" class="svg-icon" alt="Delete" style="width:1.5rem;">
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     }
@@ -58,7 +65,7 @@
             <div class="container" data-aos="fade-up">
                 <div class="section-title">
                     <h2>Total</h2><span id="total-price"></span>
-                    <form>
+                    <form asp-action="payMeal" asp-controller="Staff" asp-route-orderHistoryID="@odHistoryID" asp-route-tableID="@tableID">
                         <div class="btns">
                             <button class="btn-menu animated fadeInUp scrollto add-order">Pay</button>
                         </div>
@@ -281,6 +288,7 @@
                 data: JSON.stringify(selectedItemsList),
                 success: function () {
                     alert("yes");
+                    location.reload();
                 },
                 error: function (errMsg) {
                     alert("Error: " + errMsg.responseText);

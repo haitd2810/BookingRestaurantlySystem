@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 
 namespace booking.Models
@@ -22,5 +23,16 @@ namespace booking.Models
         public virtual Tabletype? TypeTable { get; set; }
         public virtual ICollection<Bookingtable> Bookingtables { get; set; }
         public virtual ICollection<Ordertable> Ordertables { get; set; }
+        private readonly bookingDBContext context = new bookingDBContext();
+        public Boolean UpdateTable()
+        {
+            context.Tables.Update(this);
+            int result = context.SaveChanges();
+            if (result == 0)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }
