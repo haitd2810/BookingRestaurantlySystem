@@ -1,6 +1,11 @@
 ﻿@{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Layout/_header.cshtml";
+    List<Meal> meal_list = ViewBag.mealList as List<Meal>;
+    List<Ordertable> order_list = ViewBag.orderList as List<Ordertable>;
+    List<Categorymeal> category = ViewBag.category as List<Categorymeal>;
+    int odHistoryID = -1;
+    int tableID = @ViewBag.tableID;
 }
 
 <main id="main" style="margin-top: 5em;">
@@ -28,55 +33,29 @@
         <div class="container" data-aos="fade-up">
             <div id="menu-container" class="row menu-container" data-aos="fade-up" data-aos-delay="200">
 
-                <div class="col-lg-6 menu-item meal-item filter-starters">
-                    <img src="~/assets/img/menu/lobster-bisque.jpg" class="menu-img" alt="">
-                    <div class="menu-content">
-                        <a href="#">Lobster Bisque (2)</a><span class="price">$5.95</span>
-                    </div>
-                    <div class="menu-ingredients">
-                        Lorem, deren, trataro, filede, nerada
-                    </div>
-                </div>
-
-                <div class="col-lg-6 menu-item meal-item filter-starters">
-                    <img src="~/assets/img/menu/cake.jpg" class="menu-img" alt="">
-                    <div class="menu-content">
-                        <a href="#">Crab Cake (1)</a><span class="price">$7.95</span>
-                    </div>
-                    <div class="menu-ingredients">
-                        A delicate crab cake served on a toasted roll with lettuce and tartar sauce
-                    </div>
-                </div>
-
-                <div class="col-lg-6 menu-item meal-item filter-starters">
-                    <img src="~/assets/img/menu/mozzarella.jpg" class="menu-img" alt="">
-                    <div class="menu-content">
-                        <a href="#">Mozzarella Stick (1)</a><span class="price">$4.95</span>
-                    </div>
-                    <div class="menu-ingredients">
-                        Lorem, deren, trataro, filede, nerada
-                    </div>
-                </div>
-
-                <div class="col-lg-6 menu-item meal-item filter-salads">
-                    <img src="~/assets/img/menu/caesar.jpg" class="menu-img" alt="">
-                    <div class="menu-content">
-                        <a href="#">Caesar Selections (1)</a><span class="price">$8.95</span>
-                    </div>
-                    <div class="menu-ingredients">
-                        Lorem, deren, trataro, filede, nerada
-                    </div>
-                </div>
-
-                <div class="col-lg-6 menu-item meal-item filter-specialty">
-                    <img src="~/assets/img/menu/tuscan-grilled.jpg" class="menu-img" alt="">
-                    <div class="menu-content">
-                        <a href="#">Tuscan Grilled (1)</a><span class="price">$9.95</span>
-                    </div>
-                    <div class="menu-ingredients">
-                        Grilled chicken with provolone, artichoke hearts, and roasted red pesto
-                    </div>
-                </div>
+                @if(order_list != null)
+                {
+                    @foreach(Ordertable od in order_list)
+                    {
+                        odHistoryID = int.Parse(@od.OdHistoryId.ToString());
+                        tableID = int.Parse(@od.TableId.ToString());
+                        <div class="col-lg-6 menu-item meal-item filter-@od.Meal.Cate.Name">
+                            <img src="@od.Meal.Img" class="menu-img" alt="">
+                            <div class="menu-content">
+                                <input type="hidden" name="id" value="@od.MealId"/>
+                                <a href="#">@od.Meal.Name (@od.Quantity)</a><span class="price">$@od.Price</span>
+                            </div>
+                            <div class="menu-ingredients">
+                                @od.Meal.Intro
+                                <div>
+                                    <a asp-action="DeleteOrderMeal" asp-route-tableID="@od.TableId" asp-route-mealID="@od.MealId" asp-route-odHistory="@odHistoryID">
+                                        <img src="~/assets/img/svg_icon/bin-svgrepo-com.svg" class="svg-icon" alt="Delete" style="width:1.5rem;">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
 
             </div>
 
@@ -86,7 +65,7 @@
             <div class="container" data-aos="fade-up">
                 <div class="section-title">
                     <h2>Total</h2><span id="total-price"></span>
-                    <form>
+                    <form asp-action="payMeal" asp-controller="Staff" asp-route-orderHistoryID="@odHistoryID" asp-route-tableID="@tableID">
                         <div class="btns">
                             <button class="btn-menu animated fadeInUp scrollto add-order">Pay</button>
                         </div>
@@ -120,149 +99,60 @@
             <div class="col-lg-12 d-flex justify-content-center">
                 <ul id="menu-flters">
                     <li data-filter="*" class="filter-active">All</li>
-                    <li data-filter=".filter-starters">Starters</li>
-                    <li data-filter=".filter-salads">Salads</li>
-                    <li data-filter=".filter-specialty">Specialty</li>
+                    @if (category != null)
+                    {
+                        @foreach (var item in category)
+                        {
+                            <li data-filter=".filter-@item.Name.ToLower()">@item.Name</li>
+                        }
+                    }
                 </ul>
             </div>
         </div>
 
         <div class="row menu-container" data-aos="fade-up" data-aos-delay="200">
-
-            <div id="selectable-item" class="col-lg-6 menu-item filter-starters">
-                <div>
-                    <input class="form-check-input" type="checkbox" id="checkbox1" value="JS Lobster Bisque" aria-label="...">
-                </div>
-                <img src="~/assets/img/menu/lobster-bisque.jpg" class="menu-img" alt="">
-                <div class="menu-content">
-                    <a href="#">JS Lobster Bisque</a><span>$5.95</span>
-                </div>
-                <div class="menu-ingredients">
-                    Lorem, deren, trataro, filede, nerada
-                </div>
-            </div>
-
-            <div class="col-lg-6 menu-item filter-specialty">
-                <div>
-                    <input class="form-check-input" type="checkbox" id="checkbox2" value="Bread Barrel" aria-label="...">
-                </div>
-                <img src="~/assets/img/menu/bread-barrel.jpg" class="menu-img" alt="">
-                <div class="menu-content">
-                    <a href="#">Bread Barrel</a><span>$6.95</span>
-                </div>
-                <div class="menu-ingredients">
-                    Lorem, deren, trataro, filede, nerada
-                </div>
-            </div>
-
-            <div class="col-lg-6 menu-item filter-starters">
-                <div>
-                    <input class="form-check-input" type="checkbox" id="checkbox3" value="Crab Cake" aria-label="...">
-                </div>
-                <img src="~/assets/img/menu/cake.jpg" class="menu-img" alt="">
-                <div class="menu-content">
-                    <a href="#">Crab Cake</a><span>$7.95</span>
-                </div>
-                <div class="menu-ingredients">
-                    A delicate crab cake served on a toasted roll with lettuce and tartar sauce
-                </div>
-            </div>
-
-            <div class="col-lg-6 menu-item filter-starters">
-                <div>
-                    <input class="form-check-input" type="checkbox" id="checkbox4" value="Mozzarella Stick" aria-label="...">
-                </div>
-                <img src="~/assets/img/menu/mozzarella.jpg" class="menu-img" alt="">
-                <div class="menu-content">
-                    <a href="#">Mozzarella Stick</a><span>$4.95</span>
-                </div>
-                <div class="menu-ingredients">
-                    Lorem, deren, trataro, filede, nerada
-                </div>
-            </div>
-
-            <div class="col-lg-6 menu-item filter-salads">
-                <div>
-                    <input class="form-check-input" type="checkbox" id="checkbox5" value="Caesar Selections" aria-label="...">
-                </div>
-                <img src="~/assets/img/menu/caesar.jpg" class="menu-img" alt="">
-                <div class="menu-content">
-                    <a href="#">Caesar Selections</a><span>$8.95</span>
-                </div>
-                <div class="menu-ingredients">
-                    Lorem, deren, trataro, filede, nerada
-                </div>
-            </div>
-
-            <div class="col-lg-6 menu-item filter-specialty">
-                <div>
-                    <input class="form-check-input" type="checkbox" id="checkbox6" value="Tuscan Grilled" aria-label="...">
-                </div>
-                <img src="~/assets/img/menu/tuscan-grilled.jpg" class="menu-img" alt="">
-                <div class="menu-content">
-                    <a href="#">Tuscan Grilled</a><span>$9.95</span>
-                </div>
-                <div class="menu-ingredients">
-                    Grilled chicken with provolone, artichoke hearts, and roasted red pesto
-                </div>
-            </div>
-
-            <div class="col-lg-6 menu-item filter-salads">
-                <div>
-                    <input class="form-check-input" type="checkbox" id="checkbox7" value="Greek Salad" aria-label="...">
-                </div>
-                <img src="~/assets/img/menu/greek-salad.jpg" class="menu-img" alt="">
-                <div class="menu-content">
-                    <a href="#">Greek Salad</a><span>$9.95</span>
-                </div>
-                <div class="menu-ingredients">
-                    Fresh spinach, crisp romaine, tomatoes, and Greek olives
-                </div>
-            </div>
-
-            <div class="col-lg-6 menu-item filter-salads">
-                <div>
-                    <input class="form-check-input" type="checkbox" id="checkbox8" value="Spinach Salad" aria-label="...">
-                </div>
-                <img src="~/assets/img/menu/spinach-salad.jpg" class="menu-img" alt="">
-                <div class="menu-content">
-                    <a href="#">Spinach Salad</a><span>$9.95</span>
-                </div>
-                <div class="menu-ingredients">
-                    Fresh spinach with mushrooms, hard boiled egg, and warm bacon vinaigrette
-                </div>
-            </div>
-
-            <div class="col-lg-6 menu-item filter-specialty">
-                <div>
-                    <input class="form-check-input" type="checkbox" id="checkbox9" value="Lobster Roll" aria-label="...">
-                </div>
-                <img src="~/assets/img/menu/lobster-roll.jpg" class="menu-img" alt="">
-                <div class="menu-content">
-                    <a href="#">Lobster Roll</a><span>$12.95</span>
-                </div>  
-                <div class="menu-ingredients">
-                    Plump lobster meat, mayo and crisp lettuce on a toasted bulky roll
-                </div>
-            </div>
+            @if(meal_list != null)
+            {
+                @for(int i=0; i < meal_list.Count(); i++)
+                {
+                    <div class="col-lg-6 menu-item filter-@meal_list[i].Cate.Name.ToLower()">
+                        <div>
+                            <input class="form-check-input" type="checkbox" id="checkbox@{@i}" value="JS Lobster Bisque" aria-label="...">
+                        </div>
+                        <img src="@meal_list[i].Img" class="menu-img" alt="">
+                        
+                        <div class="menu-content">
+                            <input type="hidden" name="mealID" id="mealID" value="@meal_list[i].Id" />
+                            <input type="hidden" name="tableID" value="@ViewBag.tableID" id="tableID" />
+                            <input type="hidden" name="odhistoryID" value="@odHistoryID" id="odhistoryID" />
+                            <input type="hidden" name="price_each_item" value="@meal_list[i].Price" id="price_each_item" />
+                            <a href="#">@meal_list[i].Name</a><span>$@meal_list[i].Price</span>
+                        </div>
+                        <div class="menu-ingredients">
+                            @meal_list[i].Intro
+                        </div>
+                    </div>
+                }
+            }
 
         </div>
         <hr />
-
-        <!-- Box to display selected items -->
-        <div class="selected-items-box mt-4">
-            <h3>Selected Items:</h3>
-            <div id="selected-items-container" class="row"></div>
-        </div>
-        <form>
-            <div class="btns">
-                <button class="btn-menu animated fadeInUp scrollto add-order">Add Order</button>
+        @* <form asp-action="orderMeal" asp-controller="Staff" method="post"> *@
+            <!-- Box to display selected items -->
+            <div class="selected-items-box mt-4">
+                <h3>Selected Items:</h3>
+                <div id="selected-items-container" class="row"></div>
             </div>
-        </form>
+        
+            <input type="hidden" name="tableID" value="@ViewBag.tableID" id="tableID" />
+            <div class="btns">
+                <button id="btnClick" class="btn-menu animated fadeInUp scrollto add-order">Add Order</button>
+            </div>
+        @* </form> *@
 
     </div>
 </section>
-@* <button id="retrieve-button" class="btn btn-primary">Retrieve Selected Items</button> *@
+ @* <button id="retrieve-button" class="btn btn-primary">Retrieve Selected Items</button>  *@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -286,4 +176,127 @@
     });
 
 </script>
-<script src="~/js/Staff/selected_items_order.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkboxes = document.querySelectorAll('.form-check-input');
+        const selectedItemsContainer = document.getElementById('selected-items-container');
+
+        // Object to store selected items and their quantities
+        const selectedItems = {};
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function () {
+                updateSelectedItems();
+            });
+        });
+
+        function updateSelectedItems() {
+            selectedItemsContainer.innerHTML = '';
+
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    const menuItem = checkbox.closest('.menu-item');
+                    const itemName = menuItem.querySelector('.menu-content a').textContent;
+                    const itemId = menuItem.querySelector('input[name="mealID"]').value;
+                    const tableID = menuItem.querySelector('#tableID').value;
+                    const odhistoryID = menuItem.querySelector('#odhistoryID').value;
+                    const priceEachItem = menuItem.querySelector('#price_each_item').value;
+                    var currentdate = new Date(); 
+                    // If the item is not already selected, add it with a default quantity of 1
+                    if (!selectedItems[itemName]) {
+                        selectedItems[itemName] = {
+                            MealId: itemId,
+                            element: menuItem.cloneNode(true),
+                            quantity: 1,
+                            tableID: tableID,
+                            odhistoryID: odhistoryID,
+                            price: priceEachItem
+                        };
+                    }
+
+                    // Create a clone of the menu item to display in the selected items container
+                    const clonedItem = selectedItems[itemName].element.cloneNode(true);
+                    const clonedCheckbox = clonedItem.querySelector('.form-check-input');
+                    if (clonedCheckbox) clonedCheckbox.parentNode.removeChild(clonedCheckbox);
+
+                    // Add quantity controls to the cloned item
+                    const quantityControl = document.createElement('div');
+                    quantityControl.className = 'quantity-control';
+                    quantityControl.innerHTML = `
+                        <span class="btn decrement-btn">-</span>
+                        <span class="quantity">${selectedItems[itemName].quantity}</span>
+                        <span class="btn increment-btn">+</span>
+                    `;
+                    clonedItem.appendChild(quantityControl);
+                    selectedItemsContainer.appendChild(clonedItem);
+
+                    const decrementBtn = clonedItem.querySelector('.decrement-btn');
+                    const incrementBtn = clonedItem.querySelector('.increment-btn');
+                    const quantitySpan = clonedItem.querySelector('.quantity');
+
+                    decrementBtn.addEventListener('click', function (event) {
+                        event.preventDefault(); // Ngăn chặn hành vi gửi biểu mẫu mặc định
+                        let quantity = selectedItems[itemName].quantity;
+                        if (quantity > 1) {
+                            quantitySpan.textContent = --quantity;
+                            selectedItems[itemName].quantity = quantity;
+                        }
+                    });
+
+                    incrementBtn.addEventListener('click', function (event) {
+                        event.preventDefault(); // Ngăn chặn hành vi gửi biểu mẫu mặc định
+                        let quantity = selectedItems[itemName].quantity;
+                        quantitySpan.textContent = ++quantity;
+                        selectedItems[itemName].quantity = quantity;
+                    });
+                }
+            });
+
+            // Remove items from the selectedItems object if they are unchecked
+            Object.keys(selectedItems).forEach(itemName => {
+                if (![...checkboxes].find(checkbox => checkbox.checked && checkbox.closest('.menu-item').querySelector('.menu-content a').textContent === itemName)) {
+                    delete selectedItems[itemName];
+                }
+            });
+        }
+
+        function getSelectedItems() {
+            const items = [];
+            Object.keys(selectedItems).forEach(itemName => {
+                var price = selectedItems[itemName].quantity * selectedItems[itemName].price;
+                items.push({
+                    MealId: selectedItems[itemName].MealId,
+                    name: itemName,
+                    quantity: selectedItems[itemName].quantity,
+                    tableID: selectedItems[itemName].tableID,
+                    odhistoryID: selectedItems[itemName].odhistoryID,
+                    price: price
+                });
+            });
+            return items;
+        }
+
+        $('#btnClick').click(function (e) {
+            e.preventDefault();
+            const selectedItemsList = getSelectedItems();
+            console.log(selectedItemsList);
+            $.ajax({
+                url: '@Url.Action("OrderMeal", "Staff")',
+                type: 'post', 
+                contentType: 'application/json',
+                data: JSON.stringify(selectedItemsList),
+                success: function () {
+                    alert("yes");
+                    location.reload();
+                },
+                error: function (errMsg) {
+                    alert("Error: " + errMsg.responseText);
+                }
+            });
+        });
+
+    });
+
+</script>
+

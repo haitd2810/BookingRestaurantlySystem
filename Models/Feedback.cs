@@ -17,7 +17,7 @@ namespace booking.Models
         public Boolean giveFeedback()
         {
             bookingDBContext context = new bookingDBContext();
-            context.Add(this);
+            context.Feedbacks.Add(this);
             int result = context.SaveChanges();
             if (result == 0 )
             {
