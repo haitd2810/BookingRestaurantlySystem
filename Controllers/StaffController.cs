@@ -1,4 +1,6 @@
-﻿using booking.Models;
+﻿using booking.IServices;
+using booking.Models;
+using booking.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,9 +20,13 @@ namespace booking.Controllers
         private readonly bookingDBContext context = new bookingDBContext();
         private readonly Ordertable object_od = new Ordertable();
         private readonly Orderhistory object_odhistory = new Orderhistory();
+        private readonly IOrderHistoryService order_service = new OrderHistoryService();
         public IActionResult Index()
         {
-            List<Table> table_list = context.Tables.Include(t => t.TypeTable).ToList();
+            List<Table> table_list = context.Tables
+                                            .Where(table => table.Status[0] == 1)
+                                            .Include(t => t.TypeTable)
+                                            .ToList();
             ViewBag.listTable = table_list;
 
             return View();
@@ -32,11 +38,15 @@ namespace booking.Controllers
                                    .Include(cate => cate.Cate).ToList();
             ViewBag.mealList = meal_list;
 
-            List<Ordertable> order_list = context.Ordertables.Where(od => od.Status[0] == 1 && od.TableId == id)
-                                          .Include(od => od.Meal).ToList();
+            List<Ordertable> order_list = context.Ordertables
+                                                 .Where(od => od.Status[0] == 1 && od.TableId == id)
+                                                 .Include(od => od.Meal)
+                                                 .ToList();
             ViewBag.orderList = order_list;
 
-            List<Categorymeal> cate_list = context.Categorymeals.Where(cate => cate.Status[0] == 1).ToList();
+            List<Categorymeal> cate_list = context.Categorymeals
+                                                  .Where(cate => cate.Status[0] == 1)
+                                                  .ToList();
             ViewBag.category = cate_list;
 
             ViewBag.tableID = id;
@@ -46,16 +56,21 @@ namespace booking.Controllers
 
         public ActionResult DeleteOrderMeal(int tableID, int mealID, int odHistory)
         {
-            Ordertable order = object_od.FindOrder(tableID, mealID);
+            Ordertable order = object_od.FindOrder(tableID, mealID, odHistory);
             
             List<Ordertable> order_list = context.Ordertables
-                                       .Where(od => od.TableId == tableID && od.OdHistoryId == odHistory)
+                                       .Where(od => od.TableId == tableID 
+                                                    && od.OdHistoryId == odHistory)
                                        .ToList();
             if (order != null) order.DeleteOrderTable();
             //check if there are more than 1 meal in order?
             if (order_list.Count() == 1 && order_list[0].Quantity == 1)
             {
                 object_odhistory.deleteByID(int.Parse(order_list[0].OdHistoryId.ToString()));
+
+                //update status table
+                Table table = new Table();
+                table.markTableAsOrdered(tableID, false);
             }
 
             return RedirectToAction("Details", "Staff", new
@@ -75,7 +90,16 @@ namespace booking.Controllers
             object_od.updatePaymeal(orderHistoryID, tableID);
 
             //update order history for payment
-            object_odhistory.updatePayment(orderHistoryID);
+            Orderhistory order_history = object_odhistory.findbyID(orderHistoryID);
+            order_history.TotalPrice = object_odhistory.getTotal(order_history);
+            order_history.Payed = new byte[] { 1 };
+            order_history.UpdateDate = DateTime.Now;
+            order_history.UpdateOrderHistory();
+
+            //update status table
+            Table table = new Table();
+            table.markTableAsOrdered(tableID, false);
+
             return RedirectToAction("Details", "Staff", new
             {
                 id = tableID
@@ -84,14 +108,13 @@ namespace booking.Controllers
         [HttpPost]
         public IActionResult OrderMeal([FromBody] List<SelectedItem> selectedItems)
         {
-            if (selectedItems == null || !selectedItems.Any())
-            {
-                return BadRequest("Invalid data.");
-            }
+            if (selectedItems == null || !selectedItems.Any()) return BadRequest("Invalid data.");
+
             int tableID = 0;
+            int orderHistoryID = -1;
             foreach (var item in selectedItems)
             {
-                Ordertable od = object_od.FindOrder(item.tableID,item.MealID);
+                Ordertable od = object_od.FindOrder(item.tableID,item.MealID,item.odhistoryID);
                 if (od != null)
                 {
                     od.Quantity += item.quantity;
@@ -100,22 +123,14 @@ namespace booking.Controllers
                 }
                 else
                 {
-                    int orderHistoryID = item.odhistoryID;
-                    if (item.odhistoryID == -1) { 
-                        Orderhistory od_history = new Orderhistory()
-                        {
-                            Fullname = null,
-                            Email = null,
-                            CreateDate = DateTime.Now,
-                            UpdateDate  = DateTime.Now,
-                            TotalPrice = 0,
-                            Payed = new byte[] { 0 },
-                            Status = new byte[] { 1 }
-
-                        };
+                    //check orderHistoryID is exist or not
+                    if (orderHistoryID == -1 && item.odhistoryID == -1) { 
+                        Orderhistory od_history = order_service.setDefault();
                         od_history.AddOderHistory();
                         orderHistoryID = od_history.Id;
                     }
+                    //check orderHistoryID is exist or not
+                    if (orderHistoryID == -1 && item.odhistoryID != -1) orderHistoryID = item.odhistoryID;
                     Ordertable new_od = new Ordertable()
                     {
                         MealId = item.MealID,
@@ -131,13 +146,9 @@ namespace booking.Controllers
                     tableID = item.tableID;
                 }
             }
-            Table table = context.Tables.Where(tb => tb.Id == tableID).FirstOrDefault();
-            if (table != null)
-            {
-                Console.WriteLine("thay table");
-                table.Status = new byte[] { 1 };
-                table.UpdateTable();
-            }
+            //update status order of table
+            Table table = new Table();
+            table.markTableAsOrdered(tableID, true);
 
             return Ok();
         }

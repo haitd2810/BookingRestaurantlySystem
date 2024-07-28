@@ -62,24 +62,18 @@ namespace booking.Models
             return true;
         }
 
-        public Boolean updatePayment(int id)
+        public float getTotal(Orderhistory order_history)
         {
-            Orderhistory order_history = findbyID(id);
-            if(order_history != null)
+            if (order_history != null)
             {
-                float total_price = 1;
+                float total_price = 0;
                 foreach (var od in order_history.Ordertables)
                 {
                     total_price += float.Parse(od.Price.ToString());
-                    Console.WriteLine(total_price);
                 }
-                order_history.TotalPrice = total_price;
-                order_history.Payed = new byte[] { 1 };
-                order_history.UpdateDate = DateTime.Now;
-                order_history.UpdateOrderHistory();
-                return true;
+                return total_price;
             }
-            return false;
+            return 0;
         }
     }
 }

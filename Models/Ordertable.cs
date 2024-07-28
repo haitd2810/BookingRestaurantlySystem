@@ -52,19 +52,20 @@ namespace booking.Models
                     context.Remove(this);
                     context.SaveChanges();
                 }
-                else this.UpdateOrderTable();
+                else { this.UpdateOrderTable(); }
             }
             return true;
         }
 
-        public Ordertable FindOrder(int tableID, int mealID)
+        public Ordertable FindOrder(int tableID, int mealID, int orderHistoryID)
         {
             return context.Ordertables.
-                   Where(od => od.TableId == tableID && od.MealId == mealID)
-                   .Include(meal => meal.Meal)
-                   .Include(table => table.Table)
-                   .Include(odHis => odHis.OdHistory)
-                   .FirstOrDefault();
+                    Where(od => od.TableId == tableID && od.MealId == mealID && od.OdHistoryId == orderHistoryID)
+                    .Include(meal => meal.Meal)
+                    .Include(table => table.Table)
+                    .Include(odHis => odHis.OdHistory)
+                    .FirstOrDefault();
+
         }
 
         public Boolean updatePaymeal(int orderHistoryID, int tableID)

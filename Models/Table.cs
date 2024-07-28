@@ -26,13 +26,60 @@ namespace booking.Models
         private readonly bookingDBContext context = new bookingDBContext();
         public Boolean UpdateTable()
         {
-            context.Tables.Update(this);
-            int result = context.SaveChanges();
-            if (result == 0)
+            try
             {
-                return false;
+                var entry = context.Entry(this);
+                if (entry.State == EntityState.Detached)
+                {
+                    context.Tables.Attach(this);
+                    entry.State = EntityState.Modified;
+                }
+                context.SaveChanges();
+                return true;
             }
-            return true;
+            catch (DbUpdateConcurrencyException ex)
+            {
+                var entry = ex.Entries.Single();
+                var clientValues = entry.CurrentValues;
+                var databaseEntry = entry.GetDatabaseValues();
+
+                if (databaseEntry == null)
+                {
+                    throw new Exception("The entity being updated has been deleted by another user.", ex);
+                }
+                else
+                {
+                    var databaseValues = databaseEntry.ToObject();
+                    entry.OriginalValues.SetValues(databaseValues);
+
+                    try
+                    {
+                        context.SaveChanges();
+                        return true;
+                    }
+                    catch (DbUpdateConcurrencyException retryEx)
+                    {
+                        throw new Exception("Concurrency conflict could not be resolved.", retryEx);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while updating the table.", ex);
+            }
         }
+
+        public void markTableAsOrdered(int tableID, Boolean ismark)
+        {
+            Table table = context.Tables.Where(tb => tb.Id == tableID).FirstOrDefault();
+            if (table != null)
+            {
+                if (ismark) table.Ordered = new byte[] { 1 };
+                else table.Ordered = new byte[] { 0 };
+                table.UpdateTable();
+            }
+        }
+
     }
+
 }
