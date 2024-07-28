@@ -30,16 +30,16 @@
                 {
                     @foreach(Table table in table_list)
                     {
-                        var ordered = table.Ordered[0] == 0 ? "Free" : "Ordered";
+                        var ordered = table.Ordered[0] == 1 ? "Ordered" : "Free";
                         @if (table.TypeTable.Seat == 2)
                         {
                             <div class="col-2 box" data-aos="zoom-in" data-aos-delay="100" style="margin: 3rem">
                                 <span class="chair top-chair-1vs1"><i class="bi bi-person-fill"></i></span>
                                 <span class="chair" style="visibility:hidden"><i class="bi bi-person-fill"></i></span>
                                 <div class="col-12 box" data-aos="zoom-in" data-aos-delay="100">
-                                    <a asp-controller="Staff" asp-action="Details" asp-route-id="1">
+                                    <a asp-controller="Staff" asp-action="Details" asp-route-id="@table.Id">
                                         <span>@table.TableName</span>
-                                        <p class="status"> @ordered</p>
+                                        <p class="status"> @ordered </p>
                                     </a>
                                 </div>
                                 <span class="chair bottom-chair-1vs1"><i class="bi bi-person-fill"></i></span>
@@ -53,7 +53,7 @@
                                 <span class="chair top-chair-2vs2"><i class="bi bi-person-fill"></i></span>
                                 <span class="chair top-chair-2vs2"><i class="bi bi-person-fill"></i></span>
                                 <div class="col-12 box" data-aos="zoom-in" data-aos-delay="100">
-                                    <a asp-controller="Staff" asp-action="Details" asp-route-id="1">
+                                    <a asp-controller="Staff" asp-action="Details" asp-route-id="@table.Id">
                                         <span>@table.TableName</span>
                                         <p class="status"> @ordered</p>
                                     </a>
