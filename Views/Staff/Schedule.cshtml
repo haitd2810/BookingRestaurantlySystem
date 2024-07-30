@@ -3,7 +3,9 @@
     ViewData["Title"] = "Schedule";
     Layout = "~/Views/Layout/_header.cshtml";
 }
-
+@{
+    List<Bookingtable> booking_list = ViewBag.booking_list as List<Bookingtable>;
+}
 <main id="main" style="margin-top: 5em;">
     <!-- ======= About Section ======= -->
     <section id="about" class="about">
@@ -14,7 +16,7 @@
                 </div>
                 <div class="col-lg-4 col-md-6 search-box">
                     <form action="" method="post">
-                        <input type="text" name="search"><input type="submit" value="Search">
+                        <input id="search-by-name" type="text" name="search"><input id="btnClick" type="submit" value="Search">
                     </form>
 
                 </div>
@@ -23,7 +25,7 @@
     </section><!-- End About Section -->
     <!-- ======= Menu Section ======= -->
     <section id="menu" class="menu section-bg">
-        <div class="container" data-aos="fade-up">
+        <div class="container-fluid" data-aos="fade-up">
             <div id="menu-container" class="row menu-container" data-aos="fade-up" data-aos-delay="200">
                 <div class="col-lg-12 menu-item meal-item filter-starters">
                     <table class="table text-light">
@@ -51,57 +53,50 @@
                                     <span class="sort" data-sort="message">▲</span>
                                 </th>
                                 <th scope="col">
+                                    prepay?
+                                    <span class="sort" data-sort="prepay">▲</span>
+                                </th>
+                                <th scope="col">
                                     Status
                                     <span class="sort" data-sort="status">▲</span>
+                                </th>
+                                <th scope="col">
+                                    Confirm
                                 </th>
                             </tr>
                         </thead>
                         <tbody class="table-group-divider">
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Mr. ABC</td>
-                                <td>ABC@gmail.com</td>
-                                <td>01/01/2024 10h-11h</td>
-                                <td>Table 01</td>
-                                <td>Nothing</td>
-                                <td>Ordered</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Ms. XYZ</td>
-                                <td>XYZ@email.com</td>
-                                <td>05/02/2024 13h-14h</td>
-                                <td>Table 05</td>
-                                <td>Vegetarian</td>
-                                <td>Confirmed</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td>Mr. PQR</td>
-                                <td>PQR@company.com</td>
-                                <td>05/02/2024 18h-19h</td>
-                                <td>Table 12</td>
-                                <td>No special requests</td>
-                                <td>Pending</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">4</th>
-                                <td>Ms. LMN</td>
-                                <td>LMN@outlook.com</td>
-                                <td>05/02/2024  08h-09h</td>
-                                <td>Table 08</td>
-                                <td>Gluten-free</td>
-                                <td>Confirmed</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">5</th>
-                                <td>Mr. STU</td>
-                                <td>STU@yahoo.com</td>
-                                <td>05/01/2024 12h-13h</td>
-                                <td>Table 03</td>
-                                <td>Nut allergy</td>
-                                <td>Ordered</td>
-                            </tr>
+                            @if(booking_list != null)
+                            {
+                                @for(int i=0; i < booking_list.Count(); i++)
+                                {
+                                    int row = i + 1;
+                                    string status = "pending";
+                                    @if (booking_list[i].Prepay[0] == 1 && booking_list[i].Status[0] == 1) status = "confirmed";
+                                    @if (booking_list[i].Prepay[0] == 1 && booking_list[i].Status[0] == 0) status = "ordered";
+                                    <tr>
+                                        <th scope="row">@row</th>
+                                        <td>@booking_list[i].Name</td>
+                                        <td>@booking_list[i].Email</td>
+                                        <td>@booking_list[i].DateOrder @booking_list[i].TimeOrder</td>
+                                        <td>@booking_list[i].Table.TableName</td>
+                                        <td>@booking_list[i].Message</td>
+                                        <td>@(booking_list[i].Prepay[0] == 1? "payed" : "")</td>
+                                        <td>@status</td>
+                                        <td>
+                                            @if (status == "confirmed")
+                                            {
+                                                <form asp-action="confirmBooking" asp-controller="Staff" asp-route-id="@booking_list[i].Id">
+                                                    <button class="btn btn-warning" style="color: white;">
+                                                        Ordered
+                                                    </button>
+                                                </form>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            
                         </tbody>
                     </table>
                 </div>
@@ -113,7 +108,7 @@
     </section><!-- End Menu Section -->
 
 </main><!-- End #main -->
-
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const getCellValue = (row, index) => row.children[index].innerText || row.children[index].textContent;
@@ -135,6 +130,59 @@
             });
         });
     });
+
+</script>
+
+<script>
+    $('#btnClick').click(function (e) {
+        var name = document.getElementById('search-by-name').value;
+        if (name == "") { location.reload(); }
+        e.preventDefault();
+        $.ajax({
+            url: '@Url.Action("search", "Staff")',
+            type: 'get',
+            data: { name: name },
+            success: function (data) {
+                loadData(data);
+            },
+            error: function (errMsg) {
+                var r = jQuery.parseJSON(response.responseText);
+                alert("Message: " + r.Message);
+                alert("StackTrace: " + r.StackTrace);
+                alert("ExceptionType: " + r.ExceptionType);
+            }
+        });
+    });
+
+    function loadData(data) {
+        $(".table tbody tr").remove();
+        $.each(data, function (i, item) {
+            var stt = i + 1;
+
+            var prepay = atob(item.prepay);
+            var status = atob(item.status);
+            var statusText = "pending";
+            if (prepay === '\u0001' && status === '\u0001') statusText = "confirmed";
+            if (prepay === '\u0001' && status === '\u0000') statusText = "ordered";
+            console.log(item);
+            var rows = "<tr>"
+                + "<th scope='row'>" + stt + "</th>"
+                + "<td>" + item.name + "</td>"
+                + "<td>" + item.email + "</td>"
+                + "<td>" + item.dateOrder + " " + item.timeOrder + "</td>"
+                + "<td>" + item.tableID + "</td>"
+                + "<td>" + item.message + "</td>"
+                + "<td>" + (prepay === '\u0000' ? '' : 'payed') + "</td>"
+                + "<td>" + statusText + "</td>";
+            if (statusText == "confirmed") {
+                var URL = "/Staff/confirmBooking/" + item.id;
+                var add_button = "<td><form action='" + URL + "' method='post'><button class='btn btn-warning' style='color: white;'> Ordered</button></form></td>";
+                rows += add_button;
+            }
+            rows += "</tr>";
+            $(".table tbody").append(rows);
+        });
+    }
 
 </script>
 

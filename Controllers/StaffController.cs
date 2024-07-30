@@ -3,6 +3,7 @@ using booking.Models;
 using booking.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace booking.Controllers
 {
@@ -21,6 +22,8 @@ namespace booking.Controllers
         private readonly Ordertable object_od = new Ordertable();
         private readonly Orderhistory object_odhistory = new Orderhistory();
         private readonly IOrderHistoryService order_service = new OrderHistoryService();
+        private readonly BookingService booking_service = new BookingService();
+        private readonly Bookingtable object_booking = new Bookingtable();
         public IActionResult Index()
         {
             List<Table> table_list = context.Tables
@@ -156,9 +159,25 @@ namespace booking.Controllers
         [Route("Staff/Schedule")]
         public IActionResult Schedule()
         {
+            List<Bookingtable> bookings = object_booking.getAll();
+            ViewBag.booking_list = bookings;
             return View();
         }
 
+        [HttpPost]
+        public IActionResult confirmBooking(int id)
+        {
+            Bookingtable booking = object_booking.findByID(id);
+            booking_service.changeStatus(booking);
+            booking.confirmBooking();
+            return RedirectToAction("Schedule", "Staff");
+        }
+
+        public IActionResult search(string name)
+        {
+            List<Bookingtable> booking = object_booking.findByName(name);
+            return Ok(booking);
+        }
         [Route("Staff/Statistic")]
         public IActionResult Statistic()
         {
