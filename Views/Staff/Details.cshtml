@@ -280,7 +280,6 @@
         $('#btnClick').click(function (e) {
             e.preventDefault();
             const selectedItemsList = getSelectedItems();
-            console.log(selectedItemsList);
             $.ajax({
                 url: '@Url.Action("OrderMeal", "Staff")',
                 type: 'post', 
