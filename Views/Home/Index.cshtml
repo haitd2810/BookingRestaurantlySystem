@@ -526,9 +526,72 @@
 
   </main><!-- End #main -->
 @{
-    var bookingListJson = Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.booking);
+    var serializerSettings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+    var bookingListJson = JsonConvert.SerializeObject(booking, serializerSettings);
 }
 <input type="hidden" id="bookingListJson" value='@Html.Raw(bookingListJson)' />
-  <script src="~/js/Home/booking_table_script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let bookingList = JSON.parse(document.getElementById('bookingListJson').value);
+
+        function formatDate(dateObj) {
+            let month = dateObj.Month.toString().padStart(2, '0');
+            let day = dateObj.Day.toString().padStart(2, '0');
+            return `${dateObj.Year}-${month}-${day}`;
+        }
+
+        function formatTime(timeObj) {
+            let hour = timeObj.Hour.toString().padStart(2, '0');
+            let minute = timeObj.Minute.toString().padStart(2, '0');
+            return `${hour}:${minute}`;
+        }
+
+        function timeDifferenceInMinutes(time1, time2) {
+            let [hours1, minutes1] = time1.split(':').map(Number);
+            let [hours2, minutes2] = time2.split(':').map(Number);
+            return (hours1 * 60 + minutes1) - (hours2 * 60 + minutes2);
+        }
+
+        function checkTableAvailability(date, time) {
+            let availableTables = ['table01', 'table02', 'table03', 'table04', 'table05', 'table06', 'table07', 'table08'];
+            for (let booking of bookingList) {
+                let bookingDate = formatDate(booking.DateOrder);
+                let bookingTime = formatTime(booking.TimeOrder);
+
+                if (bookingDate === date) {
+                    let timeDiff = Math.abs(timeDifferenceInMinutes(bookingTime, time));
+                    if (timeDiff <= 45) {
+                        let tableId = parseInt(booking.TableId);
+                        availableTables = availableTables.filter(table => table !== `table${tableId < 10 ? '0' + tableId : tableId}`);
+                    }
+                }
+            }
+            return availableTables;
+        }
+
+        function updateTableSelect() {
+            let date = document.getElementById('date').value;
+            let time = document.getElementById('time').value;
+            let tableSelect = document.querySelector('.select-table');
+            tableSelect.innerHTML = '';
+
+            if (date && time) {
+                let availableTables = checkTableAvailability(date, time);
+                for (let table of availableTables) {
+                    let option = document.createElement('option');
+                    option.value = table.toLowerCase().replace(' ', '');
+                    option.textContent = table;
+                    tableSelect.appendChild(option);
+                }
+            }
+        }
+
+        document.getElementById('date').addEventListener('change', updateTableSelect);
+        document.getElementById('time').addEventListener('change', updateTableSelect);
+    });
+  </script>
   <script src="~/js/Home/give_feedback_script.js"></script>
   <script src="~/js/Home/change_text_upload_file_script.js"></script>

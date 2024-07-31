@@ -1,5 +1,6 @@
 ﻿
 using booking.IServices;
+using booking.Models;
 
 namespace booking.Services
 {
@@ -38,6 +39,31 @@ namespace booking.Services
             {
                 await img.CopyToAsync(fileStream);
             }
+        }
+
+        public Feedback setValue(string name, string jobs, string feedback, DateTime create, DateTime update, byte[] status, string img)
+        {
+            return new Feedback()
+            {
+                Name = name,
+                Jobs = jobs,
+                Detail = feedback,
+                CreateDate = create,
+                UpdateDate = update,
+                Status = status,
+                Img = img
+            };
+        }
+
+        public async Task<string> pathToSave(IFormFile img, string path_save_feedback, string default_img)
+        {
+            if (isTrueIMG(img))
+            {
+                string path = path_save_feedback;
+                await saveFile(img, path);
+                return "/assets/img/uploads/" + img.FileName;
+            }
+            return default_img;
         }
     }
 }

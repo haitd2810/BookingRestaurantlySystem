@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 
 namespace booking.Models
@@ -13,5 +14,11 @@ namespace booking.Models
         public DateTime? CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public byte[]? Status { get; set; }
+
+        public List<Post> getPost()
+        {
+            bookingDBContext context = new bookingDBContext();
+            return context.Posts.Where(post => post.Status[0] == 1).ToList();
+        }
     }
 }

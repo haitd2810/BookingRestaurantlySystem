@@ -88,6 +88,5 @@
     // Example usage
     document.getElementById('retrieve-button').addEventListener('click', function () {
         const selectedItemsList = getSelectedItems();
-        console.log(selectedItemsList);
     });
 });
