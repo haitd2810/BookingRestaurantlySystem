@@ -25,6 +25,18 @@ namespace booking.Services
             else { order.DeleteOrderTable(); return true; }
         }
 
+        public int getIDOrderHistory(int ExistID, int newID)
+        {
+            if (newID == -1 && ExistID == -1)
+            {
+                Orderhistory od_history = setDefault();
+                od_history.AddOderHistory();
+                return od_history.Id;
+            }
+            else if (newID == -1 && ExistID != -1) return ExistID;
+            else return newID;
+        }
+
         public Orderhistory setDefault()
         {
             return new Orderhistory()
@@ -37,6 +49,14 @@ namespace booking.Services
                 Payed = new byte[] { 0 },
                 Status = new byte[] { 1 }
             };
+        }
+
+        public Orderhistory updateByPayMeal(Orderhistory order_history, float total)
+        {
+            order_history.TotalPrice = total;
+            order_history.Payed = new byte[] { 1 };
+            order_history.UpdateDate = DateTime.Now;
+            return order_history;
         }
     }
 }

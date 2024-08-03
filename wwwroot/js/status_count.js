@@ -1,5 +1,5 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
-    const tables = document.querySelectorAll('.box .status');
+    const tables = document.querySelectorAll('.box .status').value;
     let freeCount = 0;
     let orderedCount = 0;
 

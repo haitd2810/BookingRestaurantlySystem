@@ -26,7 +26,8 @@ namespace booking.Controllers
         private readonly Feedback feedback_object = new Feedback();
         private readonly Photorestaurant photo_object = new Photorestaurant();
         private readonly Bookingtable book_object = new Bookingtable();
-
+        const string default_img = "/assets/img/testimonials/d8b5d0a738295345ebd8934b859fa1fca1c8c6ad.jpeg";
+        const string path_save_feedback = "wwwroot/assets/img/uploads";
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
@@ -73,9 +74,7 @@ namespace booking.Controllers
         public async Task<ActionResult> createFeedback(string name, string jobs, string email, string phone, IFormFile img, string feedback)
         {
             //declare variable
-            const string default_img = "/assets/img/testimonials/d8b5d0a738295345ebd8934b859fa1fca1c8c6ad.jpeg";
-            const string path_save_feedback = "wwwroot/assets/img/uploads";
-            const string subject = "Thanks for your response";
+            string subject = "Thanks for your response";
             //check user who give feedback, have yet booked table
             if (!book_service.isBooked(email, phone))
             {
