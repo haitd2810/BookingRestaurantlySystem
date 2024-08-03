@@ -22,13 +22,8 @@ namespace booking.Models
 
         public virtual Table? Table { get; set; }
         private readonly bookingDBContext context = new bookingDBContext();
-        public Boolean isBooked(string email, string phone)
-        {
-            var booked = context.Bookingtables.Where(book => book.Email == email && book.Phone == phone).FirstOrDefault();
-            return booked == null;
-        }
 
-        public Boolean confirmBooking()
+        public Boolean updateBooking()
         {
             context.Bookingtables.Update(this);
             int row = context.SaveChanges();

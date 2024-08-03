@@ -164,7 +164,6 @@
             var statusText = "pending";
             if (prepay === '\u0001' && status === '\u0001') statusText = "confirmed";
             if (prepay === '\u0001' && status === '\u0000') statusText = "ordered";
-            console.log(item);
             var rows = "<tr>"
                 + "<th scope='row'>" + stt + "</th>"
                 + "<td>" + item.name + "</td>"

@@ -55,16 +55,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function checkTableAvailability(date, time) {
-        console.log(time);
-        console.log(date);
         let availableTables = ['table01', 'table02', 'table03', 'table04', 'table05', 'table06', 'table07', 'table08'];
         for (let booking of bookingList) {
             let bookingDate = formatDate(booking.DateOrder);
             let bookingTime = formatTime(booking.TimeOrder);
             console.log("date: " + bookingDate + " - Time: " + bookingTime);
             if (bookingDate === date && bookingTime == time) {
-                let tableId = parseInt(booking.TableId);
-                availableTables = availableTables.filter(table => table !== `table${tableId < 10 ? '0' + tableId : tableId}`);
+                    let tableId = parseInt(booking.TableId);
+                    availableTables = availableTables.filter(table => table !== `table${tableId < 10 ? '0' + tableId : tableId}`);
+                }
             }
         }
         return availableTables;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 
 namespace booking.Models
@@ -17,5 +18,11 @@ namespace booking.Models
         public byte[]? Status { get; set; }
 
         public virtual ICollection<Meal> Meals { get; set; }
+
+        public List<Categorymeal> getCate()
+        {
+            bookingDBContext context = new bookingDBContext();
+            return context.Categorymeals.Where(cate => cate.Status[0] == 1).ToList();
+        }
     }
 }

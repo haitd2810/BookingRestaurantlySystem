@@ -20,6 +20,15 @@ namespace booking.Models
         public virtual Orderhistory? OdHistory { get; set; }
         public virtual Table? Table { get; set; }
         private readonly bookingDBContext context = new bookingDBContext();
+
+        public List<Ordertable> getOrderList(int id)
+        {
+            return context.Ordertables
+                          .Where(od => od.Status[0] == 1 && od.TableId == id)
+                          .Include(od => od.Meal.Cate)
+                          .Include(od => od.Meal)
+                          .ToList();
+        }
         public Boolean AddOrderTable()
         {
             context.Ordertables.Add(this);
@@ -67,7 +76,16 @@ namespace booking.Models
                     .FirstOrDefault();
 
         }
+        public List<Ordertable> FindOrder(int tableID, int orderHistoryID)
+        {
+            return context.Ordertables.
+                    Where(od => od.TableId == tableID && od.OdHistoryId == orderHistoryID)
+                    .Include(meal => meal.Meal)
+                    .Include(table => table.Table)
+                    .Include(odHis => odHis.OdHistory)
+                    .ToList();
 
+        }
         public Boolean updatePaymeal(int orderHistoryID, int tableID)
         {
             List<Ordertable> order = context.Ordertables.

@@ -21,15 +21,17 @@ namespace booking.Controllers
         private readonly bookingDBContext context = new bookingDBContext();
         private readonly Ordertable object_od = new Ordertable();
         private readonly Orderhistory object_odhistory = new Orderhistory();
-        private readonly IOrderHistoryService order_service = new OrderHistoryService();
+        private readonly Ordertable order_object = new Ordertable();
         private readonly BookingService booking_service = new BookingService();
         private readonly Bookingtable object_booking = new Bookingtable();
+        private readonly Meal meal_object = new Meal();
+        private readonly Table table_object = new Table();
+        private readonly Categorymeal categorymeal_object = new Categorymeal();
+        private readonly IOrderHistoryService orderHistory_service = new OrderHistoryService();
+        private readonly IOrderService order_service = new OrderService();
         public IActionResult Index()
         {
-            List<Table> table_list = context.Tables
-                                            .Where(table => table.Status[0] == 1)
-                                            .Include(t => t.TypeTable)
-                                            .ToList();
+            List<Table> table_list = table_object.getTableList();
             ViewBag.listTable = table_list;
 
             return View();
@@ -37,19 +39,13 @@ namespace booking.Controllers
 
         public ActionResult Details(int id)
         {
-            List<Meal> meal_list = context.Meals.Where(meal => meal.Status[0] == 1)
-                                   .Include(cate => cate.Cate).ToList();
+            List<Meal> meal_list = meal_object.getMeal();
             ViewBag.mealList = meal_list;
 
-            List<Ordertable> order_list = context.Ordertables
-                                                 .Where(od => od.Status[0] == 1 && od.TableId == id)
-                                                 .Include(od => od.Meal)
-                                                 .ToList();
+            List<Ordertable> order_list = order_object.getOrderList(id);
             ViewBag.orderList = order_list;
 
-            List<Categorymeal> cate_list = context.Categorymeals
-                                                  .Where(cate => cate.Status[0] == 1)
-                                                  .ToList();
+            List<Categorymeal> cate_list = categorymeal_object.getCate();
             ViewBag.category = cate_list;
 
             ViewBag.tableID = id;
@@ -61,21 +57,10 @@ namespace booking.Controllers
         {
             Ordertable order = object_od.FindOrder(tableID, mealID, odHistory);
             
-            List<Ordertable> order_list = context.Ordertables
-                                       .Where(od => od.TableId == tableID 
-                                                    && od.OdHistoryId == odHistory)
-                                       .ToList();
-            if (order != null) order.DeleteOrderTable();
-            //check if there are more than 1 meal in order?
-            if (order_list.Count() == 1 && order_list[0].Quantity == 1)
-            {
-                object_odhistory.deleteByID(int.Parse(order_list[0].OdHistoryId.ToString()));
-
-                //update status table
-                Table table = new Table();
-                table.markTableAsOrdered(tableID, false);
-            }
-
+            List<Ordertable> order_list = object_od.FindOrder(tableID,odHistory);
+            
+            //delete in db
+            orderHistory_service.deleteByZeroMeal(order_list, order, odHistory, tableID);
             return RedirectToAction("Details", "Staff", new
             {
                 id = tableID
@@ -84,24 +69,22 @@ namespace booking.Controllers
 
         public ActionResult payMeal(int orderHistoryID, int tableID)
         {
-            if (orderHistoryID == -1 || tableID == -1) 
-                return RedirectToAction("Details", "Staff", new
-                {
-                    id = tableID
-                });
+            if (orderHistoryID == -1 || tableID == -1) return RedirectToAction("Details", "Staff", new
+                                                                              {
+                                                                                  id = tableID
+                                                                              });
+
             //update order table for payment
             object_od.updatePaymeal(orderHistoryID, tableID);
 
             //update order history for payment
             Orderhistory order_history = object_odhistory.findbyID(orderHistoryID);
-            order_history.TotalPrice = object_odhistory.getTotal(order_history);
-            order_history.Payed = new byte[] { 1 };
-            order_history.UpdateDate = DateTime.Now;
+            float total = object_odhistory.getTotal(order_history);
+            order_history = orderHistory_service.updateByPayMeal(order_history, total);
             order_history.UpdateOrderHistory();
 
             //update status table
-            Table table = new Table();
-            table.markTableAsOrdered(tableID, false);
+            table_object.markTableAsOrdered(tableID, false);
 
             return RedirectToAction("Details", "Staff", new
             {
@@ -113,45 +96,11 @@ namespace booking.Controllers
         {
             if (selectedItems == null || !selectedItems.Any()) return BadRequest("Invalid data.");
 
-            int tableID = 0;
+            int tableID = selectedItems[0].tableID;
             int orderHistoryID = -1;
-            foreach (var item in selectedItems)
-            {
-                Ordertable od = object_od.FindOrder(item.tableID,item.MealID,item.odhistoryID);
-                if (od != null)
-                {
-                    od.Quantity += item.quantity;
-                    od.Price += item.price;
-                    od.UpdateOrderTable();
-                }
-                else
-                {
-                    //check orderHistoryID is exist or not
-                    if (orderHistoryID == -1 && item.odhistoryID == -1) { 
-                        Orderhistory od_history = order_service.setDefault();
-                        od_history.AddOderHistory();
-                        orderHistoryID = od_history.Id;
-                    }
-                    //check orderHistoryID is exist or not
-                    if (orderHistoryID == -1 && item.odhistoryID != -1) orderHistoryID = item.odhistoryID;
-                    Ordertable new_od = new Ordertable()
-                    {
-                        MealId = item.MealID,
-                        Quantity = item.quantity,
-                        Price = item.price,
-                        TableId = item.tableID,
-                        CreateDate = DateTime.Now,
-                        UpdateDate = DateTime.Now,
-                        Status = new byte[] { 1 },
-                        OdHistoryId = orderHistoryID
-                    };
-                    new_od.AddOrderTable();
-                    tableID = item.tableID;
-                }
-            }
+            changeByOrderMeal(selectedItems, orderHistoryID);
             //update status order of table
-            Table table = new Table();
-            table.markTableAsOrdered(tableID, true);
+            table_object.markTableAsOrdered(tableID, true);
 
             return Ok();
         }
@@ -169,7 +118,7 @@ namespace booking.Controllers
         {
             Bookingtable booking = object_booking.findByID(id);
             booking_service.changeStatus(booking);
-            booking.confirmBooking();
+            booking.updateBooking();
             return RedirectToAction("Schedule", "Staff");
         }
 
@@ -190,5 +139,24 @@ namespace booking.Controllers
             return View();
         }
 
+        private void changeByOrderMeal(List<SelectedItem> selectedItems, int orderHistoryID)
+        {
+            foreach (var item in selectedItems)
+            {
+                Ordertable od = object_od.FindOrder(item.tableID, item.MealID, item.odhistoryID);
+                if (od != null)
+                {
+                    od = order_service.changeByOrderMeal(od, item.quantity, item.price);
+                    od.UpdateOrderTable();
+                }
+                else
+                {
+                    orderHistoryID = orderHistory_service.getIDOrderHistory(item.odhistoryID, orderHistoryID);
+                    Ordertable new_od = order_service.setOrder(item.MealID, item.quantity, item.price, item.tableID, DateTime.Now,
+                                                               DateTime.Now, new byte[] { 1 }, orderHistoryID);
+                    new_od.AddOrderTable();
+                }
+            }
+        }
     }
 }

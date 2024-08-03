@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 
 namespace booking.Models
@@ -14,7 +15,7 @@ namespace booking.Models
         public byte[]? Status { get; set; }
         public string? Img { get; set; }
 
-        public Boolean giveFeedback()
+        public Boolean addFeedback()
         {
             bookingDBContext context = new bookingDBContext();
             context.Feedbacks.Add(this);
@@ -24,6 +25,12 @@ namespace booking.Models
                 return false;
             }
             return true;
+        }
+
+        public List<Feedback> getFeedback()
+        {
+            bookingDBContext context = new bookingDBContext();
+            return context.Feedbacks.Where(fb => fb.Status[0] == 1).ToList();
         }
     }
 }

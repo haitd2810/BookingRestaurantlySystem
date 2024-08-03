@@ -38,8 +38,16 @@
                                 <span class="chair" style="visibility:hidden"><i class="bi bi-person-fill"></i></span>
                                 <div class="col-12 box" data-aos="zoom-in" data-aos-delay="100">
                                     <a asp-controller="Staff" asp-action="Details" asp-route-id="@table.Id">
-                                        <span>@table.TableName</span>
-                                        <p class="status"> @ordered </p>
+                                        @if (ordered.Equals("Ordered"))
+                                        {
+                                            <span>@ordered</span>
+                                            <p style="display:none" class="status"> @ordered </p>
+                                        }
+                                        else
+                                        {
+                                            <span>@table.TableName</span>
+                                            <p class="status"> @ordered </p>
+                                        }
                                     </a>
                                 </div>
                                 <span class="chair bottom-chair-1vs1"><i class="bi bi-person-fill"></i></span>
@@ -54,8 +62,16 @@
                                 <span class="chair top-chair-2vs2"><i class="bi bi-person-fill"></i></span>
                                 <div class="col-12 box" data-aos="zoom-in" data-aos-delay="100">
                                     <a asp-controller="Staff" asp-action="Details" asp-route-id="@table.Id">
-                                        <span>@table.TableName</span>
-                                        <p class="status"> @ordered</p>
+                                        @if (ordered.Equals("Ordered"))
+                                        {
+                                            <span>@ordered</span>
+                                            <p style="display:none" class="status"> @ordered </p>
+                                        }
+                                        else
+                                        {
+                                            <span>@table.TableName</span>
+                                            <p class="status"> @ordered </p>
+                                        }
                                     </a>
                                 </div>
                                 <span class="chair bottom-chair-2vs2"><i class="bi bi-person-fill"></i></span>

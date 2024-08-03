@@ -80,6 +80,14 @@ namespace booking.Models
             }
         }
 
+        public List<Table> getTableList()
+        {
+            return context.Tables
+                          .Where(table => table.Status[0] == 1)
+                          .Include(t => t.TypeTable)
+                          .ToList();
+        }
+
     }
 
 }
