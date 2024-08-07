@@ -1,2 +1,2 @@
 # BookingRestaurantlySystem
-The system lets customers book a table on the restaurant's app or website. Customers choose an available table, pick a date and time, and select the number of people. They can also request outdoor seating or a private area. For the restaurant, the system makes booking easier and reduces staff phone bookings.
+The system allows customers to book a table on the restaurant’s app or website. Customers select an available table, select a date and time, and enter a message if applicable. In addition to booking tables, the system also allows staff to manage and order food for each table during business hours. This makes it an easier management tool than traditional food record keeping.
