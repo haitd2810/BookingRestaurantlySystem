@@ -7,6 +7,8 @@ using System.Text.Json.Serialization;
 
 namespace booking.Controllers
 {
+    
+
     public class SelectedItem
     {
         public int MealID { get; set; }
@@ -18,7 +20,6 @@ namespace booking.Controllers
     }
     public class StaffController : Controller
     {
-        private readonly bookingDBContext context = new bookingDBContext();
         private readonly Ordertable object_od = new Ordertable();
         private readonly Orderhistory object_odhistory = new Orderhistory();
         private readonly Ordertable order_object = new Ordertable();
@@ -130,6 +131,15 @@ namespace booking.Controllers
         [Route("Staff/Statistic")]
         public IActionResult Statistic()
         {
+            List<Orderhistory> list_ord_history = object_odhistory.getAll();
+            ViewBag.order_history = list_ord_history;
+
+            List<Table> table_list = table_object.getTableList();
+            ViewBag.table_list = table_list;
+
+            List<Total_Statistics> list_total = new List<Total_Statistics>();
+            list_total = orderHistory_service.getTotalStatistic(list_ord_history);
+            ViewBag.total = list_total;
             return View();
         }
 

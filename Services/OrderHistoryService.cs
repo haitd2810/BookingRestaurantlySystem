@@ -4,6 +4,12 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace booking.Services
 {
+    public class Total_Statistics
+    {
+        public int id { get; set; }
+        public string date { get; set; }
+        public float total { get; set; }
+    }
     public class OrderHistoryService : IOrderHistoryService
     {
         private readonly IOrderService order_service = new OrderService();
@@ -35,6 +41,48 @@ namespace booking.Services
             }
             else if (newID == -1 && ExistID != -1) return ExistID;
             else return newID;
+        }
+
+        public List<Total_Statistics> getTotalStatistic(List<Orderhistory> order_his_list)
+        {
+            int count = 0;
+            List<Total_Statistics> total_List = new List<Total_Statistics> ();
+            foreach(Orderhistory ord in order_his_list)
+            {
+                if(returnIndexDuplicate(total_List,ord.getDate()) != -1)
+                {
+                    int index = returnIndexDuplicate(total_List, ord.getDate());
+                    float price = float.Parse(ord.TotalPrice.ToString() ?? "0");
+                    total_List[index].total += price;
+                }
+                else
+                {
+                    count++;
+                    int id = count;
+                    string date = ord.getDate();
+                    float total = float.Parse(ord.TotalPrice.ToString());
+                    Total_Statistics new_total = new Total_Statistics() 
+                    { 
+                        id = id,
+                        date = date,
+                        total = total,
+                    };
+                    total_List.Add(new_total);
+                }
+            }
+            return total_List;
+        }
+        
+        private int returnIndexDuplicate(List<Total_Statistics> list, string keyword)
+        {
+            for(int i=0; i < list.Count; i++)
+            {
+                if (list[i].date.Equals(keyword))
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         public Orderhistory setDefault()
