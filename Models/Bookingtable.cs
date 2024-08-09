@@ -34,10 +34,20 @@ namespace booking.Models
             return true;
         }
 
+        public List<Bookingtable> getAll(int pageNumber, int pageSize)
+        {
+            return context.Bookingtables.Include(book => book.Table)
+                                        .Skip((pageNumber - 1) * pageSize)
+                                        .Take(pageSize)
+                                        .OrderByDescending(book => book.DateOrder)
+                                        .OrderByDescending(book => book.TimeOrder)
+                                        .ToList();
+        }
         public List<Bookingtable> getAll()
         {
-            return context.Bookingtables.Include(book => book.Table).ToList();
-        } 
+            return context.Bookingtables.Include(book => book.Table)
+                                        .ToList();
+        }
 
         public Bookingtable findByID(int id)
         {

@@ -5,7 +5,22 @@
 }
 @{
     List<Bookingtable> booking_list = ViewBag.booking_list as List<Bookingtable>;
+    int numberPage = ViewBag.maxPage;
+    int CurrentPage = ViewBag.CurrentPage;
+    int previous = CurrentPage - 1;
+    int next = CurrentPage + 1;
 }
+<style>
+    .page-link{
+        color: #fff;
+        background-color: #cda45e00;
+    }
+
+    .page-link:hover {
+        color: #cda45e;
+        background-color: #fff;
+    }
+</style>
 <main id="main" style="margin-top: 5em;">
     <!-- ======= About Section ======= -->
     <section id="about" class="about">
@@ -99,13 +114,33 @@
                             
                         </tbody>
                     </table>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link" asp-action="schedule" asp-controller="staff" asp-route-pageNumber="@previous" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            @for (int i = (CurrentPage == 1 ? CurrentPage : CurrentPage-1); i <= numberPage; i++)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" asp-action="schedule" asp-controller="staff" asp-route-pageNumber="@i">@i</a>
+                                </li>
+                            }
+                            <li class="page-item">
+                                <a class="page-link" asp-action="schedule" asp-controller="staff" asp-route-pageNumber="@next" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
-
+                
             </div>
 
         </div>
 
-    </section><!-- End Menu Section -->
+    </sectio><!-- End Menu Section -->
 
 </main><!-- End #main -->
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.js"></script>

@@ -3,6 +3,7 @@ using booking.Models;
 using booking.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing.Printing;
 using System.Text.Json.Serialization;
 
 namespace booking.Controllers
@@ -107,13 +108,29 @@ namespace booking.Controllers
         }
 
         [Route("Staff/Schedule")]
-        public IActionResult Schedule()
+        public IActionResult Schedule(int pageNumber)
         {
-            List<Bookingtable> bookings = object_booking.getAll();
+            const int pageSize = 5;
+            pageNumber = getPageNumber(pageNumber, pageSize);
+            ViewBag.CurrentPage = pageNumber;
+            ViewBag.maxPage = (pageNumber <= getMaxPage(pageSize) - 2? pageNumber+1 : getMaxPage(pageSize));
+
+            List<Bookingtable> bookings = object_booking.getAll(pageNumber,pageSize);
             ViewBag.booking_list = bookings;
             return View();
         }
-
+        private int getPageNumber(int pageNumber, int pageSize)
+        {
+            if (pageNumber <= 1) return 1;
+            else if (pageNumber >= getMaxPage(pageSize)) return getMaxPage(pageSize);
+            else return pageNumber;
+        }
+        private int getMaxPage(int pageSize)
+        {
+            int maxPage = (object_booking.getAll().Count) / pageSize;
+            if (object_booking.getAll().Count % pageSize != 0) maxPage += object_booking.getAll().Count % pageSize;
+            return maxPage;
+        }
         [HttpPost]
         public IActionResult confirmBooking(int id)
         {
