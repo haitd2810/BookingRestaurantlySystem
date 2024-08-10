@@ -3,6 +3,7 @@ using booking.Models;
 using booking.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing.Printing;
 using System.Text.Json.Serialization;
 
 namespace booking.Controllers
@@ -30,6 +31,7 @@ namespace booking.Controllers
         private readonly Categorymeal categorymeal_object = new Categorymeal();
         private readonly IOrderHistoryService orderHistory_service = new OrderHistoryService();
         private readonly IOrderService order_service = new OrderService();
+        private readonly IService service = new Service();
         public IActionResult Index()
         {
             List<Table> table_list = table_object.getTableList();
@@ -106,14 +108,18 @@ namespace booking.Controllers
             return Ok();
         }
 
-        [Route("Staff/Schedule")]
-        public IActionResult Schedule()
+/*        [Route("Staff/Schedule")]*/
+        public IActionResult Schedule(int pageNumber)
         {
-            List<Bookingtable> bookings = object_booking.getAll();
+            const int pageSize = 10;
+            pageNumber = service.getPageNumber(pageNumber, pageSize);
+            ViewBag.CurrentPage = pageNumber;
+            ViewBag.maxPage = (pageNumber <= service.getMaxPage(pageSize) - 2? pageNumber+1 : service.getMaxPage(pageSize));
+
+            List<Bookingtable> bookings = object_booking.getAll(pageNumber,pageSize);
             ViewBag.booking_list = bookings;
             return View();
         }
-
         [HttpPost]
         public IActionResult confirmBooking(int id)
         {
@@ -128,7 +134,7 @@ namespace booking.Controllers
             List<Bookingtable> booking = object_booking.findByName(name);
             return Ok(booking);
         }
-        [Route("Staff/Statistic")]
+/*        [Route("Staff/Statistic")]*/
         public IActionResult Statistic()
         {
             List<Orderhistory> list_ord_history = object_odhistory.getAll();
@@ -137,8 +143,7 @@ namespace booking.Controllers
             List<Table> table_list = table_object.getTableList();
             ViewBag.table_list = table_list;
 
-            List<Total_Statistics> list_total = new List<Total_Statistics>();
-            list_total = orderHistory_service.getTotalStatistic(list_ord_history);
+            List<Total_Statistics> list_total = orderHistory_service.getTotalStatistic(list_ord_history);
             ViewBag.total = list_total;
             return View();
         }
