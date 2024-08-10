@@ -111,7 +111,7 @@ namespace booking.Controllers
 /*        [Route("Staff/Schedule")]*/
         public IActionResult Schedule(int pageNumber)
         {
-            const int pageSize = 1;
+            const int pageSize = 10;
             pageNumber = service.getPageNumber(pageNumber, pageSize);
             ViewBag.CurrentPage = pageNumber;
             ViewBag.maxPage = (pageNumber <= service.getMaxPage(pageSize) - 2? pageNumber+1 : service.getMaxPage(pageSize));
