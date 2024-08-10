@@ -5,9 +5,9 @@
 }
 @{
     List<Bookingtable> booking_list = ViewBag.booking_list as List<Bookingtable>;
-    int numberPage = ViewBag.maxPage;
+    int maxPage = ViewBag.maxPage;
     int CurrentPage = ViewBag.CurrentPage;
-    int previous = CurrentPage - 1;
+    int previous = (CurrentPage - 1) <= 0 ? CurrentPage : CurrentPage - 1;
     int next = CurrentPage + 1;
 }
 <style>
@@ -17,6 +17,10 @@
     }
 
     .page-link:hover {
+        color: #cda45e;
+        background-color: #fff;
+    }
+    .active-page{
         color: #cda45e;
         background-color: #fff;
     }
@@ -121,10 +125,11 @@
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
                             </li>
-                            @for (int i = (CurrentPage == 1 ? CurrentPage : CurrentPage-1); i <= numberPage; i++)
+                            @for (int i = (CurrentPage == 1 ? CurrentPage : CurrentPage - 1); i <= maxPage; i++)
                             {
+                                String active = (i == CurrentPage)? "active-page" : "";
                                 <li class="page-item">
-                                    <a class="page-link" asp-action="schedule" asp-controller="staff" asp-route-pageNumber="@i">@i</a>
+                                    <a class="page-link @active" asp-action="schedule" asp-controller="staff" asp-route-pageNumber="@i">@i</a>
                                 </li>
                             }
                             <li class="page-item">

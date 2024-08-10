@@ -39,8 +39,9 @@ namespace booking.Models
             return context.Bookingtables.Include(book => book.Table)
                                         .Skip((pageNumber - 1) * pageSize)
                                         .Take(pageSize)
-                                        .OrderByDescending(book => book.DateOrder)
-                                        .OrderByDescending(book => book.TimeOrder)
+                                        .OrderByDescending(book => book.Status[0])
+/*                                        .OrderByDescending(book => book.DateOrder)
+                                        .OrderByDescending(book => book.TimeOrder)*/
                                         .ToList();
         }
         public List<Bookingtable> getAll()

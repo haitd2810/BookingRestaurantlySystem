@@ -31,6 +31,7 @@ namespace booking.Controllers
         private readonly Categorymeal categorymeal_object = new Categorymeal();
         private readonly IOrderHistoryService orderHistory_service = new OrderHistoryService();
         private readonly IOrderService order_service = new OrderService();
+        private readonly IService service = new Service();
         public IActionResult Index()
         {
             List<Table> table_list = table_object.getTableList();
@@ -107,29 +108,17 @@ namespace booking.Controllers
             return Ok();
         }
 
-        [Route("Staff/Schedule")]
+/*        [Route("Staff/Schedule")]*/
         public IActionResult Schedule(int pageNumber)
         {
-            const int pageSize = 5;
-            pageNumber = getPageNumber(pageNumber, pageSize);
+            const int pageSize = 1;
+            pageNumber = service.getPageNumber(pageNumber, pageSize);
             ViewBag.CurrentPage = pageNumber;
-            ViewBag.maxPage = (pageNumber <= getMaxPage(pageSize) - 2? pageNumber+1 : getMaxPage(pageSize));
+            ViewBag.maxPage = (pageNumber <= service.getMaxPage(pageSize) - 2? pageNumber+1 : service.getMaxPage(pageSize));
 
             List<Bookingtable> bookings = object_booking.getAll(pageNumber,pageSize);
             ViewBag.booking_list = bookings;
             return View();
-        }
-        private int getPageNumber(int pageNumber, int pageSize)
-        {
-            if (pageNumber <= 1) return 1;
-            else if (pageNumber >= getMaxPage(pageSize)) return getMaxPage(pageSize);
-            else return pageNumber;
-        }
-        private int getMaxPage(int pageSize)
-        {
-            int maxPage = (object_booking.getAll().Count) / pageSize;
-            if (object_booking.getAll().Count % pageSize != 0) maxPage += object_booking.getAll().Count % pageSize;
-            return maxPage;
         }
         [HttpPost]
         public IActionResult confirmBooking(int id)
@@ -145,7 +134,7 @@ namespace booking.Controllers
             List<Bookingtable> booking = object_booking.findByName(name);
             return Ok(booking);
         }
-        [Route("Staff/Statistic")]
+/*        [Route("Staff/Statistic")]*/
         public IActionResult Statistic()
         {
             List<Orderhistory> list_ord_history = object_odhistory.getAll();
@@ -154,8 +143,7 @@ namespace booking.Controllers
             List<Table> table_list = table_object.getTableList();
             ViewBag.table_list = table_list;
 
-            List<Total_Statistics> list_total = new List<Total_Statistics>();
-            list_total = orderHistory_service.getTotalStatistic(list_ord_history);
+            List<Total_Statistics> list_total = orderHistory_service.getTotalStatistic(list_ord_history);
             ViewBag.total = list_total;
             return View();
         }
