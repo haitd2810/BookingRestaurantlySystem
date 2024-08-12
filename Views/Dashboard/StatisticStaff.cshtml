@@ -1,0 +1,105 @@
+﻿@using booking.Services
+@{
+    ViewData["Title"] = "Statistic";
+    Layout = "~/Views/Layout/_header.cshtml";
+    List<Table> table_list = ViewBag.table_list as List<Table>;
+    List<Orderhistory> history_list = ViewBag.order_history as List<Orderhistory>;
+    List<Total_Statistics> total_list = ViewBag.total as List<Total_Statistics>;
+}
+
+<main id="main">
+
+    <!-- ======= Specials Section ======= -->
+    <section id="specials" class="specials">
+        <div class="container" data-aos="fade-up">
+
+            <div class="section-title">
+                <h2></h2>
+                <p>Statistic</p>
+            </div>
+        </div>
+        <div class="container-fluid" data-aos="fade-up">
+
+            <div class="row" data-aos="fade-up" data-aos-delay="100">
+                <div class="col-7">
+                    <canvas id="ChartTotalByDay" style="width:10    0%;border:1px #cda45e inset;"></canvas>
+                </div>
+                <div class="col-3" style="margin:auto;">
+                    <canvas id="CharTableByDay" style="border:1px #cda45e inset;width:100%;"></canvas>
+                </div>
+            </div>
+        </div>
+    </section><!-- End Specials Section -->
+</main><!-- End #main -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
+<script>
+    const xValuesTotal = [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150];
+    const yValuesTotal = [7, 8, 8, 9, 9, 9, 10, 11, 14, 14, 15];
+
+    new Chart("ChartTotalByDay", {
+        type: "line",
+        data: {
+            labels: xValuesTotal,
+            datasets: [{
+                fill: false,
+                lineTension: 0,
+                backgroundColor: "#cda45e",
+                borderColor: "#ffffff66",
+                data: yValuesTotal
+            }]
+        },
+        options: {
+            legend: { display: false },
+            scales: {
+                yAxes: [{
+                    ticks: { min: 6, max: 16 },
+                    scaleLabel: {
+                        display: true
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true
+                    }
+                }]
+            }
+        }
+    });
+
+</script>
+
+<script>
+    const xValuesTable = ["Table1", "Table2", "Table3", "Table4", "Table5", "Table6", "Table7", "Table8"];
+    const yValuesTable = [55, 49, 44, 24, 15, 25, 30, 45];
+    const barColors = [
+        "#cda45e",
+        "#00aba9",
+        "#ffffff66",
+        "#e8c3b9",
+        "#1e7145",
+        "#b91d47",
+        "#00aba9",
+        "#2b5797"
+    ];
+
+    new Chart("CharTableByDay", {
+        type: "doughnut",
+        data: {
+            labels: xValuesTable,
+            datasets: [{
+                backgroundColor: barColors,
+                data: yValuesTable
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: "World Wide Wine Production 2018"
+            }
+        }
+    });
+</script>
+
+
+
