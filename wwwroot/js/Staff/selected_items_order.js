@@ -18,10 +18,12 @@
             if (checkbox.checked) {
                 const menuItem = checkbox.closest('.menu-item');
                 const itemName = menuItem.querySelector('.menu-content a').textContent;
+                const itemId = menuItem.querySelector('input[name="mealID"]').value; // Get the ID of the item
 
                 // If the item is not already selected, add it with a default quantity of 1
                 if (!selectedItems[itemName]) {
                     selectedItems[itemName] = {
+                        id: itemId, 
                         element: menuItem.cloneNode(true),
                         quantity: 1
                     };
@@ -36,7 +38,7 @@
                 const quantityControl = document.createElement('div');
                 quantityControl.className = 'quantity-control';
                 quantityControl.innerHTML = `
-                    <button class="btn decrement-btn">-</button>
+                    <button class="decrement-btn">-</button>
                     <span class="quantity">${selectedItems[itemName].quantity}</span>
                     <button class="btn increment-btn">+</button>
                 `;
@@ -74,7 +76,11 @@
     function getSelectedItems() {
         const items = [];
         Object.keys(selectedItems).forEach(itemName => {
-            items.push({ name: itemName, quantity: selectedItems[itemName].quantity });
+            items.push({
+                id: selectedItems[itemName].id, // Include the item ID
+                name: itemName,
+                quantity: selectedItems[itemName].quantity
+            });
         });
         return items;
     }
@@ -82,6 +88,5 @@
     // Example usage
     document.getElementById('retrieve-button').addEventListener('click', function () {
         const selectedItemsList = getSelectedItems();
-        console.log(selectedItemsList);
     });
 });

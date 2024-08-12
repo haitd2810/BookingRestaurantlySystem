@@ -16,5 +16,11 @@ namespace booking.Models
         public string? Instagram { get; set; }
         public string? Twitter { get; set; }
         public string? LinkedIn { get; set; }
+
+        public Setting getSetting()
+        {
+            bookingDBContext context = new bookingDBContext();
+            return context.Settings.FirstOrDefault() ?? this;
+        }
     }
 }

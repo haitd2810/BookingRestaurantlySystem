@@ -3,9 +3,7 @@
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
 @{
-    var httpContext = HttpContextAccessor.HttpContext;
-    var infoSettingJson = httpContext.Session.GetString("InfoSetting");
-    Setting infoSetting = infoSettingJson != null ? JsonConvert.DeserializeObject<Setting>(infoSettingJson) : null;
+    var infoSetting = ViewBag.infosetting as Setting;
     ViewData["Title"] = "Home Page";
     List<Meal> meal = ViewBag.meal as List<Meal>;
     List<Categorymeal> category = ViewBag.category as List<Categorymeal>;
@@ -13,6 +11,7 @@
     List<Post> post = ViewBag.post as List<Post>;
     List<Feedback> feedback = ViewBag.feedback as List<Feedback>;
     List<Photorestaurant> photo = ViewBag.photo as List<Photorestaurant>;
+    List<Bookingtable> booking = ViewBag.booking as List<Bookingtable>;
 }
 
   <!-- ======= Hero Section ======= -->
@@ -307,31 +306,34 @@
           <p>Book a Table</p>
         </div>
 
-        <form action="forms/book-a-table.php" method="post" role="form" class="php-email-form" data-aos="fade-up" data-aos-delay="100">
+        <form asp-controller="User" asp-action="booking" class="php-email-form" data-aos="fade-up" data-aos-delay="100">
           <div class="row">
             <div class="col-lg-4 col-md-6 form-group">
-              <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
+              <input type="text" name="name" class="form-control" required id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
               <div class="validate"></div>
             </div>
             <div class="col-lg-4 col-md-6 form-group mt-3 mt-md-0">
-              <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email">
+              <input type="email" class="form-control" name="email" required id="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email">
               <div class="validate"></div>
             </div>
             <div class="col-lg-4 col-md-6 form-group mt-3 mt-md-0">
-              <input type="text" class="form-control" name="phone" id="phone" placeholder="Your Phone" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
+              <input type="number" class="form-control" name="phone" required id="phone" placeholder="Your Phone" data-msg="Please enter your phone">
               <div class="validate"></div>
             </div>
             <div class="col-lg-4 col-md-6 form-group mt-3">
-              <input type="text" name="date" class="form-control" id="date" placeholder="Date" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
+              <input type="date" name="date" class="form-control" required id="date" placeholder="Date" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
               <div class="validate"></div>
             </div>
             <div class="col-lg-4 col-md-6 form-group mt-3">
-              <input type="text" class="form-control" name="time" id="time" placeholder="Time" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
+              <input type="time" class="form-control" name="time" required id="time" placeholder="Time" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
               <div class="validate"></div>
             </div>
             <div class="col-lg-4 col-md-6 form-group mt-3">
-              <input type="number" class="form-control" name="people" id="people" placeholder="# of people" data-rule="minlen:1" data-msg="Please enter at least 1 chars">
-              <div class="validate"></div>
+              <div class="form-group">
+                 <select class="selectpicker select-table " required name="tableNumber">
+                    
+                 </select>
+              </div>
             </div>
           </div>
           <div class="form-group mt-3">
@@ -450,7 +452,7 @@
                 <h4>Open Hours:</h4>
                 <p>
                   @infoSetting.DayWork<br>
-                  @infoSetting.OpenTime AM - @infoSetting.CloseTime PM
+                  @infoSetting.OpenTime - @infoSetting.CloseTime
                 </p>
               </div>
 
@@ -472,29 +474,49 @@
 
           <div class="col-lg-8 mt-5 mt-lg-0">
 
-            <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+            <form asp-controller="Home" asp-action="createFeedback" method="post" role="form" class="php-email-form" id="feedbackForm" enctype="multipart/form-data">
               <div class="row">
                 <div class="col-md-6 form-group">
-                  <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
+                    <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
                 </div>
                 <div class="col-md-6 form-group mt-3 mt-md-0">
-                  <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
+                    <input type="text" class="form-control" name="jobs" id="jobs" placeholder="Your Jobs" required>
                 </div>
               </div>
-              <div class="form-group mt-3">
-                <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
-              </div>
-              <div class="form-group mt-3">
-                <textarea class="form-control" name="message" rows="8" placeholder="Message" required></textarea>
-              </div>
-              <div class="my-3">
-                <div class="loading">Loading</div>
-                <div class="error-message"></div>
-                <div class="sent-message">Your message has been sent. Thank you!</div>
-              </div>
-              <div class="text-center"><button type="submit">Send Message</button></div>
+               <div class="row">
+                 <div class="col-md-6 form-group">
+                   <input type="email" name="email" class="form-control" id="email" placeholder="Your Email" required>
+                 </div>
+                 <div class="col-md-6 form-group mt-3 mt-md-0">
+                   <input type="number" class="form-control" name="phone" id="phone" placeholder="Your Phone" required>
+                 </div>
+               </div>
+               <div class="form-group mt-3 file-input-wrapper" style="position: relative;">
+                  <input type="file" class="form-control" name="img" id="img">
+                  <label for="img" class="custom-file-label" style="position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    pointer-events: none;
+                    padding: 0.375rem 0.75rem;
+                    background-color:black;
+                    border: 1px solid #ced4da;
+                    border-radius: 0.25rem;">May you upload your photo? please click here to upload. Thanks</label>
+               </div>
+               <div class="form-group mt-3">
+                  <textarea class="form-control" id="feedback" name="feedback" rows="8" placeholder="Your feedback" required></textarea>
+               </div>
+               <div class="my-3">
+                  <div class="loading">Loading</div>
+                  <div class="error-message"></div>
+                  <div class="sent-message">Your message has been sent. Thank you!</div>
+                </div>
+                <div class="text-center"><button id="button-feedback" type="submit">Give Feedback</button></div>
             </form>
-
+            <div id="thankYouMessage" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); color: white; text-align: center; padding-top: 20%; font-size: 24px;">
+                Thank you for your feedback!
+            </div>
           </div>
 
         </div>
@@ -503,4 +525,73 @@
     </section><!-- End Contact Section -->
 
   </main><!-- End #main -->
+@{
+    var serializerSettings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+    var bookingListJson = JsonConvert.SerializeObject(booking, serializerSettings);
+}
+<input type="hidden" id="bookingListJson" value='@Html.Raw(bookingListJson)' />
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let bookingList = JSON.parse(document.getElementById('bookingListJson').value);
 
+        function formatDate(dateObj) {
+            let month = dateObj.Month.toString().padStart(2, '0');
+            let day = dateObj.Day.toString().padStart(2, '0');
+            return `${dateObj.Year}-${month}-${day}`;
+        }
+
+        function formatTime(timeObj) {
+            let hour = timeObj.Hour.toString().padStart(2, '0');
+            let minute = timeObj.Minute.toString().padStart(2, '0');
+            return `${hour}:${minute}`;
+        }
+
+        function timeDifferenceInMinutes(time1, time2) {
+            let [hours1, minutes1] = time1.split(':').map(Number);
+            let [hours2, minutes2] = time2.split(':').map(Number);
+            return (hours1 * 60 + minutes1) - (hours2 * 60 + minutes2);
+        }
+
+        function checkTableAvailability(date, time) {
+            let availableTables = ['table01', 'table02', 'table03', 'table04', 'table05', 'table06', 'table07', 'table08'];
+            for (let booking of bookingList) {
+                let bookingDate = formatDate(booking.DateOrder);
+                let bookingTime = formatTime(booking.TimeOrder);
+
+                if (bookingDate === date) {
+                    let timeDiff = Math.abs(timeDifferenceInMinutes(bookingTime, time));
+                    if (timeDiff <= 45) {
+                        let tableId = parseInt(booking.TableId);
+                        availableTables = availableTables.filter(table => table !== `table${tableId < 10 ? '0' + tableId : tableId}`);
+                    }
+                }
+            }
+            return availableTables;
+        }
+
+        function updateTableSelect() {
+            let date = document.getElementById('date').value;
+            let time = document.getElementById('time').value;
+            let tableSelect = document.querySelector('.select-table');
+            tableSelect.innerHTML = '';
+
+            if (date && time) {
+                let availableTables = checkTableAvailability(date, time);
+                for (let table of availableTables) {
+                    let option = document.createElement('option');
+                    option.value = table.toLowerCase().replace(' ', '');
+                    option.textContent = table;
+                    tableSelect.appendChild(option);
+                }
+            }
+        }
+
+        document.getElementById('date').addEventListener('change', updateTableSelect);
+        document.getElementById('time').addEventListener('change', updateTableSelect);
+    });
+  </script>
+  <script src="~/js/Home/give_feedback_script.js"></script>
+  <script src="~/js/Home/change_text_upload_file_script.js"></script>

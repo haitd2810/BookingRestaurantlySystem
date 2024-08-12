@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 
 namespace booking.Models
@@ -15,5 +16,11 @@ namespace booking.Models
 
         public virtual Meal IdNavigation { get; set; } = null!;
         public virtual Meal? meal { get; set; }
+
+        public List<Specialmeal> getSepcialMeal()
+        {
+            bookingDBContext context = new bookingDBContext();
+            return context.Specialmeals.Where(spec => spec.Status[0] == 1).Include(meal => meal.meal).ToList();
+        }
     }
 }
