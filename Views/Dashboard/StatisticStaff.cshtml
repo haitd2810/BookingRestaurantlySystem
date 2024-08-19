@@ -16,7 +16,13 @@
             <div class="section-title">
                 <h2></h2>
                 <p>Statistic</p>
+                <div class="row">
+                    <div class="col-3">
+                        <input type="text" id="kt_daterangepicker_1" class="form-control form-control-solid" placeholder="Pick date range" style="    background-color: #cda45e00;color: #ffffff;border: 1px #cda45e solid;" />
+                    </div>
+                </div>
             </div>
+            
         </div>
         <div class="container-fluid" data-aos="fade-up">
 
@@ -34,8 +40,9 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 
 <script>
-    const xValuesTotal = [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150];
-    const yValuesTotal = [7, 8, 8, 9, 9, 9, 10, 11, 14, 14, 15];
+    const totalData = @Html.Raw(Json.Serialize(ViewBag.total));
+    const xValuesTotal = totalData.map(item => item.date.split('T')[0]);
+    const yValuesTotal = totalData.map(item => item.total);
 
     new Chart("ChartTotalByDay", {
         type: "line",
@@ -98,6 +105,32 @@
                 text: "World Wide Wine Production 2018"
             }
         }
+    });
+</script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<style>
+    .daterangepicker td.available.active,
+    .daterangepicker td.available:hover, .daterangepicker th {
+        color: #000 !important
+    }
+
+    .daterangepicker td.available {
+        color: #000 !important;
+    }
+</style>
+<script type="text/javascript">
+    $(function () {
+        $('#kt_daterangepicker_1').daterangepicker({
+            opens: 'left',
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        }, function (start, end, label) {
+            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        });
     });
 </script>
 

@@ -10,5 +10,8 @@ namespace booking.IServices
         public Orderhistory updateByPayMeal(Orderhistory order_history, float total);
         public int getIDOrderHistory(int ExistID, int newID);
         public List<Total_Statistics> getTotalStatistic(List<Orderhistory> order_his_list);
+
+        public List<Orderhistory> getListByDate(List<Orderhistory> order_his_list, DateTime? start, DateTime? end);
+        public List<Total_Statistics> getCompletebyDate(List<Total_Statistics> list);
     }
 }
