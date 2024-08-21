@@ -5,6 +5,8 @@
     List<Table> table_list = ViewBag.table_list as List<Table>;
     List<Orderhistory> history_list = ViewBag.order_history as List<Orderhistory>;
     List<Total_Statistics> total_list = ViewBag.total as List<Total_Statistics>;
+    String start = ViewBag.startDate.ToString("MM/dd/yyyy");
+    String end = ViewBag.endDate.ToString("MM/dd/yyyy");
 }
 
 <main id="main">
@@ -18,7 +20,12 @@
                 <p>Statistic</p>
                 <div class="row">
                     <div class="col-3">
-                        <input type="text" id="kt_daterangepicker_1" class="form-control form-control-solid" placeholder="Pick date range" style="    background-color: #cda45e00;color: #ffffff;border: 1px #cda45e solid;" />
+                        <input type="text" 
+                               name="daterange"
+                               class="form-control form-control-solid" 
+                               id="kt_daterangepicker_1"
+                               value="@start - @end"
+                               style="    background-color: #cda45e00;color: #ffffff;border: 1px #cda45e solid;" />
                     </div>
                 </div>
             </div>
@@ -27,12 +34,18 @@
         <div class="container-fluid" data-aos="fade-up">
 
             <div class="row" data-aos="fade-up" data-aos-delay="100">
-                <div class="col-7">
+                <div class="col-1"></div>
+                <div class="col-10">
                     <canvas id="ChartTotalByDay" style="width:10    0%;border:1px #cda45e inset;"></canvas>
                 </div>
-                <div class="col-3" style="margin:auto;">
+                <div class="col-1"></div>
+            </div>
+            <div class="row" data-aos="fade-up" data-aos-delay="100" style="margin-top: 5%;">
+                <div class="col-4"></div>
+                <div class="col-4" style="margin:auto;">
                     <canvas id="CharTableByDay" style="border:1px #cda45e inset;width:100%;"></canvas>
                 </div>
+                <div class="col-4"></div>
             </div>
         </div>
     </section><!-- End Specials Section -->
@@ -60,7 +73,7 @@
             legend: { display: false },
             scales: {
                 yAxes: [{
-                    ticks: { min: 6, max: 16 },
+                    ticks: { min: 0 },
                     scaleLabel: {
                         display: true
                     }
@@ -121,18 +134,4 @@
         color: #000 !important;
     }
 </style>
-<script type="text/javascript">
-    $(function () {
-        $('#kt_daterangepicker_1').daterangepicker({
-            opens: 'left',
-            locale: {
-                format: 'DD/MM/YYYY'
-            }
-        }, function (start, end, label) {
-            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-        });
-    });
-</script>
-
-
-
+<script src="~/js/dashboard/UpdateDateStatistic.js"></script>

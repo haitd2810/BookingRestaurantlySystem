@@ -14,6 +14,7 @@ namespace booking.Controllers
         {
             start ??= new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             end ??= DateTime.Now;
+            ViewBag.startDate = start; ViewBag.endDate = end;
             List<Orderhistory> list_ord_history = object_odhistory.getAll();
             ViewBag.order_history = list_ord_history;
 
@@ -21,7 +22,7 @@ namespace booking.Controllers
             ViewBag.table_list = table_list;
 
             List<Orderhistory> filterOrd = orderHistory_service.getListByDate(list_ord_history, start, end);
-            List<Total_Statistics> list_total = orderHistory_service.getTotalStatistic(filterOrd);
+            List<Total_Statistics> list_total = orderHistory_service.getTotalStatistic(filterOrd, start, end);
             ViewBag.total = list_total;
             return View();
         }
