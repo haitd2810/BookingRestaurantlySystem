@@ -81,7 +81,6 @@ namespace booking.Services
         public List<Total_Statistics> getCompletebyDate(List<Total_Statistics> list, DateTime? start, DateTime? end)
         {
             List<Total_Statistics> result = new List<Total_Statistics>();
-            Console.WriteLine(list.Count);
             if (list == null || list.Count == 0)
             {
                 addDate(DateTime.Parse(start.ToString()), DateTime.Parse(end.ToString()).AddDays(1), result);
@@ -140,7 +139,6 @@ namespace booking.Services
                     date = d,
                     total = 0,
                 });
-                Console.WriteLine(d);
             }
         }
 
