@@ -134,19 +134,6 @@ namespace booking.Controllers
             List<Bookingtable> booking = object_booking.findByName(name);
             return Ok(booking);
         }
-/*        [Route("Staff/Statistic")]*/
-        public IActionResult Statistic()
-        {
-            List<Orderhistory> list_ord_history = object_odhistory.getAll();
-            ViewBag.order_history = list_ord_history;
-
-            List<Table> table_list = table_object.getTableList();
-            ViewBag.table_list = table_list;
-
-            List<Total_Statistics> list_total = orderHistory_service.getTotalStatistic(list_ord_history);
-            ViewBag.total = list_total;
-            return View();
-        }
 
         [Route("Staff/StatisticStableDetail")]
         public IActionResult StatisticStableDetail()

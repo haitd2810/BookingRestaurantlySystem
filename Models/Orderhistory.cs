@@ -25,6 +25,24 @@ namespace booking.Models
         public virtual ICollection<Ordertable> Ordertables { get; set; }
         private readonly bookingDBContext context = new bookingDBContext();
 
+        private static readonly object instaceLock = new object();
+        private static Orderhistory instance = null;
+
+        public static Orderhistory Instance
+        {
+            get
+            {
+                lock (instaceLock)
+                {
+                    if (instance == null)
+                    {
+                        instance = new Orderhistory();
+                    }
+                    return instance;
+                }
+            }
+        }
+
         public string getDate()
         {
             return this.CreateDate.ToString().Split(' ')[0] ?? string.Empty;
@@ -103,5 +121,6 @@ namespace booking.Models
                           .Include(od => od.Ordertables)
                           .ToList();
         }
+
     }
 }
