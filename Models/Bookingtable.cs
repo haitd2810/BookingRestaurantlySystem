@@ -23,14 +23,32 @@ namespace booking.Models
         public virtual Table? Table { get; set; }
         private readonly bookingDBContext context = new bookingDBContext();
 
-        public Boolean updateBooking()
+        private static readonly object instaceLock = new object();
+        private static Bookingtable instance = null;
+
+        public static Bookingtable Instance
         {
-            context.Bookingtables.Update(this);
+            get
+            {
+                lock (instaceLock)
+                {
+                    instance ??= new Bookingtable();
+                    return instance;
+                }
+            }
+        }
+
+        public Boolean updateBooking(Bookingtable booking)
+        {
+            if(booking == null) return false;
+            context.Bookingtables.Update(booking);
             int row = context.SaveChanges();
             if(row <= 0)
             {
+                Console.WriteLine("False: " + row);
                 return false;
             }
+                
             return true;
         }
 
@@ -40,8 +58,6 @@ namespace booking.Models
                                         .Skip((pageNumber - 1) * pageSize)
                                         .Take(pageSize)
                                         .OrderByDescending(book => book.Status[0])
-/*                                        .OrderByDescending(book => book.DateOrder)
-                                        .OrderByDescending(book => book.TimeOrder)*/
                                         .ToList();
         }
         public List<Bookingtable> getAll()
@@ -63,6 +79,19 @@ namespace booking.Models
             return context.Bookingtables
                           .Where(book => book.Name.ToLower().Contains(name.ToLower()))
                           .ToList();
+        }
+
+        public Bookingtable changeStatus(Bookingtable booking)
+        {
+            booking.Status = new byte[] { 0 };
+            return booking;
+        }
+
+        public Boolean isBooked(string email, string phone)
+        {
+            bookingDBContext context = new bookingDBContext();
+            var booked = context.Bookingtables.Where(book => book.Email == email && book.Phone == phone).FirstOrDefault();
+            return booked == null;
         }
     }
 }

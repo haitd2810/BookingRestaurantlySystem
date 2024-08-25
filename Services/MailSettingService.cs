@@ -5,6 +5,6 @@ namespace booking.Services
 {
     public class MailSettingService : IMailSettingService
     {
-        private readonly bookingDBContext context = new bookingDBContext();
+        public Mailsetting getMailSetting() => Mailsetting.Instance.getMailSetting();
     }
 }

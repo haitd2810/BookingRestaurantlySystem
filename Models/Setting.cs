@@ -17,6 +17,21 @@ namespace booking.Models
         public string? Twitter { get; set; }
         public string? LinkedIn { get; set; }
 
+        private static readonly object instaceLock = new object();
+        private static Setting instance = null;
+
+        public static Setting Instance
+        {
+            get
+            {
+                lock (instaceLock)
+                {
+                    instance ??= new Setting();
+                    return instance;
+                }
+            }
+        }
+
         public Setting getSetting()
         {
             bookingDBContext context = new bookingDBContext();

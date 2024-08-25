@@ -18,6 +18,20 @@ namespace booking.Models
         public byte[]? Status { get; set; }
 
         public virtual ICollection<Meal> Meals { get; set; }
+        public virtual ICollection<Ordertable> Ordertables { get; set; }
+        private static readonly object instaceLock = new object();
+        private static Categorymeal instance = null;
+        public static Categorymeal Instance
+        {
+            get
+            {
+                lock (instaceLock)
+                {
+                    instance ??= new Categorymeal();
+                    return instance;
+                }
+            }
+        }
 
         public List<Categorymeal> getCate()
         {

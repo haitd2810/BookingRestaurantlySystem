@@ -24,6 +24,19 @@ namespace booking.Models
         public virtual Categorymeal? Cate { get; set; }
         public virtual Specialmeal? Specialmeal { get; set; }
         public virtual ICollection<Ordertable> Ordertables { get; set; }
+        private static readonly object instaceLock = new object();
+        private static Meal instance = null;
+        public static Meal Instance
+        {
+            get
+            {
+                lock (instaceLock)
+                {
+                    instance ??= new Meal();
+                    return instance;
+                }
+            }
+        }
 
         public List<Meal> getMeal()
         {

@@ -11,6 +11,22 @@ namespace booking.Models
         public DateTime? CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public byte[]? Status { get; set; }
+
+        private static readonly object instaceLock = new object();
+        private static Photorestaurant instance = null;
+
+        public static Photorestaurant Instance
+        {
+            get
+            {
+                lock (instaceLock)
+                {
+                    instance ??= new Photorestaurant();
+                    return instance;
+                }
+            }
+        }
+
         public List<Photorestaurant> getphoto()
         {
             bookingDBContext context = new bookingDBContext();

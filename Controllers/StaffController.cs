@@ -123,9 +123,9 @@ namespace booking.Controllers
         [HttpPost]
         public IActionResult confirmBooking(int id)
         {
-            Bookingtable booking = object_booking.findByID(id);
+            Bookingtable booking = booking_service.findByID(id);
             booking_service.changeStatus(booking);
-            booking.updateBooking();
+            booking_service.updateBooking(booking);
             return RedirectToAction("Schedule", "Staff");
         }
 

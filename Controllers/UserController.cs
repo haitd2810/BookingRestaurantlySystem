@@ -7,7 +7,6 @@ namespace booking.Controllers
 {
     public class UserController : Controller
     {
-        private readonly bookingDBContext context = new bookingDBContext();
         private readonly ISendMailSerivce user = new SendMailSerivce();
         private readonly IStaffService staff_service = new StaffService();
         private readonly IMailSettingService mailSetting_service = new MailSettingService();
@@ -22,7 +21,6 @@ namespace booking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Staff staff)
         {
-            Staff staff_method = new Staff();
             string username = staff.Username ?? String.Empty;
             string password = staff.Password ?? String.Empty;
             string message = staff_service.setMessageLogin(username, password);

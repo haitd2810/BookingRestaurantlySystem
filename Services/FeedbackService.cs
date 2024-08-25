@@ -65,5 +65,9 @@ namespace booking.Services
             }
             return default_img;
         }
+
+        public bool addFeedback(Feedback feedback) => Feedback.Instance.addFeedback(feedback);
+
+        public List<Feedback> getFeedback() => Feedback.Instance.getFeedback();
     }
 }

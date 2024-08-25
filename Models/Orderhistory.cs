@@ -34,10 +34,7 @@ namespace booking.Models
             {
                 lock (instaceLock)
                 {
-                    if (instance == null)
-                    {
-                        instance = new Orderhistory();
-                    }
+                    instance ??= new Orderhistory();
                     return instance;
                 }
             }

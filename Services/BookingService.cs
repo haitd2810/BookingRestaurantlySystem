@@ -5,18 +5,18 @@ namespace booking.Services
 {
     public class BookingService : IBookingService
     {
-        public Bookingtable changeStatus(Bookingtable booking)
-        {
-            if (booking.Status[0] == 1) booking.Status = new byte[] { 0 };
-            else if (booking.Status[0] == 0) booking.Status = new byte[] { 1 };
-            return booking;
-        }
+        public Bookingtable changeStatus(Bookingtable booking) => Bookingtable.Instance.changeStatus(booking);
 
-        public Boolean isBooked(string email, string phone)
-        {
-            bookingDBContext context = new bookingDBContext();
-            var booked = context.Bookingtables.Where(book => book.Email == email && book.Phone == phone).FirstOrDefault();
-            return booked == null;
-        }
+        public Bookingtable findByID(int id) => Bookingtable.Instance.findByID(id);
+
+        public List<Bookingtable> findByName(string name) => Bookingtable.Instance.findByName(name);
+
+        public List<Bookingtable> getAll(int pageNumber, int pageSize) => Bookingtable.Instance.getAll(pageNumber, pageSize);
+
+        public List<Bookingtable> getAll() => Bookingtable.Instance.getAll();
+
+        public Boolean isBooked(string email, string phone) => Bookingtable.Instance.isBooked(email,phone);
+
+        public bool updateBooking(Bookingtable booking) => Bookingtable.Instance.updateBooking(booking);
     }
 }

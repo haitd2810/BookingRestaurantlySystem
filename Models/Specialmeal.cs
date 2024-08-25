@@ -17,6 +17,20 @@ namespace booking.Models
         public virtual Meal IdNavigation { get; set; } = null!;
         public virtual Meal? meal { get; set; }
 
+        private static readonly object instaceLock = new object();
+        private static Specialmeal instance = null;
+
+        public static Specialmeal Instance
+        {
+            get
+            {
+                lock (instaceLock)
+                {
+                    instance ??= new Specialmeal();
+                    return instance;
+                }
+            }
+        }
         public List<Specialmeal> getSepcialMeal()
         {
             bookingDBContext context = new bookingDBContext();
