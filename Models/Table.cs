@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace booking.Models
@@ -23,8 +22,5 @@ namespace booking.Models
         public virtual Tabletype? TypeTable { get; set; }
         public virtual ICollection<Bookingtable> Bookingtables { get; set; }
         public virtual ICollection<Ordertable> Ordertables { get; set; }
-        
-
     }
-
 }

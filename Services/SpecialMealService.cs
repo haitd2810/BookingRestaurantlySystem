@@ -6,6 +6,6 @@ namespace booking.Services
 {
     public class SpecialMealService : ISpecialMealService
     {
-        public List<Specialmeal> getSepcialMeal() => SpecialMealDAO.Instance.getSepcialMeal();
+        public List<Specialmeal> GetSepcialMeal() => SpecialMealDAO.Instance.GetSepcialMeal();
     }
 }

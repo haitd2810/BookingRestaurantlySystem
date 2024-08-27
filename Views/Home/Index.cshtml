@@ -174,14 +174,14 @@
                         @if (isFirst)
                         {
                             <li class="nav-item">
-                                <a class="nav-link active show" data-bs-toggle="tab" href="#tab-@item_special.Id">@item_special.meal.Name</a>
+                                <a class="nav-link active show" data-bs-toggle="tab" href="#tab-@item_special.Id">@item_special.Meal.Name</a>
                             </li>
                             isFirst = false;
                         }
                         else
                         {
                             <li class="nav-item">
-                                        <a class="nav-link" data-bs-toggle="tab" href="#tab-@item_special.Id">@item_special.meal.Name</a>
+                                        <a class="nav-link" data-bs-toggle="tab" href="#tab-@item_special.Id">@item_special.Meal.Name</a>
                             </li>
                         }
                     }
@@ -201,7 +201,7 @@
                             <div class="tab-pane active show" id="tab-@item_special.Id">
                                 <div class="row">
                                     <div class="col-lg-8 details order-2 order-lg-1">
-                                        <h3>@item_special.meal.Name</h3>
+                                                <h3>@item_special.Meal.Name</h3>
                                                 <p class="fst-italic"> BRIEF INFORMATION </p>
                                         <p>@item_special.Detail</p>
                                     </div>
@@ -217,7 +217,7 @@
                             <div class="tab-pane" id="tab-@item_special.Id">
                                 <div class="row">
                                     <div class="col-lg-8 details order-2 order-lg-1">
-                                        <h3>@item_special.meal.Name</h3>
+                                                <h3>@item_special.Meal.Name</h3>
                                         <p class="fst-italic">  BRIEF INFORMATION </p>
                                         <p>@item_special.Detail</p>
                                     </div>

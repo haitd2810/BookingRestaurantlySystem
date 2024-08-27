@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace booking.Models
@@ -9,6 +8,7 @@ namespace booking.Models
         public Meal()
         {
             Ordertables = new HashSet<Ordertable>();
+            SpecialmealMeals = new HashSet<Specialmeal>();
         }
 
         public int Id { get; set; }
@@ -22,8 +22,8 @@ namespace booking.Models
         public byte[]? Status { get; set; }
 
         public virtual Categorymeal? Cate { get; set; }
-        public virtual Specialmeal? Specialmeal { get; set; }
+        public virtual Specialmeal? SpecialmealIdNavigation { get; set; }
         public virtual ICollection<Ordertable> Ordertables { get; set; }
-        
+        public virtual ICollection<Specialmeal> SpecialmealMeals { get; set; }
     }
 }

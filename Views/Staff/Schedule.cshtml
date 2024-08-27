@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Schedule";
     Layout = "~/Views/Layout/_header.cshtml";
 }
@@ -11,16 +10,17 @@
     int next = CurrentPage + 1;
 }
 <style>
-    .page-link{
+    .page-link {
         color: #fff;
         background-color: #cda45e00;
     }
 
-    .page-link:hover {
-        color: #cda45e;
-        background-color: #fff;
-    }
-    .active-page{
+        .page-link:hover {
+            color: #cda45e;
+            background-color: #fff;
+        }
+
+    .active-page {
         color: #cda45e;
         background-color: #fff;
     }
@@ -85,9 +85,9 @@
                             </tr>
                         </thead>
                         <tbody class="table-group-divider">
-                            @if(booking_list != null)
+                            @if (booking_list != null)
                             {
-                                @for(int i=0; i < booking_list.Count(); i++)
+                                @for (int i = 0; i < booking_list.Count(); i++)
                                 {
                                     int row = i + 1;
                                     string status = "pending";
@@ -100,7 +100,7 @@
                                         <td>@booking_list[i].DateOrder @booking_list[i].TimeOrder</td>
                                         <td>@booking_list[i].Table.TableName</td>
                                         <td>@booking_list[i].Message</td>
-                                        <td>@(booking_list[i].Prepay[0] == 1? "payed" : "")</td>
+                                        <td>@(booking_list[i].Prepay[0] == 1 ? "payed" : "")</td>
                                         <td>@status</td>
                                         <td>
                                             @if (status == "confirmed")
@@ -115,7 +115,7 @@
                                     </tr>
                                 }
                             }
-                            
+
                         </tbody>
                     </table>
                     <nav aria-label="Page navigation example">
@@ -127,7 +127,7 @@
                             </li>
                             @for (int i = (CurrentPage == 1 ? CurrentPage : CurrentPage - 1); i <= maxPage; i++)
                             {
-                                String active = (i == CurrentPage)? "active-page" : "";
+                                String active = (i == CurrentPage) ? "active-page" : "";
                                 <li class="page-item">
                                     <a class="page-link @active" asp-action="schedule" asp-controller="staff" asp-route-pageNumber="@i">@i</a>
                                 </li>
@@ -140,12 +140,12 @@
                         </ul>
                     </nav>
                 </div>
-                
+
             </div>
 
         </div>
 
-    </sectio><!-- End Menu Section -->
+        </sectio><!-- End Menu Section -->
 
 </main><!-- End #main -->
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
@@ -186,42 +186,53 @@
                 loadData(data);
             },
             error: function (errMsg) {
-                var r = jQuery.parseJSON(response.responseText);
-                alert("Message: " + r.Message);
-                alert("StackTrace: " + r.StackTrace);
-                alert("ExceptionType: " + r.ExceptionType);
             }
         });
     });
+    function isBase64(str) {
+        try {
+            return btoa(atob(str)) === str;
+        } catch (err) {
+            return false;
+        }
+    }
 
     function loadData(data) {
         $(".table tbody tr").remove();
         $.each(data, function (i, item) {
             var stt = i + 1;
 
-            var prepay = atob(item.prepay);
-            var status = atob(item.status);
+            var prepay = item.prepay ? item.prepay : false;
+            var status = item.status ? item.status : false;
             var statusText = "pending";
-            if (prepay === '\u0001' && status === '\u0001') statusText = "confirmed";
-            if (prepay === '\u0001' && status === '\u0000') statusText = "ordered";
+
+            if (prepay === true && status === false) statusText = "ordered";
+            if (prepay === true && status === true) statusText = "confirmed";
+
             var rows = "<tr>"
                 + "<th scope='row'>" + stt + "</th>"
-                + "<td>" + item.name + "</td>"
-                + "<td>" + item.email + "</td>"
-                + "<td>" + item.dateOrder + " " + item.timeOrder + "</td>"
-                + "<td>" + item.tableID + "</td>"
-                + "<td>" + item.message + "</td>"
-                + "<td>" + (prepay === '\u0000' ? '' : 'payed') + "</td>"
-                + "<td>" + statusText + "</td>";
+                + "<td>" + (item.name || '') + "</td>"
+                + "<td>" + (item.email || '') + "</td>"
+                + "<td>" + (item.dateOrder || '') + " " + (item.TimeOrder || '') + "</td>"
+                + "<td>" + (item.tableName || '') + "</td>"
+                + "<td>" + (item.message || '') + "</td>"
+                + "<td>" + (prepay === true? '' : 'payed') + "</td>"
+                + "<td>" + statusText + "</td>";    
+
             if (statusText == "confirmed") {
                 var URL = "/Staff/confirmBooking/" + item.id;
                 var add_button = "<td><form action='" + URL + "' method='post'><button class='btn btn-warning' style='color: white;'> Ordered</button></form></td>";
                 rows += add_button;
             }
+
             rows += "</tr>";
             $(".table tbody").append(rows);
         });
     }
+
+
+
+
 
 </script>
 

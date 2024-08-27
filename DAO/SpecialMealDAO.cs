@@ -19,10 +19,10 @@ namespace booking.DAO
                 }
             }
         }
-        public List<Specialmeal> getSepcialMeal()
+        public List<Specialmeal> GetSepcialMeal()
         {
             bookingDBContext context = new bookingDBContext();
-            return context.Specialmeals.Where(spec => spec.Status[0] == 1).Include(meal => meal.meal).ToList();
+            return context.Specialmeals.Where(spec => spec.Status[0] == 1).Include(spec => spec.Meal).ToList();
         }
     }
 }

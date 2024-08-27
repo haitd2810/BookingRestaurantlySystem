@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace booking.Models
@@ -14,6 +13,5 @@ namespace booking.Models
         public DateTime? UpdateDate { get; set; }
         public byte[]? Status { get; set; }
         public string? Img { get; set; }
-
     }
 }

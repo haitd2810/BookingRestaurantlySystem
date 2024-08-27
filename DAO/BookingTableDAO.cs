@@ -3,6 +3,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace booking.DAO
 {
+    public class BookingViewModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string DateOrder { get; set; }
+        public string TimeOrder { get; set; }
+        public string TableName { get; set; }
+        public string Message { get; set; }
+        public bool Prepay { get; set; }
+        public bool Status { get; set; }
+    }
     public class BookingTableDAO
     {
         private static readonly object instaceLock = new object();
@@ -52,14 +64,15 @@ namespace booking.DAO
         {
             return context.Bookingtables
                           .Where(b => b.Id == id)
-                          .FirstOrDefault();
+                          .FirstOrDefault() ?? new Bookingtable();
         }
 
         public List<Bookingtable> FindByName(string name)
         {
-            if (name == null) return GetAll();
+            if (name == null || name.Length == 0) return GetAll();
             return context.Bookingtables
                           .Where(book => book.Name.ToLower().Contains(name.ToLower()))
+                          .Include(booked => booked.Table)
                           .ToList();
         }
 

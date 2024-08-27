@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace booking.Models
@@ -19,6 +18,5 @@ namespace booking.Models
         public virtual Meal? Meal { get; set; }
         public virtual Orderhistory? OdHistory { get; set; }
         public virtual Table? Table { get; set; }
-
     }
 }

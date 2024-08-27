@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace booking.Models
@@ -18,7 +17,5 @@ namespace booking.Models
         public byte[]? Status { get; set; }
 
         public virtual ICollection<Meal> Meals { get; set; }
-        public virtual ICollection<Ordertable> Ordertables { get; set; }
-        
     }
 }

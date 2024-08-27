@@ -51,7 +51,7 @@ namespace booking.DAO
         {
             return context.Orderhistories.Where(oh => oh.Id == id)
                           .Include(oh => oh.Ordertables)
-                          .FirstOrDefault();
+                          .FirstOrDefault() ?? new Orderhistory();
         }
 
         public Boolean DeleteByID(int id)
@@ -72,7 +72,7 @@ namespace booking.DAO
                 float total_price = 0;
                 foreach (var od in order_history.Ordertables)
                 {
-                    total_price += float.Parse(od.Price.ToString());
+                    total_price += float.Parse(s: od.Price.ToString() ?? "0");
                 }
                 return total_price;
             }
@@ -121,9 +121,9 @@ namespace booking.DAO
             if (order_his_list == null || order_his_list.Count == 0) GetCompletebyDate(total_List, start, end);
             foreach (Orderhistory ord in order_his_list)
             {
-                if (ReturnIndexDuplicate(total_List, DateTime.Parse(ord.getDate())) != -1)
+                if (ReturnIndexDuplicate(total_List, DateTime.ParseExact(ord.getDate(), "dd/MM/yyyy", CultureInfo.InvariantCulture)) != -1)
                 {
-                    int index = ReturnIndexDuplicate(total_List, DateTime.Parse(ord.getDate()));
+                    int index = ReturnIndexDuplicate(total_List, DateTime.ParseExact(ord.getDate(), "dd/MM/yyyy", CultureInfo.InvariantCulture));
                     float price = float.Parse(ord.TotalPrice.ToString() ?? "0");
                     total_List[index].total += price;
                 }
@@ -132,7 +132,7 @@ namespace booking.DAO
                     count++;
                     int id = count;
                     string date = ord.getDate();
-                    float total = float.Parse(ord.TotalPrice.ToString());
+                    float total = float.Parse(ord.TotalPrice.ToString() ?? "0");
                     Total_Statistics new_total = new Total_Statistics()
                     {
                         id = id,

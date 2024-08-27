@@ -1,10 +1,6 @@
 ﻿using booking.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System.Diagnostics;
-using Newtonsoft.Json;
 using booking.Services;
 using booking.IServices;
 
@@ -13,7 +9,6 @@ namespace booking.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly ISendMailSerivce user_service = new SendMailSerivce();
         private readonly IFeedbackService fb_service = new FeedbackService();
         private readonly IBookingService book_service = new BookingService();
@@ -26,78 +21,98 @@ namespace booking.Controllers
         private readonly IPhotoService photo_service = new PhotoService();
         const string default_img = "/assets/img/testimonials/d8b5d0a738295345ebd8934b859fa1fca1c8c6ad.jpeg";
         const string path_save_feedback = "wwwroot/assets/img/uploads";
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
 
         public IActionResult Index()
         {
-            //footer data
-            Setting info_setting = settingService.getSetting();
-            ViewBag.infosetting = info_setting;
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    //footer data
+                    Setting info_setting = settingService.getSetting();
+                    ViewBag.infosetting = info_setting;
 
-            //menu data
-            List<Meal> meal_list = meal_service.GetMeal();
-            ViewBag.meal = meal_list;
+                    //menu data
+                    List<Meal> meal_list = meal_service.GetMeal();
+                    ViewBag.meal = meal_list;
 
-            //category meal data
-            List<Categorymeal> cate_list = categorymeal_service.GetCate();
-            ViewBag.category = cate_list;
+                    //category meal data
+                    List<Categorymeal> cate_list = categorymeal_service.GetCate();
+                    ViewBag.category = cate_list;
 
-            //special meal data
-            List<Specialmeal> special_meal_list = spmeal_Service.getSepcialMeal();
-            ViewBag.special_meals = special_meal_list;
+                    //special meal data
+                    List<Specialmeal> special_meal_list = spmeal_Service.GetSepcialMeal();
+                    ViewBag.special_meals = special_meal_list;
 
-            //post data
-            List<Post> post_list = post_service.getPost();
-            ViewBag.post = post_list;
+                    //post data
+                    List<Post> post_list = post_service.getPost();
+                    ViewBag.post = post_list;
 
-            //feedback data
-            List<Feedback> feedback_list = fb_service.getFeedback();
-            ViewBag.feedback = feedback_list;
+                    //feedback data
+                    List<Feedback> feedback_list = fb_service.GetFeedback();
+                    ViewBag.feedback = feedback_list;
 
-            //photo  data
-            List<Photorestaurant> photo_list = photo_service.getphoto();
-            ViewBag.photo = photo_list;
+                    //photo  data
+                    List<Photorestaurant> photo_list = photo_service.getphoto();
+                    ViewBag.photo = photo_list;
 
-            //booking list data
-            List<Bookingtable> booking_list = book_service.GetAll();
-            ViewBag.booking = booking_list;
-            return View();
+                    //booking list data
+                    List<Bookingtable> booking_list = book_service.GetAll();
+                    ViewBag.booking = booking_list;
+                    return View();
+                }
+                catch (Exception ex)
+                {
+                    TempData["error"] = ex.Message;
+                    return View("~/Views/Home/503.cshtml");
+                }
+            }
+            return View("~/Views/Home/503.cshtml");
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
 #pragma warning disable S6967
         public async Task<ActionResult> createFeedback(string name, string jobs, string email, string phone, IFormFile img, string feedback)
         {
-            //declare variable
-            string subject = "Thanks for your response";
-            //check user who give feedback, have yet booked table
-            if (!book_service.IsBooked(email, phone))
+            if (ModelState.IsValid)
             {
-                //get path to save file img of user
-                string imgPath = await fb_service.pathToSave(img,path_save_feedback,default_img);
+                try
+                {
+                    //declare variable
+                    string subject = "Thanks for your response";
+                    //check user who give feedback, have yet booked table
+                    if (!book_service.IsBooked(email, phone))
+                    {
+                        //get path to save file img of user
+                        string imgPath = await fb_service.PathToSave(img,path_save_feedback,default_img);
 
-                // create object of feedback
-                Feedback fb = fb_service.setValue(name, jobs, feedback, DateTime.Now, DateTime.Now, (new byte[] { 0 }), imgPath);
+                        // create object of feedback
+                        Feedback fb = fb_service.SetValue(name, jobs, feedback, DateTime.Now, DateTime.Now, (new byte[] { 0 }), imgPath);
 
-                //save feedback to database
-                fb_service.addFeedback(fb);
+                        //save feedback to database
+                        fb_service.AddFeedback(fb);
 
-                //create email variable to authenticate user
-                string email_from = mailSetting_service.getMailSetting().Mail ?? string.Empty;
+                        //create email variable to authenticate user
+                        string email_from = mailSetting_service.getMailSetting().Mail ?? string.Empty;
 
-                //create password variable to authenticate user
-                string email_password = mailSetting_service.getMailSetting().Password ?? string.Empty;
+                        //create password variable to authenticate user
+                        string email_password = mailSetting_service.getMailSetting().Password ?? string.Empty;
 
-                //create body to send mail
-                string body = user_service.messageFeedback(name);
+                        //create body to send mail
+                        string body = user_service.messageFeedback(name);
 
-                //send mail
-                user_service.sendMailConfirm(email_from, email_password, email, body, subject);
+                        //send mail
+                        user_service.sendMailConfirm(email_from, email_password, email, body, subject);
+                    }
+                    return RedirectToAction("Index", "Home");
+                }
+                catch (Exception ex)
+                {
+                    TempData["error"] = ex.Message;
+                    return View("~/Views/Home/503.cshtml");
+                }
             }
-            return RedirectToAction("Index", "Home");
+            return View("~/Views/Home/503.cshtml");
         }
         public IActionResult Privacy()
         {

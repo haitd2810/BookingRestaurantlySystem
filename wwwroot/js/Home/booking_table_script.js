@@ -67,15 +67,15 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
         return availableTables;
-    }
+    },
 
     document.getElementById('date').addEventListener('change', function () {
         updateTableSelect();
-    });
+    }),
 
     document.getElementById('time').addEventListener('change', function () {
         updateTableSelect();
-    });
+    }),
 
     function updateTableSelect() {
         let date = document.getElementById('date').value;

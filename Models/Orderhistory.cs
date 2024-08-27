@@ -1,8 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Asn1;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace booking.Models
 {
@@ -21,7 +18,7 @@ namespace booking.Models
         public float? TotalPrice { get; set; }
         public byte[]? Payed { get; set; }
         public byte[]? Status { get; set; }
-        
+
         public virtual ICollection<Ordertable> Ordertables { get; set; }
         public string getDate()
         {

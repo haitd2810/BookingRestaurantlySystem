@@ -2,8 +2,8 @@
 @{
     ViewData["Title"] = "Statistic";
     Layout = "~/Views/Layout/_header.cshtml";
-    String start = ViewBag.startDate.ToString("MM/dd/yyyy") ?? DateTime.Now;
-    String end = ViewBag.endDate.ToString("MM/dd/yyyy") ?? DateTime.Now;
+    string start = Convert.ToDateTime(TempData["startDate"]).ToString("MM/dd/yyyy") ?? DateTime.Now.ToString();
+    string end = Convert.ToDateTime(TempData["endDate"]).ToString("MM/dd/yyyy") ?? DateTime.Now.ToString();
 }
 
 <main id="main about">
@@ -43,7 +43,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 
 <script>
-    const totalData = @Html.Raw(Json.Serialize(ViewBag.total));
+    const totalData = @Html.Raw(Json.Serialize(TempData["total"]));
     if (totalData != null || totalData.length != 0) {
         const xValuesTotal = totalData.map(item => item.date.split('T')[0]);
         const yValuesTotal = totalData.map(item => item.total);
