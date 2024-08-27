@@ -1,10 +1,11 @@
-﻿using booking.IServices;
+﻿using booking.DAO;
+using booking.IServices;
 using booking.Models;
 
 namespace booking.Services
 {
     public class MealService : IMealService
     {
-        public List<Meal> getMeal() => Meal.Instance.getMeal();
+        public List<Meal> GetMeal() => MealDAO.Instance.GetMeal();
     }
 }

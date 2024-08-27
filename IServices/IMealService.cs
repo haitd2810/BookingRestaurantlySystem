@@ -4,6 +4,6 @@ namespace booking.IServices
 {
     public interface IMealService
     {
-        public List<Meal> getMeal();
+        public List<Meal> GetMeal();
     }
 }

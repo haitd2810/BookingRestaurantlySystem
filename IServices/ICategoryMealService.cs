@@ -4,6 +4,6 @@ namespace booking.IServices
 {
     public interface ICategoryMealService
     {
-        public List<Categorymeal> getCate();
+        public List<Categorymeal> GetCate();
     }
 }

@@ -1,22 +1,23 @@
-﻿using booking.IServices;
+﻿using booking.DAO;
+using booking.IServices;
 using booking.Models;
 
 namespace booking.Services
 {
     public class BookingService : IBookingService
     {
-        public Bookingtable changeStatus(Bookingtable booking) => Bookingtable.Instance.changeStatus(booking);
+        public Bookingtable ChangeStatus(Bookingtable booking) => BookingTableDAO.Instance.ChangeStatus(booking);
 
-        public Bookingtable findByID(int id) => Bookingtable.Instance.findByID(id);
+        public Bookingtable FindByID(int id) => BookingTableDAO.Instance.FindByID(id);
 
-        public List<Bookingtable> findByName(string name) => Bookingtable.Instance.findByName(name);
+        public List<Bookingtable> FindByName(string name) => BookingTableDAO.Instance.FindByName(name);
 
-        public List<Bookingtable> getAll(int pageNumber, int pageSize) => Bookingtable.Instance.getAll(pageNumber, pageSize);
+        public List<Bookingtable> GetAll(int pageNumber, int pageSize) => BookingTableDAO.Instance.GetAll(pageNumber, pageSize);
 
-        public List<Bookingtable> getAll() => Bookingtable.Instance.getAll();
+        public List<Bookingtable> GetAll() => BookingTableDAO.Instance.GetAll();
 
-        public Boolean isBooked(string email, string phone) => Bookingtable.Instance.isBooked(email,phone);
+        public Boolean IsBooked(string email, string phone) => BookingTableDAO.Instance.IsBooked(email,phone);
 
-        public bool updateBooking(Bookingtable booking) => Bookingtable.Instance.updateBooking(booking);
+        public bool UpdateBooking(Bookingtable booking) => BookingTableDAO.Instance.UpdateBooking(booking);
     }
 }

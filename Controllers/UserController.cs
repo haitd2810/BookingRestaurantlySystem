@@ -10,7 +10,6 @@ namespace booking.Controllers
         private readonly ISendMailSerivce user = new SendMailSerivce();
         private readonly IStaffService staff_service = new StaffService();
         private readonly IMailSettingService mailSetting_service = new MailSettingService();
-        private readonly Mailsetting mail_setting_object = new Mailsetting();
         public IActionResult Create()
         {
             ViewData["CurrentPage"] = "Login";
@@ -38,10 +37,10 @@ namespace booking.Controllers
         public ActionResult booking(string name, string email, string phone, string date, string time, string tableNumber, string message)
         {
             // create variable email to authentication users
-            string email_from = mail_setting_object.getMailSetting().Mail ?? String.Empty;
+            string email_from = mailSetting_service.getMailSetting().Mail ?? String.Empty;
 
             // create variable password to authentication users
-            string email_password = mail_setting_object.getMailSetting().Password ?? String.Empty;
+            string email_password = mailSetting_service.getMailSetting().Password ?? String.Empty;
 
             //create variable subject
             const string subject = "Confirm your booking";

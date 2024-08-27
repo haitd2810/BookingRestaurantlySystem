@@ -15,40 +15,5 @@ namespace booking.Models
         public byte[]? Status { get; set; }
         public string? Img { get; set; }
 
-        private static readonly object instaceLock = new object();
-        private static Feedback instance = null;
-
-        public static Feedback Instance
-        {
-            get
-            {
-                lock (instaceLock)
-                {
-                    instance ??= new Feedback();
-                    return instance;
-                }
-            }
-        }
-
-        public Boolean addFeedback(Feedback feedback)
-        {
-            if (feedback != null)
-            {
-                bookingDBContext context = new bookingDBContext();
-                context.Feedbacks.Add(feedback);
-                int result = context.SaveChanges();
-                if (result != 0)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public List<Feedback> getFeedback()
-        {
-            bookingDBContext context = new bookingDBContext();
-            return context.Feedbacks.Where(fb => fb.Status[0] == 1).ToList();
-        }
     }
 }

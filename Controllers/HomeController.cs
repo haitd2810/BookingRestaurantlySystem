@@ -38,11 +38,11 @@ namespace booking.Controllers
             ViewBag.infosetting = info_setting;
 
             //menu data
-            List<Meal> meal_list = meal_service.getMeal();
+            List<Meal> meal_list = meal_service.GetMeal();
             ViewBag.meal = meal_list;
 
             //category meal data
-            List<Categorymeal> cate_list = categorymeal_service.getCate();
+            List<Categorymeal> cate_list = categorymeal_service.GetCate();
             ViewBag.category = cate_list;
 
             //special meal data
@@ -62,7 +62,7 @@ namespace booking.Controllers
             ViewBag.photo = photo_list;
 
             //booking list data
-            List<Bookingtable> booking_list = book_service.getAll();
+            List<Bookingtable> booking_list = book_service.GetAll();
             ViewBag.booking = booking_list;
             return View();
         }
@@ -74,7 +74,7 @@ namespace booking.Controllers
             //declare variable
             string subject = "Thanks for your response";
             //check user who give feedback, have yet booked table
-            if (!book_service.isBooked(email, phone))
+            if (!book_service.IsBooked(email, phone))
             {
                 //get path to save file img of user
                 string imgPath = await fb_service.pathToSave(img,path_save_feedback,default_img);

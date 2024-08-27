@@ -21,20 +21,16 @@ namespace booking.Controllers
     }
     public class StaffController : Controller
     {
-        private readonly Ordertable object_od = new Ordertable();
-        private readonly Orderhistory object_odhistory = new Orderhistory();
-        private readonly Ordertable order_object = new Ordertable();
-        private readonly BookingService booking_service = new BookingService();
-        private readonly Bookingtable object_booking = new Bookingtable();
-        private readonly Meal meal_object = new Meal();
-        private readonly Table table_object = new Table();
-        private readonly Categorymeal categorymeal_object = new Categorymeal();
+        private readonly IBookingService booking_service = new BookingService();
         private readonly IOrderHistoryService orderHistory_service = new OrderHistoryService();
         private readonly IOrderService order_service = new OrderService();
         private readonly IService service = new Service();
+        private readonly ITableService table_service = new TableService();
+        private readonly IMealService meal_service = new MealService();
+        private readonly ICategoryMealService cate_service = new CategoryMealService();
         public IActionResult Index()
         {
-            List<Table> table_list = table_object.getTableList();
+            List<Table> table_list = table_service.GetTableList();
             ViewBag.listTable = table_list;
 
             return View();
@@ -42,13 +38,13 @@ namespace booking.Controllers
 
         public ActionResult Details(int id)
         {
-            List<Meal> meal_list = meal_object.getMeal();
+            List<Meal> meal_list = meal_service.GetMeal();
             ViewBag.mealList = meal_list;
 
-            List<Ordertable> order_list = order_object.getOrderList(id);
+            List<Ordertable> order_list = order_service.getOrderList(id);
             ViewBag.orderList = order_list;
 
-            List<Categorymeal> cate_list = categorymeal_object.getCate();
+            List<Categorymeal> cate_list = cate_service.GetCate();
             ViewBag.category = cate_list;
 
             ViewBag.tableID = id;
@@ -58,12 +54,12 @@ namespace booking.Controllers
 
         public ActionResult DeleteOrderMeal(int tableID, int mealID, int odHistory)
         {
-            Ordertable order = object_od.FindOrder(tableID, mealID, odHistory);
+            Ordertable order = order_service.FindOrder(tableID, mealID, odHistory);
             
-            List<Ordertable> order_list = object_od.FindOrder(tableID,odHistory);
+            List<Ordertable> order_list = order_service.FindOrder(tableID,odHistory);
             
             //delete in db
-            orderHistory_service.deleteByZeroMeal(order_list, order, odHistory, tableID);
+            orderHistory_service.DeleteByZeroMeal(order_list, order, odHistory, tableID);
             return RedirectToAction("Details", "Staff", new
             {
                 id = tableID
@@ -78,16 +74,16 @@ namespace booking.Controllers
                                                                               });
 
             //update order table for payment
-            object_od.updatePaymeal(orderHistoryID, tableID);
+            order_service.updatePaymeal(orderHistoryID, tableID);
 
             //update order history for payment
-            Orderhistory order_history = object_odhistory.findbyID(orderHistoryID);
-            float total = object_odhistory.getTotal(order_history);
-            order_history = orderHistory_service.updateByPayMeal(order_history, total);
-            order_history.UpdateOrderHistory();
+            Orderhistory order_history = orderHistory_service.FindbyID(orderHistoryID);
+            float total = orderHistory_service.GetTotal(order_history);
+            order_history = orderHistory_service.UpdateByPayMeal(order_history, total);
+            orderHistory_service.UpdateOrderHistory(order_history);
 
             //update status table
-            table_object.markTableAsOrdered(tableID, false);
+            table_service.MarkTableAsOrdered(tableID, false);
 
             return RedirectToAction("Details", "Staff", new
             {
@@ -103,7 +99,7 @@ namespace booking.Controllers
             int orderHistoryID = -1;
             changeByOrderMeal(selectedItems, orderHistoryID);
             //update status order of table
-            table_object.markTableAsOrdered(tableID, true);
+            table_service.MarkTableAsOrdered(tableID, true);
 
             return Ok();
         }
@@ -112,26 +108,26 @@ namespace booking.Controllers
         public IActionResult Schedule(int pageNumber)
         {
             const int pageSize = 10;
-            pageNumber = service.getPageNumber(pageNumber, pageSize);
+            pageNumber = service.GetPageNumber(pageNumber, pageSize);
             ViewBag.CurrentPage = pageNumber;
-            ViewBag.maxPage = (pageNumber <= service.getMaxPage(pageSize) - 2? pageNumber+1 : service.getMaxPage(pageSize));
+            ViewBag.maxPage = (pageNumber <= service.GetMaxPage(pageSize) - 2? pageNumber+1 : service.GetMaxPage(pageSize));
 
-            List<Bookingtable> bookings = object_booking.getAll(pageNumber,pageSize);
+            List<Bookingtable> bookings = booking_service.GetAll(pageNumber,pageSize);
             ViewBag.booking_list = bookings;
             return View();
         }
         [HttpPost]
         public IActionResult confirmBooking(int id)
         {
-            Bookingtable booking = booking_service.findByID(id);
-            booking_service.changeStatus(booking);
-            booking_service.updateBooking(booking);
+            Bookingtable booking = booking_service.FindByID(id);
+            booking_service.ChangeStatus(booking);
+            booking_service.UpdateBooking(booking);
             return RedirectToAction("Schedule", "Staff");
         }
 
         public IActionResult search(string name)
         {
-            List<Bookingtable> booking = object_booking.findByName(name);
+            List<Bookingtable> booking = booking_service.FindByName(name);
             return Ok(booking);
         }
 
@@ -145,18 +141,18 @@ namespace booking.Controllers
         {
             foreach (var item in selectedItems)
             {
-                Ordertable od = object_od.FindOrder(item.tableID, item.MealID, item.odhistoryID);
+                Ordertable od = order_service.FindOrder(item.tableID, item.MealID, item.odhistoryID);
                 if (od != null)
                 {
                     od = order_service.changeByOrderMeal(od, item.quantity, item.price);
-                    od.UpdateOrderTable();
+                    order_service.UpdateOrderTable(od);
                 }
                 else
                 {
-                    orderHistoryID = orderHistory_service.getIDOrderHistory(item.odhistoryID, orderHistoryID);
+                    orderHistoryID = orderHistory_service.GetIDOrderHistory(item.odhistoryID, orderHistoryID);
                     Ordertable new_od = order_service.setOrder(item.MealID, item.quantity, item.price, item.tableID, DateTime.Now,
                                                                DateTime.Now, new byte[] { 1 }, orderHistoryID);
-                    new_od.AddOrderTable();
+                    order_service.AddOrderTable(new_od);
                 }
             }
         }
