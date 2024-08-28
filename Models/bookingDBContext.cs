@@ -482,6 +482,8 @@ namespace booking.Models
                 entity.HasIndex(e => e.Id, "id")
                     .IsUnique();
 
+                entity.HasIndex(e => e.MealId, "mealID");
+
                 entity.Property(e => e.Id)
                     .ValueGeneratedOnAdd()
                     .HasColumnName("id");
@@ -510,10 +512,15 @@ namespace booking.Models
                     .HasColumnName("updateDate");
 
                 entity.HasOne(d => d.IdNavigation)
-                    .WithOne(p => p.Specialmeal)
+                    .WithOne(p => p.SpecialmealIdNavigation)
                     .HasForeignKey<Specialmeal>(d => d.Id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("specialmeal_ibfk_1");
+
+                entity.HasOne(d => d.Meal)
+                    .WithMany(p => p.SpecialmealMeals)
+                    .HasForeignKey(d => d.MealId)
+                    .HasConstraintName("mealID");
             });
 
             modelBuilder.Entity<Staff>(entity =>

@@ -1,4 +1,5 @@
 ﻿
+using booking.DAO;
 using booking.IServices;
 using booking.Models;
 
@@ -6,64 +7,28 @@ namespace booking.Services
 {
     public class FeedbackService : IFeedbackService
     {
-        public bool isTrueIMG(IFormFile img)
+        public bool IsTrueIMG(IFormFile img) => FeedbackDAO.Instance.isTrueIMG(img);
+
+        public bool IsImage(IFormFile file) => FeedbackDAO.Instance.IsImage(file);
+
+        public async Task SaveFile(IFormFile img, string path) => FeedbackDAO.Instance.saveFile(img, path);
+
+        public Feedback SetValue(string name, string jobs, string feedback, DateTime create, DateTime update, byte[] status, string img)
+         => FeedbackDAO.Instance.setValue(name, jobs, feedback, create, update, status, img);
+
+        public async Task<string> PathToSave(IFormFile img, string path_save_feedback, string default_img)
         {
-            if (img != null && img.Length > 0 && IsImage(img))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private bool IsImage(IFormFile file)
-        {
-            string[] permittedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
-            var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
-
-            if (string.IsNullOrEmpty(extension) || !permittedExtensions.Contains(extension)) return false;
-
-            if (!file.ContentType.StartsWith("image/", StringComparison.OrdinalIgnoreCase))  return false;
-
-            return true;
-        }
-
-        public async Task saveFile(IFormFile img, string path)
-        {
-            var uploads = Path.Combine(Directory.GetCurrentDirectory(), path);
-            if (!Directory.Exists(uploads))
-            {
-                Directory.CreateDirectory(uploads);
-            }
-            var filePath = Path.Combine(uploads, img.FileName);
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
-            {
-                await img.CopyToAsync(fileStream);
-            }
-        }
-
-        public Feedback setValue(string name, string jobs, string feedback, DateTime create, DateTime update, byte[] status, string img)
-        {
-            return new Feedback()
-            {
-                Name = name,
-                Jobs = jobs,
-                Detail = feedback,
-                CreateDate = create,
-                UpdateDate = update,
-                Status = status,
-                Img = img
-            };
-        }
-
-        public async Task<string> pathToSave(IFormFile img, string path_save_feedback, string default_img)
-        {
-            if (isTrueIMG(img))
+            if (IsTrueIMG(img))
             {
                 string path = path_save_feedback;
-                await saveFile(img, path);
+                await SaveFile(img, path);
                 return "/assets/img/uploads/" + img.FileName;
             }
             return default_img;
         }
+
+        public bool AddFeedback(Feedback feedback) => FeedbackDAO.Instance.addFeedback(feedback);
+
+        public List<Feedback> GetFeedback() => FeedbackDAO.Instance.getFeedback();
     }
 }

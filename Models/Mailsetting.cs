@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace booking.Models
@@ -12,11 +11,5 @@ namespace booking.Models
         public byte[]? Status { get; set; }
         public DateTime? CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
-
-        public Mailsetting getMailSetting()
-        {
-            bookingDBContext context = new bookingDBContext();
-            return context.Mailsettings.FirstOrDefault() ?? (new Mailsetting());
-        }
     }
 }

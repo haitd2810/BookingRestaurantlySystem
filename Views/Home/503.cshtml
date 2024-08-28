@@ -1,6 +1,6 @@
 ﻿@{
     Layout = null;
-    String msg = ViewBag.error ?? String.Empty;
+    String msg = TempData["error"].ToString() ?? String.Empty;
 }
 
 <style>

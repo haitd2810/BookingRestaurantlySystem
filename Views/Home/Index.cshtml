@@ -3,15 +3,15 @@
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
 @{
-    var infoSetting = ViewBag.infosetting as Setting;
+    var infoSetting = TempData["infosetting"] as Setting;
     ViewData["Title"] = "Home Page";
-    List<Meal> meal = ViewBag.meal as List<Meal>;
-    List<Categorymeal> category = ViewBag.category as List<Categorymeal>;
-    List<Specialmeal> special_meal = ViewBag.special_meals as List<Specialmeal>;
-    List<Post> post = ViewBag.post as List<Post>;
-    List<Feedback> feedback = ViewBag.feedback as List<Feedback>;
-    List<Photorestaurant> photo = ViewBag.photo as List<Photorestaurant>;
-    List<Bookingtable> booking = ViewBag.booking as List<Bookingtable>;
+    List<Meal> meal = TempData["meal"] as List<Meal>;
+    List<Categorymeal> category = TempData["category"] as List<Categorymeal>;
+    List<Specialmeal> special_meal = TempData["special_meals"] as List<Specialmeal>;
+    List<Post> post = TempData["post"] as List<Post>;
+    List<Feedback> feedback = TempData["feedback"] as List<Feedback>;
+    List<Photorestaurant> photo = TempData["photo"] as List<Photorestaurant>;
+    List<Bookingtable> booking = TempData["booking"] as List<Bookingtable>;
 }
 
   <!-- ======= Hero Section ======= -->
@@ -174,14 +174,14 @@
                         @if (isFirst)
                         {
                             <li class="nav-item">
-                                <a class="nav-link active show" data-bs-toggle="tab" href="#tab-@item_special.Id">@item_special.meal.Name</a>
+                                <a class="nav-link active show" data-bs-toggle="tab" href="#tab-@item_special.Id">@item_special.Meal.Name</a>
                             </li>
                             isFirst = false;
                         }
                         else
                         {
                             <li class="nav-item">
-                                        <a class="nav-link" data-bs-toggle="tab" href="#tab-@item_special.Id">@item_special.meal.Name</a>
+                                        <a class="nav-link" data-bs-toggle="tab" href="#tab-@item_special.Id">@item_special.Meal.Name</a>
                             </li>
                         }
                     }
@@ -201,7 +201,7 @@
                             <div class="tab-pane active show" id="tab-@item_special.Id">
                                 <div class="row">
                                     <div class="col-lg-8 details order-2 order-lg-1">
-                                        <h3>@item_special.meal.Name</h3>
+                                                <h3>@item_special.Meal.Name</h3>
                                                 <p class="fst-italic"> BRIEF INFORMATION </p>
                                         <p>@item_special.Detail</p>
                                     </div>
@@ -217,7 +217,7 @@
                             <div class="tab-pane" id="tab-@item_special.Id">
                                 <div class="row">
                                     <div class="col-lg-8 details order-2 order-lg-1">
-                                        <h3>@item_special.meal.Name</h3>
+                                                <h3>@item_special.Meal.Name</h3>
                                         <p class="fst-italic">  BRIEF INFORMATION </p>
                                         <p>@item_special.Detail</p>
                                     </div>
@@ -276,11 +276,6 @@
                       <p class="fst-italic">
                         @post_data.Brief
                       </p>
-@*                       <ul>
-                        <li><i class="bi bi-check-circled"></i> Ullamco laboris nisi ut aliquip ex ea commodo consequat.</li>
-                        <li><i class="bi bi-check-circled"></i> Duis aute irure dolor in reprehenderit in voluptate velit.</li>
-                        <li><i class="bi bi-check-circled"></i> Ullamco laboris nisi ut aliquip ex ea commodo consequat.</li>
-                      </ul> *@
                       <p>
                         @post_data.Detail
                       </p>

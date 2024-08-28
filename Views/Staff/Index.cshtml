@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "View";
     Layout = "~/Views/Layout/_header.cshtml";
-    List<Table> table_list = ViewBag.listTable as List<Table>;
+    List<Table> table_list =  TempData["listTable"] as List<Table>;
 }
 
 <main id="main" style="margin-top: 5em;">

@@ -1,22 +1,23 @@
-﻿using booking.IServices;
+﻿using booking.DAO;
+using booking.IServices;
 using booking.Models;
 
 namespace booking.Services
 {
     public class BookingService : IBookingService
     {
-        public Bookingtable changeStatus(Bookingtable booking)
-        {
-            if (booking.Status[0] == 1) booking.Status = new byte[] { 0 };
-            else if (booking.Status[0] == 0) booking.Status = new byte[] { 1 };
-            return booking;
-        }
+        public Bookingtable ChangeStatus(Bookingtable booking) => BookingTableDAO.Instance.ChangeStatus(booking);
 
-        public Boolean isBooked(string email, string phone)
-        {
-            bookingDBContext context = new bookingDBContext();
-            var booked = context.Bookingtables.Where(book => book.Email == email && book.Phone == phone).FirstOrDefault();
-            return booked == null;
-        }
+        public Bookingtable FindByID(int id) => BookingTableDAO.Instance.FindByID(id);
+
+        public List<Bookingtable> FindByName(string name) => BookingTableDAO.Instance.FindByName(name);
+
+        public List<Bookingtable> GetAll(int pageNumber, int pageSize) => BookingTableDAO.Instance.GetAll(pageNumber, pageSize);
+
+        public List<Bookingtable> GetAll() => BookingTableDAO.Instance.GetAll();
+
+        public Boolean IsBooked(string email, string phone) => BookingTableDAO.Instance.IsBooked(email,phone);
+
+        public bool UpdateBooking(Bookingtable booking) => BookingTableDAO.Instance.UpdateBooking(booking);
     }
 }

@@ -1,11 +1,11 @@
 ﻿@{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Layout/_header.cshtml";
-    List<Meal> meal_list = ViewBag.mealList as List<Meal>;
-    List<Ordertable> order_list = ViewBag.orderList as List<Ordertable>;
-    List<Categorymeal> category = ViewBag.category as List<Categorymeal>;
+    List<Meal> meal_list = TempData["mealList"] as List<Meal>;
+    List<Ordertable> order_list = TempData["orderList"] as List<Ordertable>;
+    List<Categorymeal> category = TempData["category"] as List<Categorymeal>;
     int odHistoryID = -1;
-    int tableID = @ViewBag.tableID;
+    int tableID = int.Parse(TempData["tableID"].ToString());
 }
 
 <main id="main" style="margin-top: 5em;">
@@ -123,7 +123,7 @@
                         
                         <div class="menu-content">
                             <input type="hidden" name="mealID" id="mealID" value="@meal_list[i].Id" />
-                            <input type="hidden" name="tableID" value="@ViewBag.tableID" id="tableID" />
+                            <input type="hidden" name="tableID" value="@TempData["tableID"]" id="tableID" />
                             <input type="hidden" name="odhistoryID" value="@odHistoryID" id="odhistoryID" />
                             <input type="hidden" name="price_each_item" value="@meal_list[i].Price" id="price_each_item" />
                             <a href="#">@meal_list[i].Name</a><span>$@meal_list[i].Price</span>
@@ -144,7 +144,7 @@
                 <div id="selected-items-container" class="row"></div>
             </div>
         
-            <input type="hidden" name="tableID" value="@ViewBag.tableID" id="tableID" />
+            <input type="hidden" name="tableID" value="@TempData["tableID"]" id="tableID" />
             <div class="btns">
                 <button id="btnClick" class="btn-menu animated fadeInUp scrollto add-order">Add Order</button>
             </div>

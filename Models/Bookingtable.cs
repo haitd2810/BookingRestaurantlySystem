@@ -1,6 +1,4 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace booking.Models
@@ -21,48 +19,5 @@ namespace booking.Models
         public byte[]? Status { get; set; }
 
         public virtual Table? Table { get; set; }
-        private readonly bookingDBContext context = new bookingDBContext();
-
-        public Boolean updateBooking()
-        {
-            context.Bookingtables.Update(this);
-            int row = context.SaveChanges();
-            if(row <= 0)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        public List<Bookingtable> getAll(int pageNumber, int pageSize)
-        {
-            return context.Bookingtables.Include(book => book.Table)
-                                        .Skip((pageNumber - 1) * pageSize)
-                                        .Take(pageSize)
-                                        .OrderByDescending(book => book.Status[0])
-/*                                        .OrderByDescending(book => book.DateOrder)
-                                        .OrderByDescending(book => book.TimeOrder)*/
-                                        .ToList();
-        }
-        public List<Bookingtable> getAll()
-        {
-            return context.Bookingtables.Include(book => book.Table)
-                                        .ToList();
-        }
-
-        public Bookingtable findByID(int id)
-        {
-            return context.Bookingtables
-                          .Where(b => b.Id == id)
-                          .FirstOrDefault();
-        }
-
-        public List<Bookingtable> findByName(string name)
-        {
-            if (name == null) return getAll();
-            return context.Bookingtables
-                          .Where(book => book.Name.ToLower().Contains(name.ToLower()))
-                          .ToList();
-        }
     }
 }

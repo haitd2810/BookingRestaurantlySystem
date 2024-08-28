@@ -4,7 +4,12 @@ namespace booking.IServices
 {
     public interface IBookingService
     {
-        Boolean isBooked(string email, string phone);
-        public Bookingtable changeStatus(Bookingtable bookingtable);
+        Boolean UpdateBooking(Bookingtable booking);
+        List<Bookingtable>GetAll(int pageNumber, int pageSize);
+        List<Bookingtable> GetAll();
+        Bookingtable FindByID(int id);
+        List<Bookingtable> FindByName(string name);
+        Boolean IsBooked(string email, string phone);
+        public Bookingtable ChangeStatus(Bookingtable bookingtable);
     }
 }
