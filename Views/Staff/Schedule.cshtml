@@ -3,9 +3,9 @@
     Layout = "~/Views/Layout/_header.cshtml";
 }
 @{
-    List<Bookingtable> booking_list = ViewBag.booking_list as List<Bookingtable>;
-    int maxPage = ViewBag.maxPage;
-    int CurrentPage = ViewBag.CurrentPage;
+    List<Bookingtable> booking_list = TempData["booking_list"] as List<Bookingtable>;
+    int maxPage = int.Parse(TempData["maxPage"].ToString());
+    int CurrentPage = int.Parse(TempData["CurrentPage"].ToString());
     int previous = (CurrentPage - 1) <= 0 ? CurrentPage : CurrentPage - 1;
     int next = CurrentPage + 1;
 }

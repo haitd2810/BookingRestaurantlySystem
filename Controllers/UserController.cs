@@ -12,8 +12,20 @@ namespace booking.Controllers
         private readonly IMailSettingService mailSetting_service = new MailSettingService();
         public IActionResult Create()
         {
-            ViewData["CurrentPage"] = "Login";
-            return View();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    ViewData["CurrentPage"] = "Login";
+                    return View();
+                }
+                catch (Exception ex)
+                {
+                    TempData["error"] = ex.Message;
+                    return View("~/Views/Home/503.cshtml");
+                }
+            }
+            return View("~/Views/Home/503.cshtml");
         }
         
         [HttpPost]

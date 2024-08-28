@@ -36,7 +36,7 @@ namespace booking.Controllers
                 try
                 {
                     List<Table> table_list = table_service.GetTableList();
-                    ViewBag.listTable = table_list;
+                    TempData["listTable"] = table_list;
 
                     return View();
                 }
@@ -56,16 +56,18 @@ namespace booking.Controllers
                 try
                 {
                     List<Meal> meal_list = meal_service.GetMeal();
-                    ViewBag.mealList = meal_list;
+                    TempData["mealList"] = meal_list;
 
-                    List<Ordertable> order_list = order_service.getOrderList(id);
-                    ViewBag.orderList = order_list;
 
-                    List<Categorymeal> cate_list = cate_service.GetCate();
-                    ViewBag.category = cate_list;
+                    List <Ordertable> order_list = order_service.getOrderList(id);
+                    TempData["orderList"] = order_list;
 
-                    ViewBag.tableID = id;
 
+                    List <Categorymeal> cate_list = cate_service.GetCate();
+                    TempData["category"] = cate_list;
+
+
+                    TempData["tableID"] = id;
                     return View("Details", id);
                 }
                 catch (Exception ex)
@@ -174,11 +176,11 @@ namespace booking.Controllers
                 {
                     const int pageSize = 10;
                     pageNumber = service.GetPageNumber(pageNumber, pageSize);
-                    ViewBag.CurrentPage = pageNumber;
-                    ViewBag.maxPage = (pageNumber <= service.GetMaxPage(pageSize) - 2? pageNumber+1 : service.GetMaxPage(pageSize));
+                    TempData["CurrentPage"] = pageNumber;
+                    TempData["maxPage"] = (pageNumber <= service.GetMaxPage(pageSize) - 2? pageNumber+1 : service.GetMaxPage(pageSize));
 
-                    List<Bookingtable> bookings = booking_service.GetAll(pageNumber,pageSize);
-                    ViewBag.booking_list = bookings;
+                    List <Bookingtable> bookings = booking_service.GetAll(pageNumber,pageSize);
+                    TempData["booking_list"] = bookings;
                     return View();
                 }
                 catch (Exception ex)
@@ -229,7 +231,6 @@ namespace booking.Controllers
                         Prepay = b.Prepay[0] == 1,
                         Status = b.Status[0] == 1
                     }).ToList();
-                    Console.WriteLine(bookingViewModels[0].Name);
                     return Ok(bookingViewModels);
                 }
                 catch (Exception ex)

@@ -1,8 +1,64 @@
 ﻿@model ErrorViewModel
 @{
     ViewData["Title"] = "Error";
+    Layout = null;
+    String msg = TempData["error"].ToString() ?? String.Empty;
 }
+<style>
+    body {
+        background-color: #0c0b09;
+        font-family: Arial, sans-serif;
+    }
 
+    .error-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        min-height: 100vh;
+        color: White;
+    }
+
+        .error-container h1 {
+            font-size: 6rem;
+            margin-bottom: 20px;
+            color: White;
+        }
+
+        .error-container p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .error-container a {
+            color: White;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: 2px solid White;
+            transition: all 0.3s ease;
+        }
+
+            .error-container a:hover {
+                background-color: #cda45e;
+                color: #FFF;
+            }
+
+    .error-image {
+        margin-top: 30px;
+    }
+</style>
+
+<div class="error-container">
+    <div>
+        <h1>503</h1>
+        <p>@msg</p>
+        <p>The service you requested is not available at this time.</p>
+        <p>Try again later.</p>
+        <a href="@Url.Action("Index", "Home")">Return to Home</a>
+    </div>
+</div>
 <h1 class="text-danger">Error.</h1>
 <h2 class="text-danger">An error occurred while processing your request.</h2>
 

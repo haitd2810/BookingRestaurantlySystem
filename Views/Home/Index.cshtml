@@ -3,15 +3,15 @@
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
 @{
-    var infoSetting = ViewBag.infosetting as Setting;
+    var infoSetting = TempData["infosetting"] as Setting;
     ViewData["Title"] = "Home Page";
-    List<Meal> meal = ViewBag.meal as List<Meal>;
-    List<Categorymeal> category = ViewBag.category as List<Categorymeal>;
-    List<Specialmeal> special_meal = ViewBag.special_meals as List<Specialmeal>;
-    List<Post> post = ViewBag.post as List<Post>;
-    List<Feedback> feedback = ViewBag.feedback as List<Feedback>;
-    List<Photorestaurant> photo = ViewBag.photo as List<Photorestaurant>;
-    List<Bookingtable> booking = ViewBag.booking as List<Bookingtable>;
+    List<Meal> meal = TempData["meal"] as List<Meal>;
+    List<Categorymeal> category = TempData["category"] as List<Categorymeal>;
+    List<Specialmeal> special_meal = TempData["special_meals"] as List<Specialmeal>;
+    List<Post> post = TempData["post"] as List<Post>;
+    List<Feedback> feedback = TempData["feedback"] as List<Feedback>;
+    List<Photorestaurant> photo = TempData["photo"] as List<Photorestaurant>;
+    List<Bookingtable> booking = TempData["booking"] as List<Bookingtable>;
 }
 
   <!-- ======= Hero Section ======= -->

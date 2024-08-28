@@ -30,35 +30,35 @@ namespace booking.Controllers
                 {
                     //footer data
                     Setting info_setting = settingService.getSetting();
-                    ViewBag.infosetting = info_setting;
+                    TempData["infosetting"] = info_setting;
 
                     //menu data
                     List<Meal> meal_list = meal_service.GetMeal();
-                    ViewBag.meal = meal_list;
+                    TempData["meal"] = meal_list;
 
                     //category meal data
                     List<Categorymeal> cate_list = categorymeal_service.GetCate();
-                    ViewBag.category = cate_list;
+                    TempData["category"] = cate_list;
 
                     //special meal data
-                    List<Specialmeal> special_meal_list = spmeal_Service.GetSepcialMeal();
-                    ViewBag.special_meals = special_meal_list;
+                    List <Specialmeal> special_meal_list = spmeal_Service.GetSepcialMeal();
+                    TempData["special_meals"] = special_meal_list;
 
                     //post data
-                    List<Post> post_list = post_service.getPost();
-                    ViewBag.post = post_list;
+                    List <Post> post_list = post_service.getPost();
+                    TempData["post"] = post_list;
 
                     //feedback data
-                    List<Feedback> feedback_list = fb_service.GetFeedback();
-                    ViewBag.feedback = feedback_list;
+                    List <Feedback> feedback_list = fb_service.GetFeedback();
+                    TempData["feedback"] = feedback_list;
 
                     //photo  data
-                    List<Photorestaurant> photo_list = photo_service.getphoto();
-                    ViewBag.photo = photo_list;
+                    List <Photorestaurant> photo_list = photo_service.getphoto();
+                    TempData["photo"] = photo_list;
 
                     //booking list data
-                    List<Bookingtable> booking_list = book_service.GetAll();
-                    ViewBag.booking = booking_list;
+                    List <Bookingtable> booking_list = book_service.GetAll();
+                    TempData["booking"] = booking_list;
                     return View();
                 }
                 catch (Exception ex)
