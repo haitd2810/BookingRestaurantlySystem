@@ -1,0 +1,238 @@
+﻿@{
+    ViewData["Title"] = "Schedule";
+    Layout = "~/Views/Layout/_header.cshtml";
+}
+@{
+    List<Bookingtable> booking_list = TempData["booking_list"] as List<Bookingtable>;
+    int maxPage = int.Parse(TempData["maxPage"].ToString());
+    int CurrentPage = int.Parse(TempData["CurrentPage"].ToString());
+    int previous = (CurrentPage - 1) <= 0 ? CurrentPage : CurrentPage - 1;
+    int next = CurrentPage + 1;
+}
+<style>
+    .page-link {
+        color: #fff;
+        background-color: #cda45e00;
+    }
+
+        .page-link:hover {
+            color: #cda45e;
+            background-color: #fff;
+        }
+
+    .active-page {
+        color: #cda45e;
+        background-color: #fff;
+    }
+</style>
+<main id="main" style="margin-top: 5em;">
+    <!-- ======= About Section ======= -->
+    <section id="about" class="about">
+        <div class="container" data-aos="fade-up">
+            <div class="row">
+                <div class="section-title col-lg-8 col-md-6">
+                    <p>Schedule</p>
+                </div>
+                <div class="col-lg-4 col-md-6 search-box">
+                    <form action="" method="post">
+                        <input id="search-by-name" type="text" name="search"><input id="btnClick" type="submit" value="Search">
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </section><!-- End About Section -->
+    <!-- ======= Menu Section ======= -->
+    <section id="menu" class="menu section-bg">
+        <div class="container-fluid" data-aos="fade-up">
+            <div id="menu-container" class="row menu-container" data-aos="fade-up" data-aos-delay="200">
+                <div class="col-lg-12 menu-item meal-item filter-starters">
+                    <table class="table text-light">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">
+                                    Full Name
+                                    <span class="sort" data-sort="name">▲</span>
+                                </th>
+                                <th scope="col">
+                                    Email
+                                    <span class="sort" data-sort="email">▲</span>
+                                </th>
+                                <th scope="col">
+                                    Date Time
+                                    <span class="sort" data-sort="date">▲</span>
+                                </th>
+                                <th scope="col">
+                                    Table
+                                    <span class="sort" data-sort="table">▲</span>
+                                </th>
+                                <th scope="col">
+                                    Message
+                                    <span class="sort" data-sort="message">▲</span>
+                                </th>
+                                <th scope="col">
+                                    prepay?
+                                    <span class="sort" data-sort="prepay">▲</span>
+                                </th>
+                                <th scope="col">
+                                    Status
+                                    <span class="sort" data-sort="status">▲</span>
+                                </th>
+                                <th scope="col">
+                                    Confirm
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            @if (booking_list != null)
+                            {
+                                @for (int i = 0; i < booking_list.Count(); i++)
+                                {
+                                    int row = i + 1;
+                                    string status = "pending";
+                                    @if (booking_list[i].Prepay[0] == 1 && booking_list[i].Status[0] == 1) status = "confirmed";
+                                    @if (booking_list[i].Prepay[0] == 1 && booking_list[i].Status[0] == 0) status = "ordered";
+                                    <tr>
+                                        <th scope="row">@row</th>
+                                        <td>@booking_list[i].Name</td>
+                                        <td>@booking_list[i].Email</td>
+                                        <td>@booking_list[i].DateOrder @booking_list[i].TimeOrder</td>
+                                        <td>@booking_list[i].Table.TableName</td>
+                                        <td>@booking_list[i].Message</td>
+                                        <td>@(booking_list[i].Prepay[0] == 1 ? "payed" : "")</td>
+                                        <td>@status</td>
+                                        <td>
+                                            @if (status == "confirmed")
+                                            {
+                                                <form asp-action="Update" asp-controller="Schedule" asp-route-id="@booking_list[i].Id">
+                                                    <button class="btn btn-warning" style="color: white;">
+                                                        Ordered
+                                                    </button>
+                                                </form>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link" asp-action="schedule" asp-controller="staff" asp-route-pageNumber="@previous" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            @for (int i = (CurrentPage == 1 ? CurrentPage : CurrentPage - 1); i <= maxPage; i++)
+                            {
+                                String active = (i == CurrentPage) ? "active-page" : "";
+                                <li class="page-item">
+                                    <a class="page-link @active" asp-action="schedule" asp-controller="staff" asp-route-pageNumber="@i">@i</a>
+                                </li>
+                            }
+                            <li class="page-item">
+                                <a class="page-link" asp-action="schedule" asp-controller="staff" asp-route-pageNumber="@next" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+            </div>
+
+        </div>
+
+        </sectio><!-- End Menu Section -->
+
+</main><!-- End #main -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const getCellValue = (row, index) => row.children[index].innerText || row.children[index].textContent;
+
+        const comparer = (index, asc) => (a, b) => ((v1, v2) =>
+            v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)
+        )(getCellValue(asc ? a : b, index), getCellValue(asc ? b : a, index));
+
+        document.querySelectorAll('th .sort').forEach(function (header) {
+            header.addEventListener('click', function () {
+                const table = header.closest('table');
+                const tbody = table.querySelector('tbody');
+                Array.from(tbody.querySelectorAll('tr'))
+                    .sort(comparer(Array.from(header.parentNode.parentNode.children).indexOf(header.parentNode), header.textContent === '▲'))
+                    .forEach(tr => tbody.appendChild(tr));
+
+                // Toggle sorting direction
+                header.textContent = header.textContent === '▲' ? '▼' : '▲';
+            });
+        });
+    });
+
+</script>
+
+<script>
+    $('#btnClick').click(function (e) {
+        var name = document.getElementById('search-by-name').value;
+        if (name == "") { location.reload(); }
+        e.preventDefault();
+        $.ajax({
+            url: '@Url.Action("Search", "Schedule")',
+            type: 'get',
+            data: { name: name },
+            success: function (data) {
+                loadData(data);
+            },
+            error: function (errMsg) {
+            }
+        });
+    });
+    function isBase64(str) {
+        try {
+            return btoa(atob(str)) === str;
+        } catch (err) {
+            return false;
+        }
+    }
+
+    function loadData(data) {
+        $(".table tbody tr").remove();
+        $.each(data, function (i, item) {
+            var stt = i + 1;
+
+            var prepay = item.prepay ? item.prepay : false;
+            var status = item.status ? item.status : false;
+            var statusText = "pending";
+
+            if (prepay === true && status === false) statusText = "ordered";
+            if (prepay === true && status === true) statusText = "confirmed";
+
+            var rows = "<tr>"
+                + "<th scope='row'>" + stt + "</th>"
+                + "<td>" + (item.name || '') + "</td>"
+                + "<td>" + (item.email || '') + "</td>"
+                + "<td>" + (item.dateOrder || '') + " " + (item.TimeOrder || '') + "</td>"
+                + "<td>" + (item.tableName || '') + "</td>"
+                + "<td>" + (item.message || '') + "</td>"
+                + "<td>" + (prepay === true ? '' : 'payed') + "</td>"
+                + "<td>" + statusText + "</td>";
+
+            if (statusText == "confirmed") {
+                var URL = "/Schedule/Update/" + item.id;
+                var add_button = "<td><form action='" + URL + "' method='post'><button class='btn btn-warning' style='color: white;'> Ordered</button></form></td>";
+                rows += add_button;
+            }
+
+            rows += "</tr>";
+            $(".table tbody").append(rows);
+        });
+    }
+
+
+
+
+
+</script>
+

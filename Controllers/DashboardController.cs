@@ -8,7 +8,7 @@ namespace booking.Controllers
     public class DashboardController : Controller
     {
         private readonly IOrderHistoryService orderHistory_service = new OrderHistoryService();
-        public IActionResult StatisticStaff(DateTime? start = null, DateTime? end = null)
+        public IActionResult Index(DateTime? start = null, DateTime? end = null)
         {
             if (ModelState.IsValid)
             {
@@ -31,6 +31,23 @@ namespace booking.Controllers
                 }
             }
             return View();
+        }
+
+        public IActionResult Details()
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    return View();
+                }
+                catch (Exception ex)
+                {
+                    TempData["error"] = ex.Message;
+                    return View("~/Views/Home/503.cshtml");
+                }
+            }
+            return View("~/Views/Home/503.cshtml");
         }
     }
 }

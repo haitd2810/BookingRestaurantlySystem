@@ -48,7 +48,7 @@
                             <div class="menu-ingredients">
                                 @od.Meal.Intro
                                 <div>
-                                    <a asp-action="DeleteOrderMeal" asp-route-tableID="@od.TableId" asp-route-mealID="@od.MealId" asp-route-odHistory="@odHistoryID">
+                                    <a asp-action="Delete" asp-route-tableID="@od.TableId" asp-route-mealID="@od.MealId" asp-route-odHistory="@odHistoryID">
                                         <img src="~/assets/img/svg_icon/bin-svgrepo-com.svg" class="svg-icon" alt="Delete" style="width:1.5rem;">
                                     </a>
                                 </div>
@@ -281,7 +281,7 @@
             e.preventDefault();
             const selectedItemsList = getSelectedItems();
             $.ajax({
-                url: '@Url.Action("OrderMeal", "Staff")',
+                url: '@Url.Action("Update", "Staff")',
                 type: 'post', 
                 contentType: 'application/json',
                 data: JSON.stringify(selectedItemsList),
