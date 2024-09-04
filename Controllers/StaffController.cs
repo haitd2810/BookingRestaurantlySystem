@@ -22,10 +22,8 @@ namespace booking.Controllers
     }
     public class StaffController : Controller
     {
-        private readonly IBookingService booking_service = new BookingService();
         private readonly IOrderHistoryService orderHistory_service = new OrderHistoryService();
         private readonly IOrderService order_service = new OrderService();
-        private readonly IService service = new Service();
         private readonly ITableService table_service = new TableService();
         private readonly IMealService meal_service = new MealService();
         private readonly ICategoryMealService cate_service = new CategoryMealService();
@@ -79,7 +77,7 @@ namespace booking.Controllers
             return View("~/Views/Home/503.cshtml");
         }
 
-        public ActionResult DeleteOrderMeal(int tableID, int mealID, int odHistory)
+        public ActionResult Delete(int tableID, int mealID, int odHistory)
         {
             if (ModelState.IsValid)
             {
@@ -142,7 +140,7 @@ namespace booking.Controllers
             return View("~/Views/Home/503.cshtml");
         }
         [HttpPost]
-        public IActionResult OrderMeal([FromBody] List<SelectedItem> selectedItems)
+        public IActionResult Update([FromBody] List<SelectedItem> selectedItems)
         {
             if (ModelState.IsValid)
             {
@@ -165,100 +163,9 @@ namespace booking.Controllers
                 }
             }
             return View("~/Views/Home/503.cshtml");
-        }
+        }   
 
-/*        [Route("Staff/Schedule")]*/
-        public IActionResult Schedule(int pageNumber)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    const int pageSize = 10;
-                    pageNumber = service.GetPageNumber(pageNumber, pageSize);
-                    TempData["CurrentPage"] = pageNumber;
-                    TempData["maxPage"] = (pageNumber <= service.GetMaxPage(pageSize) - 2? pageNumber+1 : service.GetMaxPage(pageSize));
-
-                    List <Bookingtable> bookings = booking_service.GetAll(pageNumber,pageSize);
-                    TempData["booking_list"] = bookings;
-                    return View();
-                }
-                catch (Exception ex)
-                {
-                    TempData["error"] = ex.Message;
-                    return View("~/Views/Home/503.cshtml");
-                }
-            }
-            return View("~/Views/Home/503.cshtml");
-        }
-        [HttpPost]
-        public IActionResult confirmBooking(int id)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    Bookingtable booking = booking_service.FindByID(id);
-                    booking_service.ChangeStatus(booking);
-                    booking_service.UpdateBooking(booking);
-                    return RedirectToAction("Schedule", "Staff");
-                }
-                catch (Exception ex)
-                {
-                    TempData["error"] = ex.Message;
-                    return View("~/Views/Home/503.cshtml");
-                }
-            }
-            return View("~/Views/Home/503.cshtml");
-        }
-
-        public IActionResult search(string name)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var bookings = booking_service.FindByName(name);
-                    var bookingViewModels = bookings.Select(b => new BookingViewModel
-                    {
-                        Id = b.Id,
-                        Name = b.Name,
-                        Email = b.Email,
-                        DateOrder = b.DateOrder.ToString(),
-                        TimeOrder = b.TimeOrder.ToString(),
-                        TableName = b.Table.TableName,
-                        Message = b.Message,
-                        Prepay = b.Prepay[0] == 1,
-                        Status = b.Status[0] == 1
-                    }).ToList();
-                    return Ok(bookingViewModels);
-                }
-                catch (Exception ex)
-                {
-                    TempData["error"] = ex.Message;
-                    return View("~/Views/Home/503.cshtml");
-                }
-            }
-            return View("~/Views/Home/503.cshtml");
-        }
-
-        [Route("Staff/StatisticStableDetail")]
-        public IActionResult StatisticStableDetail()
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    return View();
-                }
-                catch (Exception ex)
-                {
-                    TempData["error"] = ex.Message;
-                    return View("~/Views/Home/503.cshtml");
-                }
-            }
-            return View("~/Views/Home/503.cshtml");
-        }
+        
 
         private void changeByOrderMeal(List<SelectedItem> selectedItems, int orderHistoryID)
         {
