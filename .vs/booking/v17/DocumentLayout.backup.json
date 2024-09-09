@@ -3,20 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\Hi\\OneDrive - \u0110\u1EA1i h\u1ECDc FPT- FPT University\\Desktop\\Booking\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{97FB3999-E5EE-408A-97C3-C47939F0C3E8}|booking.csproj|c:\\users\\hi\\onedrive - \u0111\u1EA1i h\u1ECDc fpt- fpt university\\desktop\\booking\\controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{97FB3999-E5EE-408A-97C3-C47939F0C3E8}|booking.csproj|solutionrelative:controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{97FB3999-E5EE-408A-97C3-C47939F0C3E8}|booking.csproj|c:\\users\\hi\\onedrive - \u0111\u1EA1i h\u1ECDc fpt- fpt university\\desktop\\booking\\controllers\\tablemanagecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{97FB3999-E5EE-408A-97C3-C47939F0C3E8}|booking.csproj|solutionrelative:controllers\\tablemanagecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{97FB3999-E5EE-408A-97C3-C47939F0C3E8}|booking.csproj|c:\\users\\hi\\onedrive - \u0111\u1EA1i h\u1ECDc fpt- fpt university\\desktop\\booking\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{97FB3999-E5EE-408A-97C3-C47939F0C3E8}|booking.csproj|solutionrelative:controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{97FB3999-E5EE-408A-97C3-C47939F0C3E8}|booking.csproj|c:\\users\\hi\\onedrive - \u0111\u1EA1i h\u1ECDc fpt- fpt university\\desktop\\booking\\views\\tablemanage\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{97FB3999-E5EE-408A-97C3-C47939F0C3E8}|booking.csproj|solutionrelative:views\\tablemanage\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{97FB3999-E5EE-408A-97C3-C47939F0C3E8}|booking.csproj|c:\\users\\hi\\onedrive - \u0111\u1EA1i h\u1ECDc fpt- fpt university\\desktop\\booking\\views\\layout\\_adminheader.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{97FB3999-E5EE-408A-97C3-C47939F0C3E8}|booking.csproj|solutionrelative:views\\layout\\_adminheader.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{97FB3999-E5EE-408A-97C3-C47939F0C3E8}|booking.csproj|c:\\users\\hi\\onedrive - \u0111\u1EA1i h\u1ECDc fpt- fpt university\\desktop\\booking\\views\\tablemanage\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{97FB3999-E5EE-408A-97C3-C47939F0C3E8}|booking.csproj|solutionrelative:views\\tablemanage\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{97FB3999-E5EE-408A-97C3-C47939F0C3E8}|booking.csproj|c:\\users\\hi\\onedrive - \u0111\u1EA1i h\u1ECDc fpt- fpt university\\desktop\\booking\\views\\admin\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{97FB3999-E5EE-408A-97C3-C47939F0C3E8}|booking.csproj|solutionrelative:views\\admin\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{97FB3999-E5EE-408A-97C3-C47939F0C3E8}|booking.csproj|c:\\users\\hi\\onedrive - \u0111\u1EA1i h\u1ECDc fpt- fpt university\\desktop\\booking\\dao\\tabledao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{97FB3999-E5EE-408A-97C3-C47939F0C3E8}|booking.csproj|solutionrelative:dao\\tabledao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,7 +26,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 15,
+          "SelectedChildIndex": 21,
           "Children": [
             {
               "$type": "Bookmark",
@@ -89,45 +89,6 @@
               "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "DashboardController.cs",
-              "DocumentMoniker": "C:\\Users\\Hi\\OneDrive - \u0110\u1EA1i h\u1ECDc FPT- FPT University\\Desktop\\Booking\\Controllers\\DashboardController.cs",
-              "RelativeDocumentMoniker": "Controllers\\DashboardController.cs",
-              "ToolTip": "C:\\Users\\Hi\\OneDrive - \u0110\u1EA1i h\u1ECDc FPT- FPT University\\Desktop\\Booking\\Controllers\\DashboardController.cs",
-              "RelativeToolTip": "Controllers\\DashboardController.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAAB8AAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-07T07:20:33.48Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AdminController.cs",
-              "DocumentMoniker": "C:\\Users\\Hi\\OneDrive - \u0110\u1EA1i h\u1ECDc FPT- FPT University\\Desktop\\Booking\\Controllers\\AdminController.cs",
-              "RelativeDocumentMoniker": "Controllers\\AdminController.cs",
-              "ToolTip": "C:\\Users\\Hi\\OneDrive - \u0110\u1EA1i h\u1ECDc FPT- FPT University\\Desktop\\Booking\\Controllers\\AdminController.cs",
-              "RelativeToolTip": "Controllers\\AdminController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-05T12:42:58.796Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "_AdminHeader.cshtml",
-              "DocumentMoniker": "C:\\Users\\Hi\\OneDrive - \u0110\u1EA1i h\u1ECDc FPT- FPT University\\Desktop\\Booking\\Views\\Layout\\_AdminHeader.cshtml",
-              "RelativeDocumentMoniker": "Views\\Layout\\_AdminHeader.cshtml",
-              "ToolTip": "C:\\Users\\Hi\\OneDrive - \u0110\u1EA1i h\u1ECDc FPT- FPT University\\Desktop\\Booking\\Views\\Layout\\_AdminHeader.cshtml",
-              "RelativeToolTip": "Views\\Layout\\_AdminHeader.cshtml",
-              "ViewState": "AgIAAB0BAAAAAAAAAAAawC4BAAAMAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-09-07T07:09:52.347Z",
-              "EditorCaption": ""
-            },
-            {
               "$type": "Bookmark",
               "Name": "ST:0:0:{004be353-6879-467c-9d1e-9ac23cdf6d49}"
             },
@@ -136,20 +97,59 @@
               "Name": "ST:16:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
             },
             {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "C:\\Users\\Hi\\OneDrive - \u0110\u1EA1i h\u1ECDc FPT- FPT University\\Desktop\\Booking\\Views\\TableManage\\Details.cshtml",
+              "RelativeDocumentMoniker": "Views\\TableManage\\Details.cshtml",
+              "ToolTip": "C:\\Users\\Hi\\OneDrive - \u0110\u1EA1i h\u1ECDc FPT- FPT University\\Desktop\\Booking\\Views\\TableManage\\Details.cshtml",
+              "RelativeToolTip": "Views\\TableManage\\Details.cshtml",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAACMAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-09T13:36:18.555Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Hi\\OneDrive - \u0110\u1EA1i h\u1ECDc FPT- FPT University\\Desktop\\Booking\\Views\\TableManage\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\TableManage\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Hi\\OneDrive - \u0110\u1EA1i h\u1ECDc FPT- FPT University\\Desktop\\Booking\\Views\\TableManage\\Index.cshtml",
+              "RelativeToolTip": "Views\\TableManage\\Index.cshtml",
+              "ViewState": "AgIAACoAAAAAAAAAAAAAAD8AAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-09T13:29:21.504Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "TableDAO.cs",
+              "DocumentMoniker": "C:\\Users\\Hi\\OneDrive - \u0110\u1EA1i h\u1ECDc FPT- FPT University\\Desktop\\Booking\\DAO\\TableDAO.cs",
+              "RelativeDocumentMoniker": "DAO\\TableDAO.cs",
+              "ToolTip": "C:\\Users\\Hi\\OneDrive - \u0110\u1EA1i h\u1ECDc FPT- FPT University\\Desktop\\Booking\\DAO\\TableDAO.cs",
+              "RelativeToolTip": "DAO\\TableDAO.cs",
+              "ViewState": "AgIAAEoAAAAAAAAAAAAgwCYAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-09T12:51:45.667Z",
+              "EditorCaption": ""
+            },
+            {
               "$type": "Bookmark",
               "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\Hi\\OneDrive - \u0110\u1EA1i h\u1ECDc FPT- FPT University\\Desktop\\Booking\\Views\\Admin\\Index.cshtml",
-              "RelativeDocumentMoniker": "Views\\Admin\\Index.cshtml",
-              "ToolTip": "C:\\Users\\Hi\\OneDrive - \u0110\u1EA1i h\u1ECDc FPT- FPT University\\Desktop\\Booking\\Views\\Admin\\Index.cshtml",
-              "RelativeToolTip": "Views\\Admin\\Index.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAApAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-09-05T12:47:01.791Z",
+              "DocumentIndex": 0,
+              "Title": "TableManageController.cs",
+              "DocumentMoniker": "C:\\Users\\Hi\\OneDrive - \u0110\u1EA1i h\u1ECDc FPT- FPT University\\Desktop\\Booking\\Controllers\\TableManageController.cs",
+              "RelativeDocumentMoniker": "Controllers\\TableManageController.cs",
+              "ToolTip": "C:\\Users\\Hi\\OneDrive - \u0110\u1EA1i h\u1ECDc FPT- FPT University\\Desktop\\Booking\\Controllers\\TableManageController.cs",
+              "RelativeToolTip": "Controllers\\TableManageController.cs",
+              "ViewState": "AgIAAD8AAAAAAAAAAAAYwEwAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-08T07:08:32.987Z",
               "EditorCaption": ""
             }
           ]

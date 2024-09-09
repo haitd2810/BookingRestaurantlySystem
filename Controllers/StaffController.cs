@@ -79,6 +79,10 @@ namespace booking.Controllers
 
         public ActionResult Delete(int tableID, int mealID, int odHistory)
         {
+            if (tableID == 0 || mealID == 0 || odHistory == 0)
+            {
+                return View("~/Views/Home/503.cshtml");
+            }
             if (ModelState.IsValid)
             {
                 try
@@ -105,6 +109,10 @@ namespace booking.Controllers
 
         public ActionResult payMeal(int orderHistoryID, int tableID)
         {
+            if(orderHistoryID == 0 || tableID == 0)
+            {
+                return View("~/Views/Home/503.cshtml");
+            }
             if (ModelState.IsValid)
             {
                 try

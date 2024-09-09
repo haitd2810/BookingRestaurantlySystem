@@ -32,6 +32,10 @@ namespace booking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Staff staff)
         {
+            if(staff == null)
+            {
+                return View("~/Views/Home/503.cshtml");
+            }
             if (ModelState.IsValid)
             {
                 try

@@ -8,5 +8,6 @@ namespace booking.IServices
         public Boolean UpdateTable(Table table);
         public void MarkTableAsOrdered(int tableID, Boolean ismark);
         public List<Table> GetTableList();
+        public Table FindById(int tableID);
     }
 }

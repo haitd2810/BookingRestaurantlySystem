@@ -36,6 +36,7 @@ namespace booking.DAO
             }
             catch (DbUpdateConcurrencyException ex)
             {
+                Console.WriteLine(ex.Message);
                 var entry = ex.Entries.Single();
                 var clientValues = entry.CurrentValues;
                 var databaseEntry = entry.GetDatabaseValues();
@@ -83,6 +84,15 @@ namespace booking.DAO
                           .Where(table => table.Status[0] == 1)
                           .Include(t => t.TypeTable)
                           .ToList();
+        }
+
+        public Table FindByID(int id)
+        {
+            return context.Tables
+                          .Where(t => t.Id == id)
+                          .Where(table => table.Status[0] == 1)
+                          .Include(t => t.TypeTable)
+                          .FirstOrDefault() ?? new Table();
         }
     }
 }
