@@ -37,6 +37,10 @@ namespace booking.Controllers
         [HttpPost]
         public IActionResult Update(int id)
         {
+            if(id == 0)
+            {
+                return View("~/Views/Home/503.cshtml");
+            }
             if (ModelState.IsValid)
             {
                 try
@@ -57,6 +61,10 @@ namespace booking.Controllers
 
         public IActionResult Search(string name)
         {
+            if(name == null)
+            {
+                return View("~/Views/Home/503.cshtml");
+            }
             if (ModelState.IsValid)
             {
                 try

@@ -1,6 +1,5 @@
 ﻿@{
     Layout = null;
-    String msg = TempData["error"].ToString() ?? String.Empty;
 }
 
 <style>
@@ -52,7 +51,6 @@
 <div class="error-container">
     <div>
         <h1>503</h1>
-        <p>@msg</p>
         <p>The service you requested is not available at this time.</p>
         <p>Try again later.</p>
         <a href="@Url.Action("Index", "Home")">Return to Home</a>

@@ -74,6 +74,10 @@ namespace booking.Controllers
 #pragma warning disable S6967
         public async Task<ActionResult> createFeedback(string name, string jobs, string email, string phone, IFormFile img, string feedback)
         {
+            if(name == null || jobs == null || email == null || phone == null || feedback == null)
+            {
+                return View("~/Views/Home/503.cshtml");
+            }
             if (ModelState.IsValid)
             {
                 try
