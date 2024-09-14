@@ -49,7 +49,6 @@ namespace booking.Controllers
                 }
 				catch (Exception ex)
 				{
-                    Console.WriteLine(ex.Message);
 					TempData["error"] = ex.Message;
 					return View("~/Views/Home/503.cshtml");
 
@@ -99,7 +98,6 @@ namespace booking.Controllers
         {
             if (table_id == 0)
             {
-                Console.WriteLine("If dau tien");
                 return View("~/Views/Home/503.cshtml");
             }
             if (ModelState.IsValid)
@@ -107,7 +105,6 @@ namespace booking.Controllers
                 List<Ordertable> order_list = order_service.getOrderList(table_id);
                 if (order_list.Count != 0) 
                 {
-                    Console.WriteLine("Vao day");
                     return View("~/Views/Home/503.cshtml"); 
                     
                 }
@@ -116,14 +113,12 @@ namespace booking.Controllers
                     Table table = table_service.FindById(table_id);
                     if (table != null)
                     {
-                        Console.WriteLine("Thay Table");
                         table.Status = new byte[0];
                         table_service.UpdateTable(table);
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
                     TempData["error"] = ex.Message;
                     return View("~/Views/Home/503.cshtml");
 
