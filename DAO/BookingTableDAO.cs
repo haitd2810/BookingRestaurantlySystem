@@ -39,7 +39,6 @@ namespace booking.DAO
             int row = context.SaveChanges();
             if (row <= 0)
             {
-                Console.WriteLine("False: " + row);
                 return false;
             }
 

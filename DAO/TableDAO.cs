@@ -36,7 +36,6 @@ namespace booking.DAO
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                Console.WriteLine(ex.Message);
                 var entry = ex.Entries.Single();
                 var clientValues = entry.CurrentValues;
                 var databaseEntry = entry.GetDatabaseValues();

@@ -78,43 +78,40 @@ namespace booking.Controllers
             {
                 return View("~/Views/Home/503.cshtml");
             }
-            if (ModelState.IsValid)
+            try
             {
-                try
+                //declare variable
+                string subject = "Thanks for your response";
+                //check user who give feedback, have yet booked table
+                if (!book_service.IsBooked(email, phone))
                 {
-                    //declare variable
-                    string subject = "Thanks for your response";
-                    //check user who give feedback, have yet booked table
-                    if (!book_service.IsBooked(email, phone))
-                    {
-                        //get path to save file img of user
-                        string imgPath = await fb_service.PathToSave(img,path_save_feedback,default_img);
+                    //get path to save file img of user
+                    string imgPath = await fb_service.PathToSave(img,path_save_feedback,default_img);
+                    
+                    // create object of feedback
+                    Feedback fb = fb_service.SetValue(name, jobs, feedback, DateTime.Now, DateTime.Now, (new byte[] { 0 }), imgPath);
 
-                        // create object of feedback
-                        Feedback fb = fb_service.SetValue(name, jobs, feedback, DateTime.Now, DateTime.Now, (new byte[] { 0 }), imgPath);
+                    //save feedback to database
+                    fb_service.AddFeedback(fb);
 
-                        //save feedback to database
-                        fb_service.AddFeedback(fb);
+                    //create email variable to authenticate user
+                    string email_from = mailSetting_service.getMailSetting().Mail ?? string.Empty;
 
-                        //create email variable to authenticate user
-                        string email_from = mailSetting_service.getMailSetting().Mail ?? string.Empty;
+                    //create password variable to authenticate user
+                    string email_password = mailSetting_service.getMailSetting().Password ?? string.Empty;
 
-                        //create password variable to authenticate user
-                        string email_password = mailSetting_service.getMailSetting().Password ?? string.Empty;
+                    //create body to send mail
+                    string body = user_service.messageFeedback(name);
 
-                        //create body to send mail
-                        string body = user_service.messageFeedback(name);
-
-                        //send mail
-                        user_service.sendMailConfirm(email_from, email_password, email, body, subject);
-                    }
-                    return RedirectToAction("Index", "Home");
+                    //send mail
+                    user_service.sendMailConfirm(email_from, email_password, email, body, subject);
                 }
-                catch (Exception ex)
-                {
-                    TempData["error"] = ex.Message;
-                    return View("~/Views/Home/503.cshtml");
-                }
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+                return View("~/Views/Home/503.cshtml");
             }
             return View("~/Views/Home/503.cshtml");
         }
