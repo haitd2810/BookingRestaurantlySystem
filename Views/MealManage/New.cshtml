@@ -1,0 +1,92 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "~/Views/Layout/_AdminHeader.cshtml";
+    List<Categorymeal> cate_list = TempData["CategoryList"] as List<Categorymeal>;
+}
+
+<main class="ttr-wrapper">
+    <div class="container-fluid">
+        <div class="db-breadcrumb">
+            <ul class="db-breadcrumb-list">
+                <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
+                <li><a asp-controller="MealManage" asp-action="Index"><i class="bi bi-table"></i>Meal List</a></li>
+                <li>New</li>
+            </ul>
+        </div>
+            <div class="row">
+                <!-- Your Profile Views Chart -->
+                <div class="col-lg-12 m-b30">
+                    <div class="widget-box">
+                        <div class="wc-title">
+                        </div>
+                        <div class="widget-inner">
+                            <form asp-controller="MealManage" asp-action="Create" method="post" class="edit-profile m-b30" enctype="multipart/form-data">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="ml-auto">
+                                            <h3>Basic info</h3>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label class="col-form-label">Image</label>
+                                        <div>
+                                        <input required accept="image/*" type="file" class="form-control" name="img" id="img">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label class="col-form-label">Meal Name</label>
+                                        <div>
+                                            <input name="meal_name" class="form-control" type="text" value="">
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="">Category</label>
+                                        @if (cate_list != null)
+                                        {
+                                            <select class="form-control" name="meal_cate" style="display: block !important;">
+                                                @foreach (Categorymeal type in cate_list)
+                                                {
+                                                    <option value="@type.Id">@type.Name</option>
+                                                }
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <input readonly name="table_type" class="form-control" type="text" value="">
+                                        }
+
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label class="col-form-label">Price</label>
+                                        <div>
+                                            <input name="price" class="form-control" type="number" value="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label class="col-form-label">Description</label>
+                                        <div>
+                                            <input name="intro" class="form-control" type="text" value="">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-outline-success"> Create </button>
+                                    </div>
+
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- Your Profile Views Chart END-->
+            </div>
+
+    </div>
+</main>
+<style>
+    .bootstrap-select{
+        display: none !important;
+    }
+</style>

@@ -1,0 +1,100 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "~/Views/Layout/_AdminHeader.cshtml";
+    List<Meal> meal_list = TempData["Meal_List"] as List<Meal>;
+}
+<main class="ttr-wrapper">
+    <div class="container-fluid">
+        <div class="db-breadcrumb">
+            <h4 class="breadcrumb-title">Dashboard</h4>
+            <ul class="db-breadcrumb-list">
+                <li><a asp-controller="Admin" asp-action="Index"><i class="fa fa-home"></i>Home</a></li>
+                <li>Meal</li>
+            </ul>
+        </div>
+
+        <div class="row">
+            <!-- Your Profile Views Chart -->
+            <div class="col-lg-12 m-b30">
+                <div class="widget-box">
+                    <div class="wc-title">
+                        <h4 class="title-meal-list" style="margin: auto 0;">Meal List</h4>
+                        <a asp-controller="MealManage" asp-action="New" class="btn btn-success button-new"> New </a>
+                    </div>
+                    <div class="widget-inner">
+
+                        <table class="table mb-0 table-center">
+                            <thead>
+                                <tr>
+                                    <th class="border-bottom p-3" style="min-width: 50px;">#</th>
+                                    <th class="border-bottom p-3" style="min-width: 180px;">Meal Name</th>
+                                    <th class="border-bottom p-3" width="80%">Image</th>
+                                    <th class="border-bottom p-3">Price</th>
+                                    <th class="border-bottom p-3" width="100%">Description</th>
+                                    <th class="border-bottom p-3">Category</th>
+                                    <th class="border-bottom p-3">Create At</th>
+                                    <th class="border-bottom p-3">Update At</th>
+                                    <th class="border-bottom p-3">Status</th>
+                                    <th class="border-bottom p-3">Action</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (meal_list != null)
+                                {
+                                    @foreach (Meal meal in meal_list)
+                                    {
+                                        string status = meal.Status[0] == 0 ? "Hide" : "displayed";
+                                        <tr>
+                                            <th class="p-3">@meal.Id</th>
+                                            <td class="p-3">
+                                                <a asp-controller="MealManage" asp-action="Details" asp-route-id="@meal.Id" class="text-dark">
+                                                    <div class="d-flex align-items-center">
+                                                        <span class="ms-2">@meal.Name</span>
+                                                    </div>
+                                                </a>
+                                            </td>
+                                            <td class="p-3">
+                                                <img style="width:80%;" src="@meal.Img" alt="" />
+                                            </td>
+                                            <td class="p-3">@meal.Price</td>
+                                            <td class="p-3">@meal.Intro</td>
+                                            <td class="p-3">@meal.Cate.Name</td>
+                                            <td class="p-3">@meal.CreateDate</td>
+                                            <td class="p-3">@meal.UpdateDate</td>
+                                            <td class="p-3">@status</td>
+                                            <td class="p-3">
+                                                <form asp-controller="MealManage" asp-action="Delete" asp-route-id="@meal.Id" method="post">
+                                                    <div>
+                                                        <button type="submit" class="btn btn-outline-danger">Delete </button>
+                                                    </div>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+            <!-- Your Profile Views Chart END-->
+        </div>
+
+    </div>
+</main>
+<style>
+    .wc-title {
+        display: flex;
+    }
+    .title-meal-list {
+        margin: auto 0;
+    }
+    .button-new{
+        margin-left: 1rem;
+    }
+</style>
