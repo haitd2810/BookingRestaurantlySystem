@@ -1,0 +1,88 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "~/Views/Layout/_AdminHeader.cshtml";
+    List<Role> role_list = TempData["role_list"] as List<Role>;
+}
+
+<main class="ttr-wrapper">
+    <div class="container-fluid">
+        <div class="db-breadcrumb">
+            <ul class="db-breadcrumb-list">
+                <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
+                <li><a asp-controller="AccountManage" asp-action="Index"><i class="bi bi-table"></i>Account List</a></li>
+                <li>New</li>
+            </ul>
+        </div>
+        <div class="row">
+            <!-- Your Profile Views Chart -->
+            <div class="col-lg-12 m-b30">
+                <div class="widget-box">
+                    <div class="wc-title">
+                    </div>
+                    <div class="widget-inner">
+                        <form asp-controller="AccountManage" asp-action="Create" method="post" class="edit-profile m-b30">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="ml-auto">
+                                        <h3>Basic info</h3>
+                                    </div>
+                                </div>
+                                <div class="col-3"></div>
+                                <div class="form-group col-6">
+                                    <label class="col-form-label">UserName</label>
+                                    <div>
+                                        <input name="username" required class="form-control" type="email" value="">
+                                    </div>
+                                </div>
+                                <div class="col-3"></div>
+                                <div class="col-3"></div>
+                                <div class="form-group col-6">
+                                    <label class="col-form-label">Password</label>
+                                    <div>
+                                        <input name="password" required class="form-control" type="password" value="">
+                                    </div>
+                                </div>
+                                <div class="col-3"></div>
+                                <div class="col-3"></div>
+                                <div class="col-6">
+                                    <label class="">Role</label>
+                                    @if (role_list != null)
+                                    {
+                                        <select class="form-control" name="account_role" style="display: block !important;">
+                                            @foreach (Role role in role_list)
+                                            {
+                                                <option value="@role.RoleId">@role.RoleName</option>
+                                            }
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <input readonly name="table_type" class="form-control" type="text" value="">
+                                    }
+
+                                </div>
+                                <div class="col-3"></div>
+                                <div class="col-3"></div>
+                                <div class="col-6" style="margin-top: 1rem;">
+                                    <button type="submit" class="btn btn-outline-success"> Create </button>
+                                </div>
+                                <div class="col-3"></div>
+
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+            <!-- Your Profile Views Chart END-->
+        </div>
+
+    </div>
+</main>
+<style>
+    .bootstrap-select{
+        display: none !important;
+    }
+</style>

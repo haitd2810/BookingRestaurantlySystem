@@ -6,6 +6,8 @@
         public void sendMailConfirm(string from, string password, string to, string body, string subject);
         string messageFeedback(string name);
 
+        string messageCfAccount(string username, string password);
+
 
     }
 }

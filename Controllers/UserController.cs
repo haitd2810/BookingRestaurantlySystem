@@ -76,8 +76,6 @@ namespace booking.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult booking(string name, string email, string phone, string date, string time, string tableNumber, string message)
         {
-            if (ModelState.IsValid)
-            {
                 try
                 {
                     // create variable email to authentication users
@@ -102,8 +100,6 @@ namespace booking.Controllers
                     TempData["error"] = ex.Message;
                     return View("~/Views/Home/503.cshtml");
                 }
-            }
-            return View("~/Views/Home/503.cshtml");
         }
     }
 }

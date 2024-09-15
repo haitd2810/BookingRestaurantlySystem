@@ -1,0 +1,113 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "~/Views/Layout/_AdminHeader.cshtml";
+    Staff staff = TempData["staff"] as Staff;
+    List<Role> role_list = TempData["role_list"] as List<Role>;
+}
+
+<main class="ttr-wrapper">
+    <div class="container-fluid">
+        <div class="db-breadcrumb">
+            <ul class="db-breadcrumb-list">
+                <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
+                <li><a asp-controller="AccountManage" asp-action="Index"><i class="bi bi-table"></i>Account List</a></li>
+                <li>More Infor</li>
+            </ul>
+        </div>
+        @if (staff != null)
+        {
+            <div class="row">
+                <!-- Your Profile Views Chart -->
+                <div class="col-lg-12 m-b30">
+                    <div class="widget-box">
+                        <div class="wc-title">
+                        </div>
+                        <div class="widget-inner">
+                            <form asp-controller="AccountManage" asp-action="Edit" method="post" class="edit-profile m-b30">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="ml-auto">
+                                            <h3>Basic info</h3>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="account_id" name="account_id" value="@staff.Id" />
+                                    <div class="form-group col-6">
+                                        <label class="col-form-label">UserName</label>
+                                        <div>
+                                            <input name="username" readonly class="form-control" type="text" value="@staff.Username">
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="">Role</label>
+                                        @if (role_list != null)
+                                        {
+                                            <select class="form-control" name="account_role" style="display: block !important;">
+                                                @foreach (Role role in role_list)
+                                                {
+                                                    @if (role.RoleId == @staff.RoleId)
+                                                    {
+                                                        <option selected value="@role.RoleId">@role.RoleName</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@role.RoleId">@role.RoleName</option>
+                                                    }
+                                                }
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <input readonly name="account_role" class="form-control" type="text" value="@staff.Role.RoleName">
+                                        }
+
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label class="col-form-label">Create Date</label>
+                                        <div>
+                                            <input readonly class="form-control" type="text" value="@staff.CreateDate">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label class="col-form-label">Update Date</label>
+                                        <div>
+                                            <input readonly class="form-control" type="text" value="@staff.UpdateDate">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label class="col-form-label">Status</label>
+                                        @{
+                                            string status = staff.Status[0] == 0 ? "Unactive" : "Active";
+                                        }
+                                        <div>
+                                            <input readonly class="form-control" type="text" value="@status">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label class="col-form-label">Password</label>
+                                        <div>
+                                            <input readonly class="form-control" type="text" value="@staff.Password">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-outline-success">Save </button>
+                                    </div>
+
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- Your Profile Views Chart END-->
+            </div>
+        }
+
+    </div>
+</main>
+<style>
+    .bootstrap-select{
+        display: none !important;
+    }
+</style>
